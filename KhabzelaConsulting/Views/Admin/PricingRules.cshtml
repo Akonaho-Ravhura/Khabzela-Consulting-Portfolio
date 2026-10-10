@@ -1,0 +1,100 @@
+@{
+    ViewData["Title"] = "Pricing rules";
+
+    // Placeholder data — TODO (backend): load rules; these feed the client quote calculator.
+    var groups = new[]
+    {
+        new { Name = "Payroll", Rules = new[]
+        {
+            new { Variable = "Base fee", Formula = "R 250 / month", Status = "Active" },
+            new { Variable = "Per employee", Formula = "R 50 – R 100 / employee / month", Status = "Active" },
+            new { Variable = "Weekly payroll surcharge", Formula = "+ R 200 / month", Status = "Active" },
+        }},
+        new { Name = "Accounting", Rules = new[]
+        {
+            new { Variable = "Annual turnover bracket", Formula = "R 900 – R 3,500 / month by bracket", Status = "Active" },
+        }},
+        new { Name = "Tax", Rules = new[]
+        {
+            new { Variable = "Annual turnover bracket", Formula = "R 650 – R 2,400 / month by bracket", Status = "Active" },
+        }},
+        new { Name = "Bundle discount", Rules = new[]
+        {
+            new { Variable = "2+ services selected", Formula = "− 10% off combined estimate", Status = "Draft" },
+        }},
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/admin/pricing-rules.css" asp-append-version="true" />
+}
+
+<p class="admin-page-intro">Update these anytime — changes apply immediately to the quote calculator on the website and app.</p>
+
+<div class="admin-stack">
+    @foreach (var g in groups)
+    {
+        <section class="card pr-group" data-group="@g.Name">
+            <header class="card-header">
+                <h2 class="pr-group-title">@g.Name</h2>
+                <button class="btn-link small pr-add" type="button" data-add-rule>
+                    <svg class="icon icon-sm"><use href="#i-plus" /></svg> Add rule
+                </button>
+            </header>
+            <table class="table table-stack pr-table">
+                <thead>
+                    <tr><th>Variable</th><th>Price impact / formula</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in g.Rules)
+                    {
+                        <tr>
+                            <td data-label="Variable" data-field="variable">@r.Variable</td>
+                            <td data-label="Price impact" data-field="formula">@r.Formula</td>
+                            <td data-label="Status"><span class="pr-status pr-status-@r.Status.ToLowerInvariant()" data-field="status">@r.Status</span></td>
+                            <td data-label="" class="pr-actions"><button class="btn-link small" type="button" data-edit-rule>Edit</button></td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </section>
+    }
+</div>
+
+<dialog class="pr-dialog" data-rule-dialog aria-labelledby="rule-dialog-title">
+    <form method="dialog" class="pr-dialog-form" novalidate data-rule-form>
+        <header class="pr-dialog-head">
+            <h2 id="rule-dialog-title" data-dialog-title>Edit rule</h2>
+            <button type="button" class="pr-dialog-close" data-dialog-cancel aria-label="Close">
+                <svg class="icon"><use href="#i-x" /></svg>
+            </button>
+        </header>
+        <p class="muted small" data-dialog-group></p>
+
+        <div class="field">
+            <label class="label" for="rule-variable">Variable</label>
+            <input class="input" id="rule-variable" name="variable" required placeholder="e.g. Per employee" />
+        </div>
+        <div class="field">
+            <label class="label" for="rule-formula">Price impact / formula</label>
+            <input class="input" id="rule-formula" name="formula" required placeholder="e.g. R 65 / employee / month" />
+        </div>
+        <div class="field">
+            <span class="label">Status</span>
+            <div class="choice-group" role="group" aria-label="Status" data-rule-status>
+                <button type="button" class="choice is-active" data-value="Active" aria-pressed="true">Active</button>
+                <button type="button" class="choice" data-value="Draft" aria-pressed="false">Draft</button>
+            </div>
+        </div>
+
+        <footer class="pr-dialog-foot">
+            <button type="button" class="btn btn-link pr-delete" data-rule-delete>Delete rule</button>
+            <span class="pr-dialog-spacer"></span>
+            <button type="button" class="btn btn-outline" data-dialog-cancel>Cancel</button>
+            <button type="submit" class="btn btn-primary">Save rule</button>
+        </footer>
+    </form>
+</dialog>
+
+@section Scripts {
+    <script src="~/js/pages/admin/pricing-rules.js" asp-append-version="true"></script>
+}

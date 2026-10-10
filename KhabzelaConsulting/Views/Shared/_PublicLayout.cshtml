@@ -1,0 +1,127 @@
+@{
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    string Active(string name) => string.Equals(action, name, StringComparison.OrdinalIgnoreCase) ? "is-active" : "";
+    var isHome = string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase);
+    var homeUrl = Url.Action("Index", "Home");
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1b2619" />
+    <meta name="description" content="@(ViewData["Description"] ?? "Khabzela Consulting — accounting, payroll, tax and insurance advice for South African businesses.")" />
+    <title>@ViewData["Title"] · Khabzela Consulting</title>
+    <partial name="_Fonts" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layouts/public.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+    <script>document.documentElement.classList.add("js");</script>
+</head>
+<body class="public-body @(isHome ? "is-home" : "")">
+    <partial name="_IconSprite" />
+    <a class="skip-link" href="#main">Skip to content</a>
+
+    <header class="site-header" data-site-header>
+        <div class="site-container site-header-inner">
+            <a class="site-logo" asp-controller="Home" asp-action="Index">
+                <svg class="icon"><use href="#i-brand" /></svg>
+                <span>Khabzela</span>
+            </a>
+
+            <nav class="site-nav" id="site-nav" aria-label="Main" data-site-nav>
+                <a class="@Active("Index")" asp-controller="Home" asp-action="Index">Home</a>
+                <a href="@homeUrl#services">Services</a>
+                <a href="@homeUrl#portfolio">Portfolio</a>
+                <a class="@Active("About")" asp-controller="Home" asp-action="About">About us</a>
+                <a class="@Active("Contact")" asp-controller="Home" asp-action="Contact">Contact</a>
+                <div class="site-nav-actions">
+                    <a class="btn btn-outline site-login" asp-controller="Account" asp-action="Login">Client login</a>
+                    <a class="btn btn-primary" asp-controller="Client" asp-action="Quote">Get a quote</a>
+                </div>
+            </nav>
+
+            <button class="site-menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu" data-menu-toggle>
+                <svg class="icon icon-open"><use href="#i-menu" /></svg>
+                <svg class="icon icon-close"><use href="#i-x" /></svg>
+            </button>
+        </div>
+    </header>
+
+    <main id="main">
+        @RenderBody()
+    </main>
+
+    <footer class="site-footer">
+        <div class="site-container">
+            <div class="footer-cta">
+                <div>
+                    <h2>Ready for numbers you can trust?</h2>
+                    <p>See a price in under a minute, then book a time with an accountant.</p>
+                </div>
+                <div class="footer-cta-actions">
+                    <a class="btn btn-light" asp-controller="Client" asp-action="Quote">Get an instant quote</a>
+                    <a class="btn footer-btn-ghost" asp-controller="Home" asp-action="Contact">Talk to us</a>
+                </div>
+            </div>
+
+            <div class="footer-grid">
+                <div class="footer-brand">
+                    <a class="site-logo" asp-controller="Home" asp-action="Index">
+                        <svg class="icon"><use href="#i-brand" /></svg>
+                        <span>Khabzela</span>
+                    </a>
+                    <p>Accounting, payroll, tax and insurance advice for South African businesses and individuals.</p>
+                    <div class="footer-social">
+                        <a href="#" aria-label="LinkedIn"><svg class="icon"><use href="#i-linkedin" /></svg></a>
+                        <a href="#" aria-label="Facebook"><svg class="icon"><use href="#i-facebook" /></svg></a>
+                        <a href="#" aria-label="Instagram"><svg class="icon"><use href="#i-instagram" /></svg></a>
+                    </div>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Services</h3>
+                    <ul>
+                        <li><a href="@homeUrl#services">Accounting</a></li>
+                        <li><a href="@homeUrl#services">Payroll</a></li>
+                        <li><a href="@homeUrl#services">Tax</a></li>
+                        <li><a href="@homeUrl#services">Insurance advice</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Company</h3>
+                    <ul>
+                        <li><a asp-controller="Home" asp-action="About">About us</a></li>
+                        <li><a href="@homeUrl#portfolio">Portfolio</a></li>
+                        <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
+                        <li><a asp-controller="Account" asp-action="Login">Client login</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-col">
+                    <h3>Get in touch</h3>
+                    <ul class="footer-contact">
+                        <li><svg class="icon icon-sm"><use href="#i-phone" /></svg><a href="tel:+27110000000">+27 (0)11 000 0000</a></li>
+                        <li><svg class="icon icon-sm"><use href="#i-mail" /></svg><a href="mailto:hello@example.co.za">hello@example.co.za</a></li>
+                        <li><svg class="icon icon-sm"><use href="#i-pin" /></svg><span>Johannesburg, Gauteng</span></li>
+                        <li><svg class="icon icon-sm"><use href="#i-clock" /></svg><span>Mon – Fri, 08:00 – 17:00</span></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; <span data-year>@DateTime.Now.Year</span> Khabzela Consulting. All rights reserved.</p>
+                <nav aria-label="Legal">
+                    <a asp-controller="Home" asp-action="Privacy">Privacy &amp; POPIA</a>
+                    <button type="button" class="footer-top" data-back-to-top>Back to top ↑</button>
+                </nav>
+            </div>
+        </div>
+    </footer>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/layouts/public.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

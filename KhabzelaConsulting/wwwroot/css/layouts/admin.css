@@ -1,0 +1,93 @@
+/* Admin layout — fixed sidebar on desktop, off-canvas drawer below 1024px */
+
+:root { --sidebar-w: 240px; }
+
+.admin-sidebar {
+    position: fixed; inset: 0 auto 0 0; z-index: 60;
+    display: flex; flex-direction: column;
+    width: min(var(--sidebar-w), 82vw);
+    padding: 24px 0;
+    background: var(--ink);
+    color: rgba(248, 241, 231, .82);
+    transform: translateX(-100%);
+    transition: transform 220ms ease;
+}
+.admin-sidebar.is-open { transform: translateX(0); box-shadow: var(--shadow-md); }
+
+.admin-sidebar-head {
+    display: flex; align-items: center; justify-content: space-between;
+    padding: 0 20px 24px;
+}
+.admin-logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    color: var(--cream);
+    font-weight: 600; letter-spacing: .14em; text-transform: uppercase; font-size: .85rem;
+}
+.admin-logo .icon { color: var(--gold); }
+.admin-sidebar-close { color: var(--cream); padding: 6px; }
+
+.admin-nav { display: grid; gap: 2px; }
+.admin-nav a,
+.admin-signout {
+    display: flex; align-items: center; gap: 12px;
+    padding: 11px 20px;
+    border-left: 3px solid transparent;
+    font-size: .95rem;
+    transition: background var(--transition), color var(--transition);
+}
+.admin-nav a .icon, .admin-signout .icon { width: 18px; height: 18px; }
+.admin-nav a:hover, .admin-signout:hover { background: rgba(255, 255, 255, .04); color: var(--cream); }
+.admin-nav a.is-active {
+    background: var(--ink-2);
+    border-left-color: var(--gold);
+    color: var(--cream);
+}
+.admin-nav-count {
+    margin-left: auto;
+    padding: 0 .5rem;
+    border-radius: var(--radius-pill);
+    background: var(--gold); color: var(--ink);
+    font-size: .72rem; line-height: 1.6;
+}
+.admin-signout { margin-top: auto; color: rgba(248, 241, 231, .6); }
+
+.admin-scrim {
+    position: fixed; inset: 0; z-index: 55;
+    background: rgba(27, 38, 25, .45);
+}
+
+.admin-shell { min-width: 0; }
+
+.admin-topbar {
+    position: sticky; top: 0; z-index: 30;
+    display: flex; align-items: center; gap: 12px;
+    height: 60px;
+    padding: 0 var(--gutter);
+    background: rgba(248, 241, 231, .94);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--line);
+}
+.admin-menu-btn { display: inline-grid; place-items: center; width: 40px; height: 40px; margin-left: -8px; color: var(--ink); }
+.admin-title { font-size: 1.25rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.admin-user { display: flex; align-items: center; gap: 10px; margin-left: auto; }
+.admin-user-name { display: none; }
+
+.admin-main { padding: 20px var(--gutter) 48px; }
+
+/* Shared admin page pieces */
+.admin-page-intro { margin-bottom: 20px; color: var(--muted); font-size: .92rem; }
+.admin-stack { display: grid; gap: 16px; }
+
+@media (min-width: 600px) {
+    .admin-user-name { display: inline; }
+    .admin-main { padding: 28px 24px 56px; }
+}
+
+@media (min-width: 1024px) {
+    .admin-sidebar { transform: none; width: var(--sidebar-w); box-shadow: none; }
+    .admin-sidebar-close, .admin-menu-btn, .admin-scrim { display: none !important; }
+    .admin-shell { margin-left: var(--sidebar-w); }
+    .admin-topbar { height: 76px; padding: 0 40px; border-bottom: 0; background: var(--cream); }
+    .admin-title { font-size: 1.9rem; }
+    .admin-main { padding: 8px 40px 64px; max-width: 1280px; }
+}

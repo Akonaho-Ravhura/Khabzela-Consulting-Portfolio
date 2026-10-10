@@ -1,0 +1,82 @@
+@{
+    ViewData["Title"] = "Profile";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/client/profile.css" asp-append-version="true" />
+}
+
+<header class="profile-head">
+    <span class="avatar avatar-lg">T</span>
+    <div>
+        <h1>Thabo Mokoena</h1>
+        <p class="muted small">Payroll client since 2024 · Accountant: Vukani</p>
+    </div>
+</header>
+
+<div class="profile-grid">
+    <form class="card card-pad profile-form" novalidate data-profile-form>
+        <h2>Personal details</h2>
+        <div class="field">
+            <label class="label" for="fullName">Full name</label>
+            <input class="input" id="fullName" name="fullName" value="Thabo Mokoena" required autocomplete="name" />
+        </div>
+        <div class="field">
+            <label class="label" for="email">Email</label>
+            <input class="input" id="email" name="email" type="email" value="thabo@example.co.za" required autocomplete="email" />
+        </div>
+        <div class="field">
+            <label class="label" for="phone">Mobile number</label>
+            <input class="input" id="phone" name="phone" type="tel" value="082 555 0142" autocomplete="tel" />
+        </div>
+        <div class="field">
+            <label class="label" for="company">Business name <span class="muted">(optional)</span></label>
+            <input class="input" id="company" name="company" value="Mokoena Logistics (Pty) Ltd" autocomplete="organization" />
+        </div>
+        <button class="btn btn-primary" type="submit" data-save disabled>Save changes</button>
+    </form>
+
+    <div class="profile-side">
+        <section class="card card-pad">
+            <h2>Notifications</h2>
+            <ul class="profile-toggles">
+                <li>
+                    <label class="switch-row">
+                        <span>
+                            <span class="switch-title">Tax status changes</span>
+                            <span class="muted small">When SARS updates your return</span>
+                        </span>
+                        <input type="checkbox" class="switch" checked data-pref="tax" />
+                    </label>
+                </li>
+                <li>
+                    <label class="switch-row">
+                        <span>
+                            <span class="switch-title">Deadline reminders</span>
+                            <span class="muted small">Provisional tax, VAT and EMP201</span>
+                        </span>
+                        <input type="checkbox" class="switch" checked data-pref="deadlines" />
+                    </label>
+                </li>
+                <li>
+                    <label class="switch-row">
+                        <span>
+                            <span class="switch-title">Email copies</span>
+                            <span class="muted small">Also send notifications by email</span>
+                        </span>
+                        <input type="checkbox" class="switch" data-pref="email" />
+                    </label>
+                </li>
+            </ul>
+        </section>
+
+        <section class="card profile-links">
+            <a asp-action="Invoices"><svg class="icon"><use href="#i-file" /></svg><span>Invoices</span><svg class="icon icon-sm"><use href="#i-chevron-right" /></svg></a>
+            <a href="tel:+27110000000"><svg class="icon"><use href="#i-phone" /></svg><span>Call your accountant</span><svg class="icon icon-sm"><use href="#i-chevron-right" /></svg></a>
+            <a asp-controller="Account" asp-action="Login" class="profile-signout"><svg class="icon"><use href="#i-logout" /></svg><span>Sign out</span></a>
+        </section>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/pages/client/profile.js" asp-append-version="true"></script>
+}

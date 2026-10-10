@@ -1,0 +1,78 @@
+@{
+    var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+    var section = ViewData["AdminSection"] as string ?? action;
+    string Active(string name) => string.Equals(section, name, StringComparison.OrdinalIgnoreCase) ? "is-active" : "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1b2619" />
+    <title>@ViewData["Title"] · Khabzela Admin</title>
+    <partial name="_Fonts" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layouts/admin.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="admin-body">
+    <partial name="_IconSprite" />
+
+    <aside class="admin-sidebar" id="admin-sidebar" aria-label="Admin navigation">
+        <div class="admin-sidebar-head">
+            <a class="admin-logo" asp-controller="Admin" asp-action="Index">
+                <svg class="icon"><use href="#i-brand" /></svg>
+                <span>Khabzela</span>
+            </a>
+            <button class="admin-sidebar-close" type="button" data-sidebar-close aria-label="Close menu">
+                <svg class="icon"><use href="#i-x" /></svg>
+            </button>
+        </div>
+
+        <nav class="admin-nav">
+            <a class="@Active("Index")" asp-controller="Admin" asp-action="Index">
+                <svg class="icon"><use href="#i-grid" /></svg><span>Dashboard</span>
+            </a>
+            <a class="@Active("Clients")" asp-controller="Admin" asp-action="Clients">
+                <svg class="icon"><use href="#i-users" /></svg><span>Clients</span>
+            </a>
+            <a class="@Active("PricingRules")" asp-controller="Admin" asp-action="PricingRules">
+                <svg class="icon"><use href="#i-quote" /></svg><span>Pricing rules</span>
+            </a>
+            <a class="@Active("QuoteRequests")" asp-controller="Admin" asp-action="QuoteRequests">
+                <svg class="icon"><use href="#i-message" /></svg><span>Quote requests</span>
+                <span class="admin-nav-count">7</span>
+            </a>
+            <a class="@Active("Invoices")" asp-controller="Admin" asp-action="Invoices">
+                <svg class="icon"><use href="#i-file" /></svg><span>Invoices</span>
+            </a>
+        </nav>
+
+        <a class="admin-signout" asp-controller="Account" asp-action="Login">
+            <svg class="icon"><use href="#i-logout" /></svg><span>Sign out</span>
+        </a>
+    </aside>
+    <div class="admin-scrim" data-sidebar-close hidden></div>
+
+    <div class="admin-shell">
+        <header class="admin-topbar">
+            <button class="admin-menu-btn" type="button" data-sidebar-open aria-controls="admin-sidebar" aria-expanded="false" aria-label="Open menu">
+                <svg class="icon"><use href="#i-menu" /></svg>
+            </button>
+            <h1 class="admin-title">@ViewData["Title"]</h1>
+            <div class="admin-user">
+                <span class="avatar">V</span>
+                <span class="admin-user-name">Vukani</span>
+            </div>
+        </header>
+
+        <main class="admin-main" id="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/layouts/admin.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

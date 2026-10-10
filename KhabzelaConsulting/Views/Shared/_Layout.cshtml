@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#1b2619" />
+    <title>@ViewData["Title"] · Khabzela Consulting</title>
+    <partial name="_Fonts" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layouts/auth.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="auth-body">
+    <partial name="_IconSprite" />
+
+    <main class="auth-shell">
+        <aside class="auth-brand">
+            <a class="auth-logo" asp-controller="Home" asp-action="Index">
+                <svg class="icon"><use href="#i-brand" /></svg>
+                <span>Khabzela</span>
+            </a>
+            <div class="auth-brand-copy">
+                <p class="eyebrow">Accounting · Payroll · Tax · Insurance</p>
+                <h2 class="auth-brand-title">Clear numbers.<br />Calm decisions.</h2>
+                <p class="auth-brand-text">Get an instant quote, book time with your accountant and follow your tax status — all in one place.</p>
+            </div>
+            <p class="auth-brand-foot">&copy; @DateTime.Now.Year Khabzela Consulting</p>
+        </aside>
+
+        <section class="auth-panel">
+            @RenderBody()
+        </section>
+    </main>
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

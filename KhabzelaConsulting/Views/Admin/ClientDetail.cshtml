@@ -1,0 +1,71 @@
+@{
+    ViewData["Title"] = "Client";
+    ViewData["AdminSection"] = "Clients";
+
+    // Placeholder data — TODO (backend): load client by ViewData["ClientId"].
+    var statuses = new[] { "Not filed", "Submitted", "SARS query", "Assessed", "Refund due" };
+    var current = "SARS query";
+    var history = new[]
+    {
+        new { Title = "Status → SARS query", Meta = "Sent to client today, 09:14 · Delivered" },
+        new { Title = "Status → Submitted", Meta = "Sent to client 14 Aug · Delivered" },
+        new { Title = "Provisional tax reminder", Meta = "Sent to client 1 Aug · Delivered" },
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/admin/client-detail.css" asp-append-version="true" />
+}
+
+<a class="cd-back btn-link small" asp-action="Clients">
+    <svg class="icon icon-sm"><use href="#i-chevron-left" /></svg> All clients
+</a>
+
+<header class="cd-head">
+    <span class="avatar avatar-lg">SN</span>
+    <div>
+        <h2 class="cd-name">Sipho Nkosi</h2>
+        <p class="muted small">Accounting + Tax client since 2022 · sipho@example.co.za</p>
+    </div>
+</header>
+
+<div class="cd-grid">
+    <section class="card card-pad cd-update">
+        <h3>Update tax status</h3>
+        <p class="muted small cd-hint">The client is notified automatically in the app — no documents are attached or stored.</p>
+
+        <form data-status-form>
+            <div class="choice-group cd-statuses" role="radiogroup" aria-label="Tax status" data-status-group>
+                @foreach (var s in statuses)
+                {
+                    <button type="button" role="radio" class="choice @(s == current ? "is-active" : "")"
+                            aria-checked="@(s == current ? "true" : "false")" data-value="@s">@s</button>
+                }
+            </div>
+
+            <div class="field cd-note">
+                <label class="label" for="note">Note to client <span class="muted">(optional)</span></label>
+                <textarea class="textarea" id="note" maxlength="280" placeholder="SARS has requested supporting documents by email — we'll be in touch." data-note></textarea>
+                <span class="muted small cd-count"><span data-note-count>0</span>/280</span>
+            </div>
+
+            <button class="btn btn-primary btn-block" type="submit" data-save>Save &amp; notify client</button>
+        </form>
+    </section>
+
+    <section class="card card-pad cd-history">
+        <h3>Notification history</h3>
+        <ul class="cd-history-list" data-history>
+            @foreach (var h in history)
+            {
+                <li>
+                    <p>@h.Title</p>
+                    <p class="muted small">@h.Meta</p>
+                </li>
+            }
+        </ul>
+    </section>
+</div>
+
+@section Scripts {
+    <script src="~/js/pages/admin/client-detail.js" asp-append-version="true"></script>
+}

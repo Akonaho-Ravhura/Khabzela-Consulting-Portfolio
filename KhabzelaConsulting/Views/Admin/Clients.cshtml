@@ -1,0 +1,76 @@
+@{
+    ViewData["Title"] = "Clients";
+
+    // Placeholder data — TODO (backend): load clients.
+    var clients = new[]
+    {
+        new { Id = 1, Name = "Sipho Nkosi", Initials = "SN", Services = "Accounting + Tax", TaxStatus = "SARS query", Since = "2022", Email = "sipho@example.co.za" },
+        new { Id = 2, Name = "Thabo Mokoena", Initials = "TM", Services = "Payroll", TaxStatus = "Assessed", Since = "2024", Email = "thabo@example.co.za" },
+        new { Id = 3, Name = "Palesa Mokoena", Initials = "PM", Services = "Tax", TaxStatus = "Submitted", Since = "2026", Email = "palesa@example.co.za" },
+        new { Id = 4, Name = "Naledi Dube", Initials = "ND", Services = "Payroll", TaxStatus = "Not filed", Since = "2026", Email = "naledi@example.co.za" },
+        new { Id = 5, Name = "Ayanda Zulu", Initials = "AZ", Services = "Accounting", TaxStatus = "Refund due", Since = "2023", Email = "ayanda@example.co.za" },
+        new { Id = 6, Name = "Karabo Molefe", Initials = "KM", Services = "Accounting + Payroll", TaxStatus = "Assessed", Since = "2021", Email = "karabo@example.co.za" },
+    };
+    string Tone(string s) => s switch
+    {
+        "Assessed" => "won",
+        "Refund due" => "new",
+        "SARS query" => "lost",
+        "Submitted" => "contacted",
+        _ => "draft"
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/admin/clients.css" asp-append-version="true" />
+}
+
+<div class="clients-toolbar">
+    <label class="clients-search">
+        <svg class="icon icon-sm"><use href="#i-search" /></svg>
+        <span class="visually-hidden">Search clients</span>
+        <input class="input" type="search" placeholder="Search by name, service or email" data-client-search />
+    </label>
+    <select class="select clients-filter" aria-label="Filter by tax status" data-status-filter>
+        <option value="">All tax statuses</option>
+        <option>Not filed</option>
+        <option>Submitted</option>
+        <option>SARS query</option>
+        <option>Assessed</option>
+        <option>Refund due</option>
+    </select>
+</div>
+
+<section class="card">
+    <table class="table table-stack">
+        <thead>
+            <tr><th>Client</th><th>Services</th><th>Tax status</th><th>Client since</th><th><span class="visually-hidden">Actions</span></th></tr>
+        </thead>
+        <tbody data-client-rows>
+            @foreach (var c in clients)
+            {
+                <tr data-search="@($"{c.Name} {c.Services} {c.Email}".ToLowerInvariant())" data-status="@c.TaxStatus">
+                    <td data-label="">
+                        <a class="clients-name" asp-action="ClientDetail" asp-route-id="@c.Id">
+                            <span class="avatar">@c.Initials</span>
+                            <span>
+                                <strong>@c.Name</strong>
+                                <span class="muted small">@c.Email</span>
+                            </span>
+                        </a>
+                    </td>
+                    <td data-label="Services">@c.Services</td>
+                    <td data-label="Tax status"><span class="badge badge-@Tone(c.TaxStatus)">@c.TaxStatus</span></td>
+                    <td data-label="Client since" class="text-muted">@c.Since</td>
+                    <td data-label="" class="clients-action">
+                        <a class="btn-link small" asp-action="ClientDetail" asp-route-id="@c.Id">Update status →</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p class="clients-empty muted" data-clients-empty hidden>No clients match your search.</p>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/admin/clients.js" asp-append-version="true"></script>
+}

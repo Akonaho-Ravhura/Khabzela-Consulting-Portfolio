@@ -1,0 +1,20 @@
+/* Home — Privacy & POPIA */
+
+.privacy-layout { display: grid; gap: 32px; }
+
+.privacy-toc { display: flex; flex-wrap: wrap; gap: 8px 16px; align-items: center; }
+.privacy-toc .eyebrow { flex-basis: 100%; }
+.privacy-toc a { color: var(--muted); font-size: .92rem; transition: color var(--transition); }
+.privacy-toc a:hover, .privacy-toc a.is-active { color: var(--ink); }
+
+.privacy-body { max-width: 720px; }
+.privacy-body h2 { font-size: 1.4rem; margin: 32px 0 10px; }
+.privacy-body h2:first-child { margin-top: 0; }
+.privacy-body p { color: var(--muted); font-size: 1.02rem; }
+
+@media (min-width: 960px) {
+    .privacy-layout { grid-template-columns: 220px 1fr; gap: 64px; align-items: start; }
+    .privacy-toc { position: sticky; top: calc(var(--header-h) + 24px); flex-direction: column; align-items: flex-start; }
+    .privacy-toc a { padding-left: 12px; border-left: 2px solid var(--line); }
+    .privacy-toc a.is-active { border-left-color: var(--gold); }
+}

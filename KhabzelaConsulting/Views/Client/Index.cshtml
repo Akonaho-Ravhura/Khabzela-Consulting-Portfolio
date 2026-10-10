@@ -1,0 +1,78 @@
+@{
+    ViewData["Title"] = "Home";
+
+    // Placeholder data — replace with the signed-in client's data from the backend.
+    var firstName = "Thabo";
+    var activity = new[]
+    {
+        new { Title = "Invoice #1042", Meta = "Paid", Tone = "success", Href = Url.Action("Invoices") },
+        new { Title = "Tax status — updated", Meta = "Today", Tone = "muted", Href = Url.Action("Notifications") },
+        new { Title = "Appointment with Vukani", Meta = "Tue 26, 10:30", Tone = "muted", Href = Url.Action("Notifications") },
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/client/home.css" asp-append-version="true" />
+}
+
+<section class="home">
+    <header class="home-greeting">
+        <div>
+            <p class="muted" data-greeting>Welcome back,</p>
+            <h1>@firstName</h1>
+        </div>
+        <a class="avatar avatar-lg home-avatar" asp-action="Profile" aria-label="Your profile">@firstName[0]</a>
+    </header>
+
+    <a class="home-alert" asp-action="Notifications">
+        <svg class="icon"><use href="#i-clock" /></svg>
+        <span>
+            <strong>Provisional tax due in <span data-days-left data-due="2026-10-22">12</span> days</strong>
+            <span class="home-alert-link">View details →</span>
+        </span>
+    </a>
+
+    <div class="home-grid">
+        <div class="home-actions">
+            <p class="eyebrow section-label">Quick actions</p>
+
+            <a class="home-cta" asp-action="Quote">
+                <svg class="icon icon-lg"><use href="#i-quote" /></svg>
+                <span class="home-cta-text">
+                    <strong>Get a quote &amp; book an appointment</strong>
+                    <span>One flow — see a price, then pick a time</span>
+                </span>
+                <svg class="icon"><use href="#i-chevron-right" /></svg>
+            </a>
+
+            <div class="home-tiles">
+                <a class="home-tile" asp-action="Invoices">
+                    <svg class="icon"><use href="#i-file" /></svg>
+                    <span>View invoices</span>
+                </a>
+                <a class="home-tile" asp-action="Notifications">
+                    <svg class="icon"><use href="#i-bell" /></svg>
+                    <span>Notifications</span>
+                </a>
+            </div>
+        </div>
+
+        <div class="home-activity">
+            <p class="eyebrow section-label">Recent activity</p>
+            <ul class="home-activity-list">
+                @foreach (var item in activity)
+                {
+                    <li>
+                        <a href="@item.Href">
+                            <span>@item.Title</span>
+                            <span class="small @(item.Tone == "success" ? "text-success" : "text-muted")">@item.Meta</span>
+                        </a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/client/home.js" asp-append-version="true"></script>
+}

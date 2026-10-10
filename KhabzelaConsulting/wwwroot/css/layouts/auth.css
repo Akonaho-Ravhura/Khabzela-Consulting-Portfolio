@@ -1,0 +1,50 @@
+/* Auth layout — split brand panel + form panel; stacks on mobile */
+
+.auth-shell {
+    display: grid;
+    grid-template-columns: 1fr;
+    min-height: 100vh;
+}
+
+.auth-brand {
+    display: flex; flex-direction: column; gap: 24px;
+    padding: 20px var(--gutter);
+    background: var(--ink);
+    color: var(--cream);
+}
+
+.auth-logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-family: var(--font-body); font-weight: 600;
+    letter-spacing: .14em; text-transform: uppercase; font-size: .85rem;
+    color: var(--cream);
+}
+.auth-logo .icon { color: var(--gold); }
+
+.auth-brand-copy,
+.auth-brand-foot { display: none; }
+
+.auth-panel {
+    display: flex; align-items: flex-start; justify-content: center;
+    padding: 32px var(--gutter) 48px;
+}
+
+@media (min-width: 900px) {
+    .auth-shell { grid-template-columns: minmax(360px, 5fr) 7fr; }
+
+    .auth-brand {
+        position: sticky; top: 0; height: 100vh;
+        justify-content: space-between;
+        padding: 40px 48px;
+        background:
+            radial-gradient(120% 80% at 0% 100%, rgba(168, 132, 78, .18), transparent 60%),
+            var(--ink);
+    }
+    .auth-brand-copy { display: grid; gap: 16px; max-width: 420px; }
+    .auth-brand-copy .eyebrow { color: var(--gold); }
+    .auth-brand-title { color: var(--cream); font-size: clamp(2rem, 1.2rem + 1.8vw, 2.8rem); line-height: 1.15; }
+    .auth-brand-text { color: rgba(248, 241, 231, .72); }
+    .auth-brand-foot { display: block; font-size: .8rem; color: rgba(248, 241, 231, .5); }
+
+    .auth-panel { align-items: center; padding: 48px; }
+}

@@ -1,0 +1,96 @@
+/* Client app layout — mobile-first: bottom tab bar on phones,
+   top navigation bar on tablet / desktop. */
+
+:root {
+    --tabbar-h: 68px;
+    --client-max: 1040px;
+}
+
+.client-body { padding-bottom: calc(var(--tabbar-h) + env(safe-area-inset-bottom)); }
+.client-body.no-tabbar { padding-bottom: 0; }
+
+.client-main {
+    width: 100%;
+    max-width: var(--client-max);
+    margin: 0 auto;
+    padding: 24px var(--gutter) 32px;
+}
+
+/* ---------- Top bar (hidden on phones) ---------- */
+.client-topbar { display: none; }
+
+.client-logo {
+    display: inline-flex; align-items: center; gap: 10px;
+    font-weight: 600; letter-spacing: .14em; text-transform: uppercase; font-size: .85rem;
+    color: var(--ink);
+}
+.client-logo .icon { color: var(--gold); }
+
+/* ---------- Bottom tab bar ---------- */
+.client-tabbar {
+    position: fixed; inset: auto 0 0 0; z-index: 40;
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    height: calc(var(--tabbar-h) + env(safe-area-inset-bottom));
+    padding-bottom: env(safe-area-inset-bottom);
+    background: var(--paper);
+    border-top: 1px solid var(--line);
+}
+.client-tabbar a {
+    position: relative;
+    display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px;
+    font-size: .72rem;
+    color: var(--muted);
+    transition: color var(--transition);
+}
+.client-tabbar a.is-active { color: var(--ink); }
+.client-tabbar a.is-active .icon { stroke-width: 1.8; }
+.tab-dot {
+    position: absolute; top: 12px; left: calc(50% + 6px);
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--gold); border: 2px solid var(--paper);
+}
+
+/* ---------- Shared client page pieces ---------- */
+.page-head { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; }
+.page-head .back-btn {
+    display: inline-grid; place-items: center;
+    width: 36px; height: 36px; margin-left: -8px;
+    color: var(--ink);
+}
+.page-sub { margin: -8px 0 20px; color: var(--muted); font-size: .92rem; }
+.section-label { margin: 24px 0 10px; }
+
+/* ---------- Tablet / desktop ---------- */
+@media (min-width: 768px) {
+    .client-body,
+    .client-body.no-tabbar { padding-bottom: 0; }
+
+    .client-tabbar { display: none; }
+
+    .client-topbar {
+        display: block;
+        position: sticky; top: 0; z-index: 40;
+        background: rgba(248, 241, 231, .92);
+        backdrop-filter: blur(8px);
+        border-bottom: 1px solid var(--line);
+    }
+    .client-topbar-inner {
+        display: flex; align-items: center; gap: 32px;
+        max-width: var(--client-max);
+        height: 64px;
+        margin: 0 auto;
+        padding: 0 var(--gutter);
+    }
+    .client-topnav { display: flex; gap: 4px; margin-left: auto; }
+    .client-topnav a {
+        padding: .45rem .85rem;
+        border-radius: var(--radius);
+        color: var(--muted);
+        font-size: .92rem;
+        transition: color var(--transition), background var(--transition);
+    }
+    .client-topnav a:hover { color: var(--ink); }
+    .client-topnav a.is-active { color: var(--ink); background: var(--gold-tint); }
+
+    .client-main { padding: 40px 24px 64px; }
+}

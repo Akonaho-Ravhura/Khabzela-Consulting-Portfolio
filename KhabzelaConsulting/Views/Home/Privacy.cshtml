@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "Privacy & POPIA";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/home/privacy.css" asp-append-version="true" />
+}
+
+<section class="page-hero">
+    <div class="site-container">
+        <p class="eyebrow">Legal</p>
+        <h1>Privacy &amp; POPIA</h1>
+        <p class="lead">How Khabzela Consulting collects, uses and protects your personal information.</p>
+    </div>
+</section>
+
+<section class="section">
+    <div class="site-container privacy-layout">
+        <nav class="privacy-toc" aria-label="On this page" data-toc>
+            <p class="eyebrow">On this page</p>
+            <a href="#collect">What we collect</a>
+            <a href="#use">How we use it</a>
+            <a href="#documents">Documents</a>
+            <a href="#rights">Your rights</a>
+        </nav>
+
+        @* Placeholder policy text — TODO: replace with the firm's reviewed privacy policy. *@
+        <article class="privacy-body">
+            <h2 id="collect">What we collect</h2>
+            <p>Your name, contact details and the information you provide when requesting a quote, booking an appointment or sending us a message.</p>
+
+            <h2 id="use">How we use it</h2>
+            <p>Only to provide our services, respond to enquiries, send notifications you've opted into and meet our legal obligations to SARS and other regulators.</p>
+
+            <h2 id="documents">Documents</h2>
+            <p>The client app shows status updates only — no tax documents are attached to or stored in app notifications.</p>
+
+            <h2 id="rights">Your rights</h2>
+            <p>Under the Protection of Personal Information Act (POPIA) you may ask to see, correct or delete your information. Contact us and we'll respond within 30 days.</p>
+        </article>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/home/privacy.js" asp-append-version="true"></script>
+}

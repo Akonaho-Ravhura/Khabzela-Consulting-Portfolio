@@ -1,0 +1,69 @@
+@{
+    ViewData["Title"] = "Invoices";
+
+    // Placeholder data — TODO (backend): load the client's invoices.
+    var invoices = new[]
+    {
+        new { Number = "#1045", Description = "Payroll — October", Issued = "01 Oct 2026", Due = "15 Oct 2026", Amount = 1150m, Status = "Due" },
+        new { Number = "#1042", Description = "Accounting + Tax — September", Issued = "01 Sep 2026", Due = "15 Sep 2026", Amount = 2650m, Status = "Paid" },
+        new { Number = "#1038", Description = "Payroll — September", Issued = "01 Sep 2026", Due = "15 Sep 2026", Amount = 1150m, Status = "Paid" },
+        new { Number = "#1031", Description = "Annual financial statements", Issued = "12 Aug 2026", Due = "26 Aug 2026", Amount = 4800m, Status = "Paid" },
+    };
+    var outstanding = invoices.Where(i => i.Status != "Paid").Sum(i => i.Amount);
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/client/invoices.css" asp-append-version="true" />
+}
+
+<div class="page-head">
+    <a class="back-btn" asp-action="Index" aria-label="Back to home"><svg class="icon"><use href="#i-chevron-left" /></svg></a>
+    <h1>Invoices</h1>
+</div>
+
+<div class="inv-summary">
+    <div class="card card-pad">
+        <p class="eyebrow">Outstanding</p>
+        <p class="inv-figure">R @outstanding.ToString("N0")</p>
+    </div>
+    <div class="card card-pad">
+        <p class="eyebrow">Paid this year</p>
+        <p class="inv-figure">R @invoices.Where(i => i.Status == "Paid").Sum(i => i.Amount).ToString("N0")</p>
+    </div>
+</div>
+
+<div class="choice-group inv-filters" role="group" aria-label="Filter invoices" data-filter-group>
+    <button type="button" class="choice is-active" data-value="all" aria-pressed="true">All</button>
+    <button type="button" class="choice" data-value="due" aria-pressed="false">Due</button>
+    <button type="button" class="choice" data-value="paid" aria-pressed="false">Paid</button>
+</div>
+
+<ul class="inv-list">
+    @foreach (var inv in invoices)
+    {
+        <li class="inv" data-status="@inv.Status.ToLowerInvariant()">
+            <button type="button" class="inv-row" aria-expanded="false">
+                <span class="inv-main">
+                    <span class="inv-number">Invoice @inv.Number</span>
+                    <span class="inv-desc">@inv.Description</span>
+                </span>
+                <span class="inv-side">
+                    <span class="inv-amount">R @inv.Amount.ToString("N0")</span>
+                    <span class="badge badge-@inv.Status.ToLowerInvariant()">@inv.Status</span>
+                </span>
+            </button>
+            <div class="inv-detail" hidden>
+                <dl>
+                    <div><dt>Issued</dt><dd>@inv.Issued</dd></div>
+                    <div><dt>Due</dt><dd>@inv.Due</dd></div>
+                </dl>
+                <button type="button" class="btn btn-outline inv-download">
+                    <svg class="icon icon-sm"><use href="#i-download" /></svg> Download PDF
+                </button>
+            </div>
+        </li>
+    }
+</ul>
+
+@section Scripts {
+    <script src="~/js/pages/client/invoices.js" asp-append-version="true"></script>
+}

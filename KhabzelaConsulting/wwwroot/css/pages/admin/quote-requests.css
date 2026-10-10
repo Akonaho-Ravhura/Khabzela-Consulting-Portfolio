@@ -1,0 +1,31 @@
+/* Admin — Quote requests */
+
+.qr-toolbar { margin-bottom: 16px; }
+.qr-tabs { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; }
+.qr-tabs::-webkit-scrollbar { display: none; }
+.qr-tabs .choice { flex: none; min-height: 36px; padding: .4rem .9rem; font-size: .88rem; }
+.qr-tabs .choice span { margin-left: 4px; opacity: .6; font-size: .8rem; }
+
+.qr-client, .qr-service { display: grid; gap: 2px; }
+.qr-client strong { font-weight: 500; }
+.qr-client a:hover { color: var(--ink); text-decoration: underline; }
+
+/* Status select styled as a badge */
+.qr-status {
+    appearance: none; -webkit-appearance: none;
+    padding: .25rem 1.6rem .25rem .7rem;
+    border: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%237a7062' stroke-width='2'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right .4rem center;
+    background-size: 12px;
+    cursor: pointer;
+    font-size: .78rem;
+}
+
+.qr-empty { padding: 32px 20px; text-align: center; }
+
+@media (max-width: 720px) {
+    .table-stack td .qr-client { text-align: left; }
+    .table-stack td .qr-service { justify-items: end; }
+}

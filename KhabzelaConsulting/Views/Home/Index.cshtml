@@ -1,0 +1,229 @@
+@{
+    ViewData["Title"] = "Accounting, payroll & tax";
+
+    // Placeholder content — TODO: replace with real services, case studies and figures.
+    var services = new[]
+    {
+        new { Icon = "i-chart", Name = "Accounting", Text = "Bookkeeping, reconciliations, management accounts and annual financial statements.", From = "R 900" },
+        new { Icon = "i-users", Name = "Payroll", Text = "Monthly or weekly payroll, payslips, EMP201s and UIF — handled on time, every time.", From = "R 300" },
+        new { Icon = "i-file", Name = "Tax", Text = "Income tax, provisional tax, VAT and SARS correspondence for businesses and individuals.", From = "R 650" },
+        new { Icon = "i-shield", Name = "Insurance advice", Text = "Independent advice on business, life and short-term cover that fits your risk.", From = "" },
+    };
+    var steps = new[]
+    {
+        new { Title = "Get an instant quote", Text = "Choose a service, answer two or three questions and see a price range straight away." },
+        new { Title = "Book a time", Text = "Pick a slot with the accountant who specialises in what you need — your estimate comes with you." },
+        new { Title = "Stay in the loop", Text = "Follow tax status changes, deadlines and invoices in the app. No paperwork chasing." },
+    };
+    var portfolio = new[]
+    {
+        new { Category = "payroll", Tag = "Payroll", Industry = "Logistics", Title = "Weekly payroll for a 40-person fleet", Text = "Moved drivers from manual spreadsheets to weekly payroll with on-time EMP201 submissions.", Metric = "0", MetricLabel = "late SARS submissions in 18 months" },
+        new { Category = "accounting", Tag = "Accounting", Industry = "Retail", Title = "Monthly management accounts for 3 stores", Text = "Consolidated bookkeeping across branches so the owner sees margin per store each month.", Metric = "6 days", MetricLabel = "faster month-end close" },
+        new { Category = "tax", Tag = "Tax", Industry = "Professional services", Title = "Clearing a SARS backlog", Text = "Filed four years of outstanding returns and negotiated a payment arrangement.", Metric = "4 yrs", MetricLabel = "of returns brought up to date" },
+        new { Category = "accounting", Tag = "Accounting + Tax", Industry = "Construction", Title = "Funding-ready financial statements", Text = "Prepared audited-ready AFS and tax compliance to support a bank funding application.", Metric = "R 2.5m", MetricLabel = "facility approved" },
+        new { Category = "insurance", Tag = "Insurance", Industry = "Hospitality", Title = "Right-sizing business cover", Text = "Reviewed overlapping policies for a guesthouse group and restructured cover.", Metric = "18%", MetricLabel = "lower annual premiums" },
+        new { Category = "payroll", Tag = "Payroll", Industry = "Agriculture", Title = "Seasonal workforce payroll", Text = "Set up weekly and monthly runs for permanent and seasonal staff, with UIF handled.", Metric = "120+", MetricLabel = "employees paid every cycle" },
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/home/index.css" asp-append-version="true" />
+}
+
+<!-- Hero -->
+<section class="hero">
+    <div class="site-container hero-inner">
+        <div class="hero-copy">
+            <p class="eyebrow">Accounting · Payroll · Tax · Insurance</p>
+            <h1>Clear numbers.<br /><em>Calm decisions.</em></h1>
+            <p class="hero-lead">Khabzela Consulting keeps South African businesses compliant and confident — with instant online quotes, a dedicated accountant and real-time updates on your tax status.</p>
+            <div class="hero-actions">
+                <a class="btn btn-light" asp-controller="Client" asp-action="Quote">Get an instant quote <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
+                <a class="btn hero-btn-ghost" asp-action="Contact">Book a consultation</a>
+            </div>
+            <ul class="hero-points">
+                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Price in under a minute</li>
+                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>SARS-ready filing</li>
+                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>POPIA compliant</li>
+            </ul>
+        </div>
+
+        <div class="hero-visual" aria-hidden="true">
+            <div class="hero-card hero-card-quote">
+                <p class="eyebrow">Payroll estimate</p>
+                <p class="hero-card-figure" data-hero-estimate>R 850 – R 1,450<span>/mo</span></p>
+                <div class="hero-card-bar"><span data-hero-bar></span></div>
+                <p class="hero-card-meta"><span data-hero-employees>12</span> employees · monthly</p>
+            </div>
+            <div class="hero-card hero-card-notif">
+                <svg class="icon"><use href="#i-clock" /></svg>
+                <div>
+                    <p><strong>Tax status changed</strong></p>
+                    <p class="hero-card-meta">Your 2025 return is now “Assessed”.</p>
+                </div>
+            </div>
+            <div class="hero-card hero-card-booking">
+                <span class="avatar">V</span>
+                <div>
+                    <p><strong>Booked with Vukani</strong></p>
+                    <p class="hero-card-meta">Tue 26 · 10:30</p>
+                </div>
+                <svg class="icon hero-card-check"><use href="#i-check" /></svg>
+            </div>
+        </div>
+    </div>
+
+    <div class="site-container">
+        <dl class="hero-stats">
+            <div><dt>Active clients</dt><dd><span data-count-to="48">48</span>+</dd></div>
+            <div><dt>Years in practice</dt><dd><span data-count-to="10">10</span>+</dd></div>
+            <div><dt>Returns filed yearly</dt><dd><span data-count-to="300">300</span>+</dd></div>
+            <div><dt>Quote turnaround</dt><dd>&lt; 1 min</dd></div>
+        </dl>
+    </div>
+</section>
+
+<!-- Services -->
+<section class="section" id="services">
+    <div class="site-container">
+        <header class="section-head" data-reveal>
+            <p class="eyebrow">What we do</p>
+            <h2>Four services. One team that knows your numbers.</h2>
+            <p>Pick one or bundle them — every client gets a named accountant and transparent monthly pricing.</p>
+        </header>
+
+        <div class="services-grid">
+            @foreach (var s in services)
+            {
+                <article class="service-card" data-reveal>
+                    <span class="service-icon"><svg class="icon"><use href="#@s.Icon" /></svg></span>
+                    <h3>@s.Name</h3>
+                    <p>@s.Text</p>
+                    <p class="service-price">
+                        @if (string.IsNullOrEmpty(s.From))
+                        {
+                            <span>Priced on consultation</span>
+                        }
+                        else
+                        {
+                            <span>From <strong>@s.From</strong> / month</span>
+                        }
+                    </p>
+                    <a class="service-link" asp-controller="Client" asp-action="Quote">Get a quote <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
+                </article>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- How it works -->
+<section class="section section-dark how">
+    <div class="site-container">
+        <header class="section-head is-center" data-reveal>
+            <p class="eyebrow">How it works</p>
+            <h2>From quote to compliant in three steps</h2>
+        </header>
+        <ol class="how-steps">
+            @for (var i = 0; i < steps.Length; i++)
+            {
+                <li class="how-step" data-reveal>
+                    <span class="how-num">@((i + 1).ToString("00"))</span>
+                    <h3>@steps[i].Title</h3>
+                    <p>@steps[i].Text</p>
+                </li>
+            }
+        </ol>
+    </div>
+</section>
+
+<!-- Portfolio -->
+<section class="section" id="portfolio">
+    <div class="site-container">
+        <div class="portfolio-head">
+            <header class="section-head" data-reveal>
+                <p class="eyebrow">Portfolio</p>
+                <h2>Work we're proud of</h2>
+                <p>A few recent engagements — names withheld, results not.</p>
+            </header>
+            <div class="choice-group portfolio-filters" role="group" aria-label="Filter case studies" data-portfolio-filter>
+                <button type="button" class="choice is-active" data-value="all" aria-pressed="true">All</button>
+                <button type="button" class="choice" data-value="accounting" aria-pressed="false">Accounting</button>
+                <button type="button" class="choice" data-value="payroll" aria-pressed="false">Payroll</button>
+                <button type="button" class="choice" data-value="tax" aria-pressed="false">Tax</button>
+                <button type="button" class="choice" data-value="insurance" aria-pressed="false">Insurance</button>
+            </div>
+        </div>
+
+        <div class="portfolio-grid" data-portfolio-grid>
+            @foreach (var p in portfolio)
+            {
+                <article class="case-card" data-category="@p.Category" data-reveal>
+                    <div class="case-top">
+                        <span class="case-tag">@p.Tag</span>
+                        <span class="case-industry"><svg class="icon icon-sm"><use href="#i-briefcase" /></svg>@p.Industry</span>
+                    </div>
+                    <h3>@p.Title</h3>
+                    <p>@p.Text</p>
+                    <div class="case-metric">
+                        <strong>@p.Metric</strong>
+                        <span>@p.MetricLabel</span>
+                    </div>
+                </article>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- About teaser -->
+<section class="section section-alt about-teaser">
+    <div class="site-container about-teaser-inner">
+        <div class="about-teaser-media" data-reveal aria-hidden="true">
+            <div class="about-monogram">
+                <svg class="icon"><use href="#i-brand" /></svg>
+            </div>
+            <div class="about-badge">
+                <strong>Est. 2016</strong>
+                <span>Johannesburg</span>
+            </div>
+        </div>
+        <div class="about-teaser-copy" data-reveal>
+            <p class="eyebrow">About us</p>
+            <h2>A small firm with big-firm discipline</h2>
+            <p>We started Khabzela to give owner-run businesses the kind of financial clarity usually reserved for corporates — without the corporate fees or the jargon.</p>
+            <p>Every client works with a named accountant who knows their business, answers the phone and explains what the numbers mean.</p>
+            <a class="btn btn-primary" asp-action="About">More about us <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
+        </div>
+    </div>
+</section>
+
+<!-- Testimonial -->
+<section class="section testimonial">
+    <div class="site-container">
+        <figure class="testimonial-card" data-reveal>
+            <blockquote>“We used to find out about SARS problems months too late. Now I get a notification the same day — and Vukani has already dealt with it.”</blockquote>
+            <figcaption>
+                <span class="avatar">SN</span>
+                <span><strong>Sipho N.</strong><span class="muted small">Owner, construction company</span></span>
+            </figcaption>
+        </figure>
+    </div>
+</section>
+
+<!-- Contact band -->
+<section class="section section-alt contact-band">
+    <div class="site-container contact-band-inner" data-reveal>
+        <div>
+            <p class="eyebrow">Contact us</p>
+            <h2>Have a question before you get a quote?</h2>
+            <p class="muted">Send us a message or call — we reply within one working day.</p>
+        </div>
+        <div class="contact-band-cards">
+            <a class="contact-mini" href="tel:+27110000000"><svg class="icon"><use href="#i-phone" /></svg><span><span class="muted small">Call</span>+27 (0)11 000 0000</span></a>
+            <a class="contact-mini" href="mailto:hello@example.co.za"><svg class="icon"><use href="#i-mail" /></svg><span><span class="muted small">Email</span>hello@example.co.za</span></a>
+            <a class="btn btn-primary" asp-action="Contact">Send a message</a>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/home/index.js" asp-append-version="true"></script>
+}

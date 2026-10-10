@@ -1,0 +1,63 @@
+@{
+    ViewData["Title"] = "Create account";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/account/register.css" asp-append-version="true" />
+}
+
+<div class="register">
+    <a class="register-back btn-link small" asp-action="Login">
+        <svg class="icon icon-sm"><use href="#i-chevron-left" /></svg> Back to sign in
+    </a>
+
+    <header class="register-head">
+        <h1>Create your account</h1>
+        <p class="lead">It takes a minute. You can get a quote straight after.</p>
+    </header>
+
+    <form class="register-form" method="post" asp-action="Register" novalidate data-register-form>
+        <div class="field">
+            <label class="label" for="fullName">Full name</label>
+            <input class="input" id="fullName" name="fullName" autocomplete="name" required />
+            <span class="field-error" data-error-for="fullName"></span>
+        </div>
+
+        <div class="register-row">
+            <div class="field">
+                <label class="label" for="email">Email address</label>
+                <input class="input" id="email" name="email" type="email" autocomplete="email" required />
+                <span class="field-error" data-error-for="email"></span>
+            </div>
+            <div class="field">
+                <label class="label" for="phone">Mobile number</label>
+                <input class="input" id="phone" name="phone" type="tel" autocomplete="tel" placeholder="082 000 0000" required pattern="^(\+27|0)[\d\s]{9,12}$" />
+                <span class="field-error" data-error-for="phone"></span>
+            </div>
+        </div>
+
+        <div class="field">
+            <label class="label" for="password">Password</label>
+            <input class="input" id="password" name="password" type="password" autocomplete="new-password" required minlength="8" />
+            <div class="strength" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            <span class="field-error" data-error-for="password"></span>
+        </div>
+
+        <div class="field">
+            <label class="label" for="confirmPassword">Confirm password</label>
+            <input class="input" id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required />
+            <span class="field-error" data-error-for="confirmPassword"></span>
+        </div>
+
+        <label class="register-terms">
+            <input type="checkbox" name="acceptTerms" required data-terms />
+            <span>I agree to the terms of service and privacy policy (POPIA).</span>
+        </label>
+        <span class="field-error" data-error-for="acceptTerms"></span>
+
+        <button class="btn btn-primary btn-block" type="submit">Create account</button>
+    </form>
+</div>
+
+@section Scripts {
+    <script src="~/js/pages/account/register.js" asp-append-version="true"></script>
+}

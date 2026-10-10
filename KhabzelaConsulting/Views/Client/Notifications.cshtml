@@ -1,0 +1,52 @@
+@{
+    ViewData["Title"] = "Notifications";
+
+    // Placeholder data — TODO (backend): load the client's notifications.
+    var notifications = new[]
+    {
+        new { Icon = "i-clock", Title = "Your tax status changed", Body = "SARS has moved your 2025 return to \"Assessed\". No action needed — your accountant will follow up if anything is required.", When = "Today, 09:14", Type = "tax", Unread = true },
+        new { Icon = "i-calendar", Title = "Provisional tax due in 12 days", Body = "Your second IRP6 for the 2026 tax year is due soon.", When = "Yesterday, 08:00", Type = "deadline", Unread = true },
+        new { Icon = "i-file", Title = "Invoice #1042 marked paid", Body = "", When = "3 days ago", Type = "invoice", Unread = false },
+        new { Icon = "i-calendar", Title = "Appointment confirmed", Body = "Payroll consultation with Vukani.", When = "Last week", Type = "deadline", Unread = false },
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/client/notifications.css" asp-append-version="true" />
+}
+
+<header class="notif-head">
+    <div>
+        <h1>Notifications</h1>
+        <p class="lead">Tax status changes, deadlines and updates from your accountant — no documents are stored here.</p>
+    </div>
+    <button class="btn-link small notif-mark" type="button" data-mark-all>Mark all as read</button>
+</header>
+
+<div class="choice-group notif-filters" role="group" aria-label="Filter notifications" data-filter-group>
+    <button type="button" class="choice is-active" data-value="all" aria-pressed="true">All</button>
+    <button type="button" class="choice" data-value="tax" aria-pressed="false">Tax status</button>
+    <button type="button" class="choice" data-value="deadline" aria-pressed="false">Deadlines</button>
+    <button type="button" class="choice" data-value="invoice" aria-pressed="false">Invoices</button>
+</div>
+
+<ul class="notif-list" data-notif-list>
+    @foreach (var n in notifications)
+    {
+        <li class="notif @(n.Unread ? "is-unread" : "")" data-type="@n.Type">
+            <svg class="icon notif-icon"><use href="#@n.Icon" /></svg>
+            <div class="notif-body">
+                <h2 class="notif-title">@n.Title</h2>
+                @if (!string.IsNullOrEmpty(n.Body))
+                {
+                    <p>@n.Body</p>
+                }
+                <time class="notif-time">@n.When</time>
+            </div>
+        </li>
+    }
+</ul>
+<p class="notif-empty muted" data-notif-empty hidden>Nothing here yet.</p>
+
+@section Scripts {
+    <script src="~/js/pages/client/notifications.js" asp-append-version="true"></script>
+}

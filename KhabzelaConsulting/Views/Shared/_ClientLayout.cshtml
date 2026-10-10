@@ -1,0 +1,69 @@
+@{
+    var action = ViewContext.RouteData.Values["action"]?.ToString();
+    string Active(string name) => string.Equals(action, name, StringComparison.OrdinalIgnoreCase) ? "is-active" : "";
+    string Current(string name) => string.Equals(action, name, StringComparison.OrdinalIgnoreCase) ? "page" : "false";
+    var hideTabBar = ViewData["HideTabBar"] as bool? ?? false;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#f8f1e7" />
+    <title>@ViewData["Title"] · Khabzela</title>
+    <partial name="_Fonts" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/layouts/client.css" asp-append-version="true" />
+    @await RenderSectionAsync("Styles", required: false)
+</head>
+<body class="client-body @(hideTabBar ? "no-tabbar" : "")">
+    <partial name="_IconSprite" />
+
+    <!-- Desktop / tablet top navigation -->
+    <header class="client-topbar">
+        <div class="client-topbar-inner">
+            <a class="client-logo" asp-controller="Client" asp-action="Index">
+                <svg class="icon"><use href="#i-brand" /></svg>
+                <span>Khabzela</span>
+            </a>
+            <nav class="client-topnav" aria-label="Main">
+                <a class="@Active("Index")" aria-current="@Current("Index")" asp-controller="Client" asp-action="Index">Home</a>
+                <a class="@Active("Quote") @Active("Book")" asp-controller="Client" asp-action="Quote">Get a quote</a>
+                <a class="@Active("Invoices")" aria-current="@Current("Invoices")" asp-controller="Client" asp-action="Invoices">Invoices</a>
+                <a class="@Active("Notifications")" aria-current="@Current("Notifications")" asp-controller="Client" asp-action="Notifications">Notifications</a>
+            </nav>
+            <a class="client-topbar-profile" asp-controller="Client" asp-action="Profile" aria-label="Profile">
+                <span class="avatar">T</span>
+            </a>
+        </div>
+    </header>
+
+    <main class="client-main" id="main">
+        @RenderBody()
+    </main>
+
+    @if (!hideTabBar)
+    {
+        <!-- Mobile bottom tab bar -->
+        <nav class="client-tabbar" aria-label="Main">
+            <a class="@Active("Index")" aria-current="@Current("Index")" asp-controller="Client" asp-action="Index">
+                <svg class="icon"><use href="#i-home" /></svg><span>Home</span>
+            </a>
+            <a class="@Active("Quote") @Active("Book")" asp-controller="Client" asp-action="Quote">
+                <svg class="icon"><use href="#i-quote" /></svg><span>Get a quote</span>
+            </a>
+            <a class="@Active("Notifications")" aria-current="@Current("Notifications")" asp-controller="Client" asp-action="Notifications">
+                <svg class="icon"><use href="#i-bell" /></svg><span>Notifications</span>
+                <span class="tab-dot" data-unread-dot hidden></span>
+            </a>
+            <a class="@Active("Profile")" aria-current="@Current("Profile")" asp-controller="Client" asp-action="Profile">
+                <svg class="icon"><use href="#i-user" /></svg><span>Profile</span>
+            </a>
+        </nav>
+    }
+
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/layouts/client.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

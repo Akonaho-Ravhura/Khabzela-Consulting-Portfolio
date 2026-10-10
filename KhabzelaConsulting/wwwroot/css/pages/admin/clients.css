@@ -1,0 +1,24 @@
+/* Admin — Clients */
+
+.clients-toolbar { display: grid; gap: 10px; margin-bottom: 16px; }
+
+.clients-search { position: relative; }
+.clients-search .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.clients-search .input { padding-left: 36px; }
+
+.clients-name { display: flex; align-items: center; gap: 12px; }
+.clients-name > span:last-child { display: grid; text-align: left; }
+.clients-name strong { font-weight: 500; }
+.clients-name:hover strong { text-decoration: underline; text-underline-offset: 3px; }
+
+.clients-action { text-align: right; white-space: nowrap; }
+
+.clients-empty { padding: 32px 20px; text-align: center; }
+
+@media (max-width: 720px) {
+    .table-stack td.clients-action { justify-content: flex-end; padding-top: 8px; }
+}
+
+@media (min-width: 720px) {
+    .clients-toolbar { grid-template-columns: 1fr 220px; }
+}

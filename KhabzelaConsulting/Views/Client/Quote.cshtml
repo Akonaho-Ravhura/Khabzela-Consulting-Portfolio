@@ -1,0 +1,122 @@
+@{
+    ViewData["Title"] = "Get a quote";
+    ViewData["HideTabBar"] = true;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/client/quote.css" asp-append-version="true" />
+}
+
+@* Pricing rules drive the calculator. TODO (backend): serialise the active rules from the
+   Pricing rules admin page into this block so changes apply immediately. *@
+<script type="application/json" id="pricing-rules">
+{
+    "payroll": { "base": 250, "perEmployeeMin": 50, "perEmployeeMax": 100, "weeklySurcharge": 200 },
+    "accounting": { "brackets": { "lt1m": [900, 1400], "1to5m": [1400, 2200], "5to20m": [2200, 3500] } },
+    "tax": { "brackets": { "lt1m": [650, 950], "1to5m": [950, 1500], "5to20m": [1500, 2400] } },
+    "insurance": { "quoteOnConsultation": true }
+}
+</script>
+
+<div class="page-head">
+    <a class="back-btn" asp-action="Index" aria-label="Back to home"><svg class="icon"><use href="#i-chevron-left" /></svg></a>
+    <h1>Get a quote</h1>
+</div>
+
+<div class="quote-layout">
+    <form class="quote-form" data-quote-form onsubmit="return false">
+        <div class="choice-group quote-services" role="group" aria-label="Service" data-service-group>
+            <button type="button" class="choice" data-value="accounting" aria-pressed="false">Accounting</button>
+            <button type="button" class="choice is-active" data-value="payroll" aria-pressed="true">Payroll</button>
+            <button type="button" class="choice" data-value="tax" aria-pressed="false">Tax</button>
+            <button type="button" class="choice" data-value="insurance" aria-pressed="false">Insurance</button>
+        </div>
+
+        <!-- Payroll -->
+        <div class="quote-panel" data-panel="payroll">
+            <div class="card card-pad">
+                <label class="label" for="employees">Number of employees</label>
+                <div class="quote-slider">
+                    <input type="range" id="employees" min="1" max="200" value="12" data-employees-range />
+                    <input class="input quote-number" type="number" min="1" max="200" value="12" aria-label="Number of employees" data-employees-input />
+                </div>
+            </div>
+            <div class="card card-pad">
+                <p class="label">Pay frequency</p>
+                <div class="choice-group quote-grid-3" role="group" aria-label="Pay frequency" data-frequency-group>
+                    <button type="button" class="choice" data-value="weekly" aria-pressed="false">Weekly</button>
+                    <button type="button" class="choice is-active" data-value="monthly" aria-pressed="true">Monthly</button>
+                    <button type="button" class="choice" data-value="both" aria-pressed="false">Both</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Accounting -->
+        <div class="quote-panel" data-panel="accounting" hidden>
+            <div class="card card-pad">
+                <p class="label">Annual turnover</p>
+                <div class="choice-group quote-grid-3" role="group" aria-label="Annual turnover" data-bracket-group="accounting">
+                    <button type="button" class="choice is-active" data-value="lt1m" aria-pressed="true">Under R1m</button>
+                    <button type="button" class="choice" data-value="1to5m" aria-pressed="false">R1m – R5m</button>
+                    <button type="button" class="choice" data-value="5to20m" aria-pressed="false">R5m – R20m</button>
+                </div>
+            </div>
+            <div class="card card-pad">
+                <p class="label">What's included</p>
+                <ul class="quote-includes">
+                    <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Monthly bookkeeping &amp; reconciliations</li>
+                    <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Management accounts</li>
+                    <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Annual financial statements</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Tax -->
+        <div class="quote-panel" data-panel="tax" hidden>
+            <div class="card card-pad">
+                <p class="label">Annual turnover</p>
+                <div class="choice-group quote-grid-3" role="group" aria-label="Annual turnover" data-bracket-group="tax">
+                    <button type="button" class="choice is-active" data-value="lt1m" aria-pressed="true">Under R1m</button>
+                    <button type="button" class="choice" data-value="1to5m" aria-pressed="false">R1m – R5m</button>
+                    <button type="button" class="choice" data-value="5to20m" aria-pressed="false">R5m – R20m</button>
+                </div>
+            </div>
+            <div class="card card-pad">
+                <p class="label">What's included</p>
+                <ul class="quote-includes">
+                    <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Income tax &amp; provisional tax (IRP6)</li>
+                    <li><svg class="icon icon-sm"><use href="#i-check" /></svg>VAT returns</li>
+                    <li><svg class="icon icon-sm"><use href="#i-check" /></svg>SARS correspondence</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Insurance -->
+        <div class="quote-panel" data-panel="insurance" hidden>
+            <div class="card card-pad">
+                <p class="label">Type of cover</p>
+                <div class="choice-group quote-grid-3" role="group" aria-label="Type of cover" data-cover-group>
+                    <button type="button" class="choice is-active" data-value="business" aria-pressed="true">Business</button>
+                    <button type="button" class="choice" data-value="life" aria-pressed="false">Life</button>
+                    <button type="button" class="choice" data-value="short-term" aria-pressed="false">Short-term</button>
+                </div>
+            </div>
+            <div class="card card-pad quote-note">
+                <svg class="icon"><use href="#i-message" /></svg>
+                <p>Insurance advice is priced after a short consultation, so there's no estimate yet. Book a time and we'll take it from there.</p>
+            </div>
+        </div>
+    </form>
+
+    <aside class="quote-summary" aria-live="polite">
+        <div class="quote-summary-text">
+            <p class="eyebrow">Estimated</p>
+            <p class="quote-estimate" data-estimate>R 850 – R 1,450 / mo</p>
+            <p class="quote-summary-detail" data-estimate-detail>Payroll · 12 employees · monthly</p>
+        </div>
+        <button class="btn btn-light" type="button" data-continue data-href="@Url.Action("Book")">Continue to booking →</button>
+    </aside>
+</div>
+
+@section Scripts {
+    <script src="~/js/pages/client/quote.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,34 @@
+/* Admin — Client detail (tax status & notify) */
+
+.cd-back { display: inline-flex; align-items: center; gap: 4px; margin-bottom: 16px; }
+
+.cd-head { display: flex; align-items: center; gap: 14px; margin-bottom: 20px; }
+.cd-name { font-size: 1.4rem; }
+
+.cd-grid { display: grid; gap: 16px; }
+
+.cd-update h3, .cd-history h3 { font-size: 1.15rem; }
+.cd-hint { margin: 4px 0 16px; }
+
+.cd-statuses .choice { flex: 1 1 auto; }
+
+.cd-note { margin-top: 20px; }
+.cd-count { justify-self: end; }
+.cd-update .btn { margin-top: 16px; }
+
+.cd-history-list { margin-top: 12px; }
+.cd-history-list li { padding: 12px 0; }
+.cd-history-list li + li { border-top: 1px solid var(--line); }
+.cd-history-list li.is-new { animation: cd-flash 1.6s ease; }
+.cd-history-list li p:first-child { font-size: .95rem; }
+
+@keyframes cd-flash {
+    from { background: var(--gold-tint); }
+    to { background: transparent; }
+}
+
+@media (min-width: 1100px) {
+    .cd-grid { grid-template-columns: 1fr 1fr; gap: 24px; align-items: stretch; }
+    .cd-update, .cd-history { padding: 24px; }
+    .cd-statuses .choice { flex: 0 0 auto; }
+}

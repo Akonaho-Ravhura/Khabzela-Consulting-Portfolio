@@ -1,0 +1,68 @@
+/* Client — Home */
+
+.home-greeting {
+    display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    margin-bottom: 20px;
+}
+.home-greeting h1 { font-weight: 600; }
+.home-avatar { transition: transform var(--transition); }
+.home-avatar:hover { transform: scale(1.05); }
+
+.home-alert {
+    display: flex; align-items: flex-start; gap: 14px;
+    padding: 16px 18px;
+    background: var(--gold-tint);
+    border: 1px solid #e2cfa6;
+    border-radius: var(--radius);
+    color: var(--ink);
+    transition: background var(--transition);
+}
+.home-alert:hover { background: var(--gold-soft); }
+.home-alert > .icon { margin-top: 2px; color: var(--gold-dark); }
+.home-alert strong { display: block; font-weight: 500; }
+.home-alert-link { font-size: .85rem; color: var(--gold-dark); }
+
+.home-cta {
+    display: flex; align-items: center; gap: 16px;
+    padding: 20px;
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: var(--radius);
+    transition: background var(--transition);
+}
+.home-cta:hover { background: var(--ink-3); }
+.home-cta > .icon:last-child { margin-left: auto; }
+.home-cta-text { display: grid; gap: 2px; }
+.home-cta-text strong { font-weight: 600; }
+.home-cta-text span { font-size: .85rem; color: rgba(248, 241, 231, .75); }
+
+.home-tiles { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 12px; }
+.home-tile {
+    display: grid; gap: 14px; align-content: start;
+    min-height: 88px;
+    padding: 18px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    color: var(--ink);
+    transition: border-color var(--transition), transform var(--transition);
+}
+.home-tile:hover { border-color: var(--ink); }
+
+.home-activity-list { display: grid; gap: 8px; }
+.home-activity-list a {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 14px 16px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    transition: border-color var(--transition);
+}
+.home-activity-list a:hover { border-color: var(--line-strong); }
+
+@media (min-width: 768px) {
+    .home-greeting { margin-bottom: 28px; }
+    .home-grid { display: grid; grid-template-columns: 3fr 2fr; gap: 32px; align-items: start; }
+    .home-cta { padding: 26px 24px; }
+    .home-tile { min-height: 120px; }
+}

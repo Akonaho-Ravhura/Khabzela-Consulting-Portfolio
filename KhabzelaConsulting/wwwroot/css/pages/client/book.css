@@ -1,0 +1,65 @@
+/* Client — Book appointment */
+
+.client-main { padding-bottom: 120px; }
+
+.book-sub { margin-left: 36px; }
+
+.book-days { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.book-day {
+    display: grid; justify-items: center; gap: 2px;
+    padding: 10px 4px;
+    min-height: 60px;
+}
+.book-day-name { font-size: .78rem; }
+.book-day-num { font-family: var(--font-display); font-size: 1.1rem; font-weight: 600; }
+
+.book-times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+.book-times .choice { min-height: 42px; }
+
+.book-consultants { display: grid; gap: 8px; }
+.book-consultant {
+    display: flex; align-items: center; gap: 12px;
+    width: 100%;
+    padding: 12px 14px;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    text-align: left;
+    transition: border-color var(--transition);
+}
+.book-consultant:hover { border-color: var(--line-strong); }
+.book-consultant.is-active { border-color: var(--ink); }
+.book-consultant-check { margin-left: auto; color: var(--ink); visibility: hidden; }
+.book-consultant.is-active .book-consultant-check { visibility: visible; }
+
+.book-notes { margin-top: 20px; }
+.book-notes .textarea { background: var(--paper); }
+
+.book-footer {
+    position: fixed; inset: auto 0 0 0; z-index: 40;
+    padding: 16px var(--gutter) calc(16px + env(safe-area-inset-bottom));
+    background: var(--ink);
+}
+
+/* Confirmation */
+.book-done { display: grid; justify-items: center; gap: 12px; max-width: 460px; margin: 24px auto 0; text-align: center; }
+.book-done[hidden] { display: none; }
+.book-done-icon {
+    display: grid; place-items: center;
+    width: 64px; height: 64px;
+    border-radius: 50%;
+    background: var(--success-bg); color: var(--success);
+}
+.book-done-card { width: 100%; margin: 8px 0; text-align: left; }
+.book-done-card dl { display: grid; gap: 12px; margin: 0; }
+.book-done-card dl > div { display: flex; justify-content: space-between; gap: 16px; }
+.book-done-card dt { color: var(--muted); font-size: .85rem; }
+.book-done-card dd { margin: 0; text-align: right; }
+
+@media (min-width: 900px) {
+    .client-main { padding-bottom: 64px; }
+    .book-layout { display: grid; grid-template-columns: 3fr 2fr; gap: 40px; align-items: start; }
+    .book-footer { position: static; margin-top: 32px; padding: 0; background: none; display: flex; justify-content: flex-end; }
+    .book-footer .btn { width: auto; min-width: 320px; background: var(--ink); color: var(--cream); }
+    .book-footer .btn:hover:not(:disabled) { background: var(--ink-3); }
+}

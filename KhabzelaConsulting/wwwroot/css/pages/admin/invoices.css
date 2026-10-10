@@ -1,0 +1,55 @@
+/* Admin — Invoices */
+
+.ai-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 20px; }
+.ai-stat { display: grid; gap: 6px; padding: 14px; }
+.ai-stat .eyebrow { font-size: .65rem; }
+.ai-stat-value { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; color: var(--ink); }
+.ai-overdue { color: var(--danger); }
+
+.ai-title { font-size: 1.05rem; }
+.ai-new { min-height: 38px; padding: .45rem .9rem; font-size: .88rem; }
+
+.ai-inv { display: grid; gap: 2px; text-align: left; }
+.ai-inv strong { font-weight: 500; }
+.ai-actions { text-align: right; white-space: nowrap; }
+
+.table tr.is-updated { animation: ai-flash 1.4s ease; }
+@keyframes ai-flash { from { background: var(--gold-tint); } to { background: transparent; } }
+
+@media (max-width: 720px) {
+    .table-stack td.ai-actions { justify-content: flex-end; }
+    .table-stack td.ai-actions:empty { display: none; }
+}
+
+@media (min-width: 640px) {
+    .ai-summary { gap: 16px; margin-bottom: 24px; }
+    .ai-stat { padding: 20px; gap: 8px; }
+    .ai-stat .eyebrow { font-size: .74rem; }
+    .ai-stat-value { font-size: 1.7rem; }
+}
+
+/* Dialog */
+.ai-dialog {
+    width: min(520px, calc(100% - 32px));
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--text);
+    box-shadow: var(--shadow-md);
+}
+.ai-dialog::backdrop { background: rgba(27, 38, 25, .45); }
+.ai-dialog-form { display: grid; padding: 24px; }
+.ai-dialog-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.ai-dialog-close { display: grid; place-items: center; width: 36px; height: 36px; margin-right: -8px; color: var(--muted); }
+.ai-dialog-form .field { margin-top: 14px; }
+.ai-dialog-row { display: grid; gap: 0 12px; }
+.ai-dialog-hint { margin-top: 16px; }
+.ai-dialog-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }
+
+@media (min-width: 480px) {
+    .ai-dialog-row { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 479px) {
+    .ai-dialog-foot .btn { flex: 1; }
+}

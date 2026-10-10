@@ -1,0 +1,88 @@
+/* Client — Get a quote */
+
+.client-main { padding-bottom: 140px; }
+
+.quote-form { display: grid; gap: 16px; }
+.quote-services { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; }
+.quote-services .choice { padding-inline: .25rem; font-size: .85rem; }
+
+@media (min-width: 480px) {
+    .quote-services { display: flex; gap: 8px; }
+    .quote-services .choice { padding-inline: 1rem; font-size: .9rem; }
+}
+
+.quote-panel { display: grid; gap: 16px; }
+.quote-panel[hidden] { display: none; }
+.quote-panel .label { display: block; margin-bottom: 14px; }
+
+.quote-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); }
+.quote-grid-3 .choice { min-height: 44px; padding-inline: .5rem; }
+
+/* Range slider */
+.quote-slider { display: flex; align-items: center; gap: 16px; }
+.quote-slider input[type="range"] {
+    --fill: 6%;
+    flex: 1;
+    height: 6px;
+    appearance: none; -webkit-appearance: none;
+    background: linear-gradient(to right, var(--ink) var(--fill), var(--line) var(--fill));
+    border-radius: 3px;
+    cursor: pointer;
+}
+.quote-slider input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none; appearance: none;
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--ink);
+    border: 3px solid var(--paper);
+    box-shadow: 0 0 0 1.5px var(--ink);
+}
+.quote-slider input[type="range"]::-moz-range-thumb {
+    width: 18px; height: 18px; border-radius: 50%;
+    background: var(--ink);
+    border: 3px solid var(--paper);
+    box-shadow: 0 0 0 1.5px var(--ink);
+}
+.quote-number { width: 64px; min-height: 40px; padding: .4rem; text-align: center; -moz-appearance: textfield; }
+.quote-number::-webkit-inner-spin-button { opacity: 1; }
+
+.quote-includes { display: grid; gap: 10px; font-size: .92rem; }
+.quote-includes li { display: flex; align-items: center; gap: 10px; }
+.quote-includes .icon { color: var(--success); }
+
+.quote-note { display: flex; gap: 14px; color: var(--muted); font-size: .92rem; }
+.quote-note .icon { color: var(--gold-dark); margin-top: 2px; }
+
+/* Summary: fixed bar on mobile */
+.quote-summary {
+    position: fixed; inset: auto 0 0 0; z-index: 40;
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 16px var(--gutter) calc(16px + env(safe-area-inset-bottom));
+    background: var(--ink);
+    color: var(--cream);
+}
+.quote-summary .eyebrow { color: rgba(248, 241, 231, .7); font-size: .68rem; }
+.quote-estimate { font-family: var(--font-display); font-size: 1.15rem; font-weight: 600; white-space: nowrap; }
+.quote-summary-detail { display: none; }
+.quote-summary .btn { padding-inline: 1rem; }
+
+@media (max-width: 380px) {
+    .quote-estimate { font-size: 1rem; }
+    .quote-summary .btn { font-size: .85rem; padding-inline: .75rem; }
+}
+
+/* Desktop: two columns with sticky summary card */
+@media (min-width: 900px) {
+    .client-main { padding-bottom: 64px; }
+
+    .quote-layout { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 32px; align-items: start; }
+
+    .quote-summary {
+        position: sticky; top: 96px;
+        flex-direction: column; align-items: stretch; gap: 20px;
+        padding: 24px;
+        border-radius: var(--radius);
+    }
+    .quote-summary-text { display: grid; gap: 6px; }
+    .quote-estimate { font-size: 1.6rem; white-space: normal; }
+    .quote-summary-detail { display: block; font-size: .85rem; color: rgba(248, 241, 231, .7); }
+}

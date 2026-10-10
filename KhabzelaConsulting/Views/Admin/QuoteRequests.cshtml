@@ -1,0 +1,67 @@
+@{
+    ViewData["Title"] = "Quote requests";
+
+    // Placeholder data — TODO (backend): load quote requests (created by the client quote + booking flow).
+    var requests = new[]
+    {
+        new { Id = 1, Client = "Naledi Dube", Email = "naledi@example.co.za", Service = "Payroll", Detail = "12 employees · monthly", Estimate = "R 850 – 1,450", Appointment = "Tue 26 Aug, 10:30", Status = "New", Date = "22 Aug" },
+        new { Id = 2, Client = "Lwazi Khumalo", Email = "lwazi@example.co.za", Service = "Accounting", Detail = "Turnover R1m – R5m", Estimate = "R 1,400 – 2,200", Appointment = "Wed 27 Aug, 09:00", Status = "New", Date = "22 Aug" },
+        new { Id = 3, Client = "Sipho Nkosi", Email = "sipho@example.co.za", Service = "Accounting + Tax", Detail = "Turnover R1m – R5m", Estimate = "R 2,100 – 3,200", Appointment = "Mon 25 Aug, 14:30", Status = "Contacted", Date = "21 Aug" },
+        new { Id = 4, Client = "Palesa Mokoena", Email = "palesa@example.co.za", Service = "Tax", Detail = "Turnover under R1m", Estimate = "R 650 – 950", Appointment = "Done", Status = "Won", Date = "19 Aug" },
+        new { Id = 5, Client = "Johan Pretorius", Email = "johan@example.co.za", Service = "Insurance advice", Detail = "Business cover", Estimate = "—", Appointment = "Done", Status = "Lost", Date = "15 Aug" },
+    };
+    var statuses = new[] { "New", "Contacted", "Won", "Lost" };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/admin/quote-requests.css" asp-append-version="true" />
+}
+
+<div class="qr-toolbar">
+    <div class="choice-group qr-tabs" role="group" aria-label="Filter by status" data-filter-group>
+        <button type="button" class="choice is-active" data-value="all" aria-pressed="true">All <span data-count="all"></span></button>
+        @foreach (var s in statuses)
+        {
+            <button type="button" class="choice" data-value="@s" aria-pressed="false">@s <span data-count="@s"></span></button>
+        }
+    </div>
+</div>
+
+<section class="card">
+    <table class="table table-stack">
+        <thead>
+            <tr><th>Client</th><th>Service</th><th>Estimate</th><th>Appointment</th><th>Status</th><th>Date</th></tr>
+        </thead>
+        <tbody data-request-rows>
+            @foreach (var r in requests)
+            {
+                <tr data-status="@r.Status">
+                    <td data-label="">
+                        <span class="qr-client">
+                            <strong>@r.Client</strong>
+                            <a class="muted small" href="mailto:@r.Email">@r.Email</a>
+                        </span>
+                    </td>
+                    <td data-label="Service">
+                        <span class="qr-service">@r.Service<span class="muted small">@r.Detail</span></span>
+                    </td>
+                    <td data-label="Estimate">@r.Estimate</td>
+                    <td data-label="Appointment">@r.Appointment</td>
+                    <td data-label="Status">
+                        <select class="qr-status badge badge-@r.Status.ToLowerInvariant()" aria-label="Status for @r.Client" data-status-select>
+                            @foreach (var s in statuses)
+                            {
+                                <option selected="@(s == r.Status)">@s</option>
+                            }
+                        </select>
+                    </td>
+                    <td data-label="Date" class="text-muted">@r.Date</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <p class="qr-empty muted" data-empty hidden>No requests with this status.</p>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/admin/quote-requests.js" asp-append-version="true"></script>
+}

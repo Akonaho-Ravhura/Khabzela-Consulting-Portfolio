@@ -1,0 +1,129 @@
+@{
+    ViewData["Title"] = "Contact us";
+    ViewData["Description"] = "Get in touch with Khabzela Consulting — call, email or send us a message.";
+
+    // Placeholder contact details — TODO: replace with the firm's real details.
+    var faqs = new[]
+    {
+        new { Q = "How quickly will you reply?", A = "We reply to every message within one working day — usually the same day." },
+        new { Q = "Do I need to be a client to ask a question?", A = "Not at all. Ask us anything; if we can help, we'll suggest a next step and a price." },
+        new { Q = "Can I switch from my current accountant mid-year?", A = "Yes. We'll request your records from your previous accountant and make sure nothing falls through the cracks." },
+        new { Q = "Do you work with clients outside Gauteng?", A = "Yes — most of our work is done remotely, and consultations can be online or by phone." },
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/home/contact.css" asp-append-version="true" />
+}
+
+<section class="page-hero">
+    <div class="site-container">
+        <p class="eyebrow">Contact us</p>
+        <h1>Let's talk about your numbers.</h1>
+        <p class="lead">Send a message, call, or pop in. Want a price straight away? <a class="btn-link" asp-controller="Client" asp-action="Quote">Get an instant quote →</a></p>
+    </div>
+</section>
+
+<section class="section contact-section">
+    <div class="site-container contact-layout">
+        <aside class="contact-info">
+            <a class="contact-card" href="tel:+27110000000">
+                <span class="contact-icon"><svg class="icon"><use href="#i-phone" /></svg></span>
+                <span><span class="contact-label">Call us</span><strong>+27 (0)11 000 0000</strong></span>
+            </a>
+            <a class="contact-card" href="mailto:hello@example.co.za">
+                <span class="contact-icon"><svg class="icon"><use href="#i-mail" /></svg></span>
+                <span><span class="contact-label">Email</span><strong>hello@example.co.za</strong></span>
+            </a>
+            <div class="contact-card">
+                <span class="contact-icon"><svg class="icon"><use href="#i-pin" /></svg></span>
+                <span><span class="contact-label">Office</span><strong>Johannesburg, Gauteng</strong></span>
+            </div>
+            <div class="contact-card">
+                <span class="contact-icon"><svg class="icon"><use href="#i-clock" /></svg></span>
+                <span>
+                    <span class="contact-label">Office hours</span>
+                    <strong>Mon – Fri, 08:00 – 17:00</strong>
+                    <span class="contact-status" data-open-status></span>
+                </span>
+            </div>
+        </aside>
+
+        <div class="card contact-form-card">
+            <form class="contact-form" novalidate data-contact-form>
+                <h2>Send us a message</h2>
+                <div class="contact-row">
+                    <div class="field">
+                        <label class="label" for="name">Full name</label>
+                        <input class="input" id="name" name="name" autocomplete="name" required />
+                        <span class="field-error" data-error-for="name"></span>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="email">Email</label>
+                        <input class="input" id="email" name="email" type="email" autocomplete="email" required />
+                        <span class="field-error" data-error-for="email"></span>
+                    </div>
+                </div>
+                <div class="contact-row">
+                    <div class="field">
+                        <label class="label" for="phone">Phone <span class="muted">(optional)</span></label>
+                        <input class="input" id="phone" name="phone" type="tel" autocomplete="tel" />
+                        <span class="field-error" data-error-for="phone"></span>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="service">I'm interested in</label>
+                        <select class="select" id="service" name="service">
+                            <option>General enquiry</option>
+                            <option>Accounting</option>
+                            <option>Payroll</option>
+                            <option>Tax</option>
+                            <option>Insurance advice</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label" for="message">Message</label>
+                    <textarea class="textarea" id="message" name="message" rows="5" required minlength="10" maxlength="1000" placeholder="Tell us a little about your business and what you need help with."></textarea>
+                    <div class="contact-meta">
+                        <span class="field-error" data-error-for="message"></span>
+                        <span class="muted small"><span data-char-count>0</span>/1000</span>
+                    </div>
+                </div>
+                <label class="contact-consent">
+                    <input type="checkbox" name="consent" required data-consent />
+                    <span>I agree that Khabzela Consulting may use these details to respond to my enquiry, in line with the <a class="btn-link" asp-action="Privacy">privacy policy</a>.</span>
+                </label>
+                <span class="field-error" data-error-for="consent"></span>
+                <button class="btn btn-primary contact-submit" type="submit" data-submit>Send message</button>
+            </form>
+
+            <div class="contact-success" data-contact-success hidden tabindex="-1">
+                <span class="contact-success-icon"><svg class="icon icon-lg"><use href="#i-check" /></svg></span>
+                <h2>Message sent</h2>
+                <p class="muted">Thanks, <span data-success-name></span>. We'll get back to you within one working day.</p>
+                <button class="btn btn-outline" type="button" data-send-another>Send another message</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="section section-alt">
+    <div class="site-container faq">
+        <header class="section-head" data-reveal>
+            <p class="eyebrow">FAQ</p>
+            <h2>Common questions</h2>
+        </header>
+        <div class="faq-list" data-faq>
+            @foreach (var f in faqs)
+            {
+                <details class="faq-item">
+                    <summary>@f.Q<svg class="icon icon-sm"><use href="#i-plus" /></svg></summary>
+                    <p>@f.A</p>
+                </details>
+            }
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/home/contact.js" asp-append-version="true"></script>
+}

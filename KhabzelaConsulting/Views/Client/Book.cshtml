@@ -1,0 +1,113 @@
+@{
+    ViewData["Title"] = "Book your appointment";
+    ViewData["HideTabBar"] = true;
+
+    // Next five working days. TODO (backend): load real availability per consultant.
+    var days = new List<DateTime>();
+    for (var d = DateTime.Today.AddDays(1); days.Count < 5; d = d.AddDays(1))
+    {
+        if (d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday) days.Add(d);
+    }
+    var times = new[] { "09:00", "10:30", "13:00", "14:30", "15:30", "16:30" };
+    var consultants = new[]
+    {
+        new { Initial = "V", Name = "Vukani", Speciality = "Payroll & Tax" },
+        new { Initial = "N", Name = "Nomsa", Speciality = "Accounting" },
+        new { Initial = "L", Name = "Lerato", Speciality = "Insurance advice" },
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/client/book.css" asp-append-version="true" />
+}
+
+@* Booked slots per day (yyyy-MM-dd → times). Placeholder until the backend provides availability. *@
+<script type="application/json" id="booked-slots">
+{
+    "@(days[0].ToString("yyyy-MM-dd"))": ["16:30"],
+    "@(days[1].ToString("yyyy-MM-dd"))": ["09:00", "13:00"],
+    "@(days[2].ToString("yyyy-MM-dd"))": ["10:30"],
+    "@(days[3].ToString("yyyy-MM-dd"))": [],
+    "@(days[4].ToString("yyyy-MM-dd"))": ["14:30", "15:30", "16:30"]
+}
+</script>
+
+<div data-book-step="pick">
+    <div class="page-head">
+        <a class="back-btn" asp-action="Quote" aria-label="Back to quote"><svg class="icon"><use href="#i-chevron-left" /></svg></a>
+        <div>
+            <h1>Book your appointment</h1>
+        </div>
+    </div>
+    <p class="page-sub book-sub" data-quote-summary>Pick a time to talk to our team.</p>
+
+    <div class="book-layout">
+        <div>
+            <p class="eyebrow section-label">Next available days</p>
+            <div class="book-days" role="radiogroup" aria-label="Day" data-day-group>
+                @for (var i = 0; i < days.Count; i++)
+                {
+                    var day = days[i];
+                    <button type="button" role="radio" class="choice book-day @(i == 0 ? "is-active" : "")"
+                            aria-checked="@(i == 0 ? "true" : "false")"
+                            data-value="@(day.ToString("yyyy-MM-dd"))"
+                            data-label="@(day.ToString("ddd d"))">
+                        <span class="book-day-name">@(day.ToString("ddd"))</span>
+                        <span class="book-day-num">@day.Day</span>
+                    </button>
+                }
+            </div>
+
+            <p class="eyebrow section-label">Available times — <span data-day-label>@(days[0].ToString("ddd d"))</span></p>
+            <div class="book-times" role="radiogroup" aria-label="Time" data-time-group>
+                @foreach (var t in times)
+                {
+                    <button type="button" role="radio" class="choice" aria-checked="false" data-value="@t">@t</button>
+                }
+            </div>
+        </div>
+
+        <div>
+            <p class="eyebrow section-label">Meet with</p>
+            <div class="book-consultants" role="radiogroup" aria-label="Consultant" data-consultant-group>
+                @for (var i = 0; i < consultants.Length; i++)
+                {
+                    var c = consultants[i];
+                    <button type="button" role="radio" class="book-consultant @(i == 0 ? "is-active" : "")"
+                            aria-checked="@(i == 0 ? "true" : "false")" data-value="@c.Name">
+                        <span class="avatar">@c.Initial</span>
+                        <span>@c.Name — @c.Speciality</span>
+                        <svg class="icon icon-sm book-consultant-check"><use href="#i-check" /></svg>
+                    </button>
+                }
+            </div>
+
+            <div class="field book-notes">
+                <label class="label" for="notes">Anything we should know? <span class="muted">(optional)</span></label>
+                <textarea class="textarea" id="notes" rows="3" placeholder="E.g. we're switching from another payroll provider"></textarea>
+            </div>
+        </div>
+    </div>
+
+    <div class="book-footer">
+        <button class="btn btn-light btn-block" type="button" data-confirm disabled>Select a time</button>
+    </div>
+</div>
+
+<section class="book-done" data-book-step="done" hidden>
+    <span class="book-done-icon"><svg class="icon icon-lg"><use href="#i-check" /></svg></span>
+    <h1>You're booked</h1>
+    <p class="muted" data-done-text></p>
+    <div class="card card-pad book-done-card">
+        <dl>
+            <div><dt>When</dt><dd data-done-when></dd></div>
+            <div><dt>With</dt><dd data-done-with></dd></div>
+            <div><dt>Service</dt><dd data-done-service></dd></div>
+            <div><dt>Estimate</dt><dd data-done-estimate></dd></div>
+        </dl>
+    </div>
+    <a class="btn btn-primary" asp-action="Index">Back to home</a>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/client/book.js" asp-append-version="true"></script>
+}

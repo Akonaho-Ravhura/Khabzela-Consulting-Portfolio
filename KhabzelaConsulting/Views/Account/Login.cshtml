@@ -1,0 +1,58 @@
+@{
+    ViewData["Title"] = "Sign in";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/account/login.css" asp-append-version="true" />
+}
+
+<div class="login">
+    <header class="login-head">
+        <p class="eyebrow">Welcome back</p>
+        <h1>Sign in to your account</h1>
+        <p class="lead">Track invoices, tax status and appointments with your accountant.</p>
+    </header>
+
+    <form class="login-form" method="post" asp-action="Login" asp-route-returnUrl="@Context.Request.Query["returnUrl"]" novalidate data-login-form>
+        <div class="field">
+            <label class="label" for="email">Email address</label>
+            <div class="input-icon">
+                <svg class="icon icon-sm"><use href="#i-mail" /></svg>
+                <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.co.za" required />
+            </div>
+            <span class="field-error" data-error-for="email"></span>
+        </div>
+
+        <div class="field">
+            <div class="login-label-row">
+                <label class="label" for="password">Password</label>
+                <a class="btn-link small" asp-action="ForgotPassword">Forgot password?</a>
+            </div>
+            <div class="input-icon">
+                <svg class="icon icon-sm"><use href="#i-lock" /></svg>
+                <input class="input" id="password" name="password" type="password" autocomplete="current-password" placeholder="••••••••" required minlength="6" />
+                <button class="input-toggle" type="button" data-toggle-password aria-label="Show password" aria-pressed="false">
+                    <svg class="icon icon-sm"><use href="#i-eye" /></svg>
+                </button>
+            </div>
+            <span class="field-error" data-error-for="password"></span>
+        </div>
+
+        <label class="login-remember">
+            <input type="checkbox" name="rememberMe" value="true" />
+            <span>Keep me signed in</span>
+        </label>
+
+        <button class="btn btn-primary btn-block" type="submit">Sign in</button>
+    </form>
+
+    <p class="login-alt">
+        New to Khabzela? <a class="btn-link" asp-action="Register">Create an account</a>
+    </p>
+
+    <div class="login-divider"><span>Team member?</span></div>
+    <a class="btn btn-outline btn-block" asp-controller="Admin" asp-action="Index">Go to the admin portal</a>
+</div>
+
+@section Scripts {
+    <script src="~/js/pages/account/login.js" asp-append-version="true"></script>
+}

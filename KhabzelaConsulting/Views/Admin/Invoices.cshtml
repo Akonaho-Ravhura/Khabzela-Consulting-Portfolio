@@ -1,0 +1,100 @@
+@{
+    ViewData["Title"] = "Invoices";
+
+    // Placeholder data — TODO (backend): load invoices.
+    var invoices = new[]
+    {
+        new { Number = "#1047", Client = "Sipho Nkosi", Description = "Accounting + Tax — October", Amount = 2650m, Due = "15 Oct", Status = "Due" },
+        new { Number = "#1046", Client = "Karabo Molefe", Description = "Accounting + Payroll — October", Amount = 3900m, Due = "15 Oct", Status = "Due" },
+        new { Number = "#1045", Client = "Thabo Mokoena", Description = "Payroll — October", Amount = 1150m, Due = "15 Oct", Status = "Due" },
+        new { Number = "#1043", Client = "Ayanda Zulu", Description = "Accounting — September", Amount = 1800m, Due = "15 Sep", Status = "Overdue" },
+        new { Number = "#1042", Client = "Thabo Mokoena", Description = "Accounting + Tax — September", Amount = 2650m, Due = "15 Sep", Status = "Paid" },
+        new { Number = "#1040", Client = "Palesa Mokoena", Description = "Tax — September", Amount = 800m, Due = "15 Sep", Status = "Paid" },
+    };
+    var clients = invoices.Select(i => i.Client).Distinct().OrderBy(c => c);
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/admin/invoices.css" asp-append-version="true" />
+}
+
+<div class="ai-summary">
+    <div class="card ai-stat"><span class="eyebrow">Outstanding</span><span class="ai-stat-value" data-total="Due">R 0</span></div>
+    <div class="card ai-stat"><span class="eyebrow">Overdue</span><span class="ai-stat-value ai-overdue" data-total="Overdue">R 0</span></div>
+    <div class="card ai-stat"><span class="eyebrow">Paid</span><span class="ai-stat-value" data-total="Paid">R 0</span></div>
+</div>
+
+<section class="card">
+    <header class="card-header">
+        <h2 class="ai-title">All invoices</h2>
+        <button class="btn btn-primary ai-new" type="button" data-new-invoice>
+            <svg class="icon icon-sm"><use href="#i-plus" /></svg> New invoice
+        </button>
+    </header>
+    <table class="table table-stack">
+        <thead>
+            <tr><th>Invoice</th><th>Client</th><th>Amount</th><th>Due</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr>
+        </thead>
+        <tbody data-invoice-rows>
+            @foreach (var inv in invoices)
+            {
+                <tr data-status="@inv.Status" data-amount="@inv.Amount">
+                    <td data-label="">
+                        <span class="ai-inv"><strong>Invoice @inv.Number</strong><span class="muted small">@inv.Description</span></span>
+                    </td>
+                    <td data-label="Client">@inv.Client</td>
+                    <td data-label="Amount">R @inv.Amount.ToString("N0")</td>
+                    <td data-label="Due" class="text-muted">@inv.Due</td>
+                    <td data-label="Status"><span class="badge badge-@inv.Status.ToLowerInvariant()" data-status-badge>@inv.Status</span></td>
+                    <td data-label="" class="ai-actions">
+                        @if (inv.Status != "Paid")
+                        {
+                            <button class="btn-link small" type="button" data-mark-paid>Mark paid</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+
+<dialog class="ai-dialog" data-invoice-dialog aria-labelledby="invoice-dialog-title">
+    <form method="dialog" class="ai-dialog-form" novalidate data-invoice-form>
+        <header class="ai-dialog-head">
+            <h2 id="invoice-dialog-title">New invoice</h2>
+            <button type="button" class="ai-dialog-close" data-dialog-cancel aria-label="Close"><svg class="icon"><use href="#i-x" /></svg></button>
+        </header>
+        <div class="field">
+            <label class="label" for="inv-client">Client</label>
+            <select class="select" id="inv-client" required>
+                <option value="">Choose a client…</option>
+                @foreach (var c in clients)
+                {
+                    <option>@c</option>
+                }
+            </select>
+        </div>
+        <div class="field">
+            <label class="label" for="inv-description">Description</label>
+            <input class="input" id="inv-description" required placeholder="e.g. Payroll — November" />
+        </div>
+        <div class="ai-dialog-row">
+            <div class="field">
+                <label class="label" for="inv-amount">Amount (R)</label>
+                <input class="input" id="inv-amount" type="number" min="1" step="1" required inputmode="numeric" />
+            </div>
+            <div class="field">
+                <label class="label" for="inv-due">Due date</label>
+                <input class="input" id="inv-due" type="date" required />
+            </div>
+        </div>
+        <p class="muted small ai-dialog-hint">The client is notified in the app when the invoice is created.</p>
+        <footer class="ai-dialog-foot">
+            <button type="button" class="btn btn-outline" data-dialog-cancel>Cancel</button>
+            <button type="submit" class="btn btn-primary">Create invoice</button>
+        </footer>
+    </form>
+</dialog>
+
+@section Scripts {
+    <script src="~/js/pages/admin/invoices.js" asp-append-version="true"></script>
+}

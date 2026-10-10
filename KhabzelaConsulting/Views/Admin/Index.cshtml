@@ -1,0 +1,60 @@
+@{
+    ViewData["Title"] = "Dashboard";
+
+    // Placeholder data — TODO (backend): load dashboard figures and recent requests.
+    var stats = new[]
+    {
+        new { Label = "Active clients", Value = "48", Trend = "+3 this month", Href = Url.Action("Clients") },
+        new { Label = "Pending quote requests", Value = "7", Trend = "2 new today", Href = Url.Action("QuoteRequests") },
+        new { Label = "This month's revenue", Value = "R 64,200", Trend = "+8% vs last month", Href = Url.Action("Invoices") },
+    };
+    var requests = new[]
+    {
+        new { Client = "Naledi Dube", Service = "Payroll", Estimate = "R 850 – 1,450", Status = "New", Date = "22 Aug" },
+        new { Client = "Sipho Nkosi", Service = "Accounting + Tax", Estimate = "R 2,100 – 3,200", Status = "Contacted", Date = "21 Aug" },
+        new { Client = "Palesa Mokoena", Service = "Tax", Estimate = "R 650 – 950", Status = "Won", Date = "19 Aug" },
+        new { Client = "Johan Pretorius", Service = "Insurance advice", Estimate = "—", Status = "Lost", Date = "15 Aug" },
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/admin/dashboard.css" asp-append-version="true" />
+}
+
+<div class="dash-stats">
+    @foreach (var s in stats)
+    {
+        <a class="card dash-stat" href="@s.Href">
+            <span class="eyebrow">@s.Label</span>
+            <span class="dash-stat-value" data-count="@s.Value">@s.Value</span>
+            <span class="dash-stat-trend">@s.Trend</span>
+        </a>
+    }
+</div>
+
+<section class="card dash-requests">
+    <header class="card-header">
+        <h2>Recent quote requests</h2>
+        <a class="btn-link small" asp-action="QuoteRequests">View all →</a>
+    </header>
+    <table class="table table-stack">
+        <thead>
+            <tr><th>Client</th><th>Service</th><th>Estimate</th><th>Status</th><th>Date</th></tr>
+        </thead>
+        <tbody>
+            @foreach (var r in requests)
+            {
+                <tr data-href="@Url.Action("QuoteRequests")">
+                    <td data-label="Client"><strong class="dash-client">@r.Client</strong></td>
+                    <td data-label="Service">@r.Service</td>
+                    <td data-label="Estimate">@r.Estimate</td>
+                    <td data-label="Status"><span class="badge badge-@r.Status.ToLowerInvariant()">@r.Status</span></td>
+                    <td data-label="Date" class="text-muted">@r.Date</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+
+@section Scripts {
+    <script src="~/js/pages/admin/dashboard.js" asp-append-version="true"></script>
+}

@@ -1,0 +1,47 @@
+/* Admin — Pricing rules */
+
+.pr-group-title { font-size: 1.05rem; }
+.pr-add { display: inline-flex; align-items: center; gap: 4px; }
+
+@media (min-width: 721px) {
+    .pr-table th:nth-child(1), .pr-table td:nth-child(1) { width: 30%; }
+    .pr-table th:nth-child(2), .pr-table td:nth-child(2) { width: 38%; }
+}
+.pr-actions { text-align: right; }
+
+.pr-status { font-size: .85rem; }
+.pr-status-active { color: var(--success); }
+.pr-status-draft { color: var(--muted); }
+
+.pr-table tr.is-updated { animation: pr-flash 1.4s ease; }
+@keyframes pr-flash { from { background: var(--gold-tint); } to { background: transparent; } }
+
+@media (max-width: 720px) {
+    .table-stack td.pr-actions { justify-content: flex-end; }
+}
+
+/* Dialog */
+.pr-dialog {
+    width: min(480px, calc(100% - 32px));
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--text);
+    box-shadow: var(--shadow-md);
+}
+.pr-dialog::backdrop { background: rgba(27, 38, 25, .45); }
+
+.pr-dialog-form { display: grid; gap: 4px; padding: 24px; }
+.pr-dialog-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.pr-dialog-close { display: grid; place-items: center; width: 36px; height: 36px; margin-right: -8px; color: var(--muted); }
+.pr-dialog-form .field { margin-top: 14px; }
+
+.pr-dialog-foot { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 24px; }
+.pr-dialog-spacer { flex: 1; }
+.pr-delete { color: var(--danger); }
+
+@media (max-width: 480px) {
+    .pr-dialog-foot .btn-outline, .pr-dialog-foot .btn-primary { flex: 1; }
+    .pr-dialog-spacer { flex-basis: 100%; height: 0; }
+}

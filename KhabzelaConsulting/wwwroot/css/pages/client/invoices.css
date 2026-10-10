@@ -1,0 +1,43 @@
+/* Client — Invoices */
+
+.inv-summary { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+.inv-summary .card { display: grid; gap: 6px; padding: 16px; }
+.inv-figure { font-family: var(--font-display); font-size: 1.4rem; font-weight: 600; color: var(--ink); }
+
+.inv-filters { margin-bottom: 16px; }
+.inv-filters .choice { min-height: 34px; padding: .35rem .9rem; font-size: .85rem; }
+
+.inv-list { display: grid; gap: 8px; }
+.inv { background: var(--paper); border: 1px solid var(--line); border-radius: var(--radius); }
+.inv[hidden] { display: none; }
+
+.inv-row {
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    width: 100%;
+    padding: 14px 16px;
+    text-align: left;
+}
+.inv-main, .inv-side { display: grid; gap: 4px; }
+.inv-side { justify-items: end; }
+.inv-number { font-weight: 500; }
+.inv-desc { font-size: .85rem; color: var(--muted); }
+.inv-amount { font-family: var(--font-display); font-weight: 600; }
+
+.inv-detail {
+    display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 12px;
+    padding: 12px 16px 16px;
+    border-top: 1px solid var(--line);
+}
+.inv-detail[hidden] { display: none; }
+.inv-detail dl { display: flex; gap: 24px; margin: 0; font-size: .88rem; }
+.inv-detail dt { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
+.inv-detail dd { margin: 0; }
+.inv-download { min-height: 38px; padding: .4rem .9rem; font-size: .85rem; }
+
+@media (min-width: 768px) {
+    .inv-summary { max-width: 560px; }
+    .inv-summary .card { padding: 20px; }
+    .inv-list { max-width: 760px; }
+    .inv-row { padding: 18px 20px; }
+    .inv-detail { padding: 14px 20px 18px; }
+}

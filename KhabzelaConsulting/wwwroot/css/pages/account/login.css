@@ -1,0 +1,40 @@
+/* Account — Login */
+
+.login { width: 100%; max-width: 420px; }
+
+.login-head { display: grid; gap: 8px; margin-bottom: 28px; }
+.login-head .eyebrow { color: var(--gold-dark); }
+
+.login-form { display: grid; }
+.login-form .field + .field { margin-top: 12px; }
+
+.login-label-row { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
+
+.input-icon { position: relative; }
+.input-icon > .icon { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.input-icon .input { padding-left: 38px; }
+.input-toggle {
+    position: absolute; right: 4px; top: 50%; transform: translateY(-50%);
+    display: grid; place-items: center;
+    width: 36px; height: 36px;
+    color: var(--muted);
+}
+.input-toggle[aria-pressed="true"] { color: var(--ink); }
+.input-icon .input[type="password"], .input-icon .input[data-password] { padding-right: 44px; }
+
+.login-remember {
+    display: flex; align-items: center; gap: 10px;
+    margin: 12px 0 20px;
+    font-size: .9rem; color: var(--muted);
+    cursor: pointer;
+}
+.login-remember input { width: 18px; height: 18px; accent-color: var(--ink); }
+
+.login-alt { margin-top: 20px; text-align: center; font-size: .92rem; color: var(--muted); }
+
+.login-divider {
+    display: flex; align-items: center; gap: 12px;
+    margin: 28px 0 16px;
+    color: var(--muted-2); font-size: .8rem;
+}
+.login-divider::before, .login-divider::after { content: ""; flex: 1; height: 1px; background: var(--line); }
