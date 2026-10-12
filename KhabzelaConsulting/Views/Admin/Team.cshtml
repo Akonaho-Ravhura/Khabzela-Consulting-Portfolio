@@ -1,0 +1,93 @@
+@model List<TeamRow>
+@{
+    ViewData["Title"] = "Team";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/admin/team.css" asp-append-version="true" />
+}
+
+<p class="admin-page-intro">Team members can use the admin portal and appear as consultants when clients book. For security, people can't sign up as administrators themselves — invite them here and they'll choose their own password.</p>
+
+<section class="card">
+    <header class="card-header">
+        <h2 class="team-title">Administrators</h2>
+        <button class="btn btn-primary" type="button" data-invite-open>
+            <svg class="icon icon-sm"><use href="#i-plus" /></svg> Invite team member
+        </button>
+    </header>
+    <table class="table table-stack">
+        <thead>
+            <tr><th>Name</th><th>Speciality</th><th>Status</th><th><span class="visually-hidden">Actions</span></th></tr>
+        </thead>
+        <tbody data-team-rows>
+            @foreach (var m in Model)
+            {
+                <tr data-id="@m.Id">
+                    <td data-label="">
+                        <span class="team-name">
+                            <span class="avatar">@m.Initials</span>
+                            <span><strong>@m.Name@(m.IsYou ? " (you)" : "")</strong><span class="muted small">@m.Email</span></span>
+                        </span>
+                    </td>
+                    <td data-label="Speciality">@(m.Speciality ?? "—")</td>
+                    <td data-label="Status">
+                        <span class="badge @(m.PasswordSet ? "badge-paid" : "badge-due")">@(m.PasswordSet ? "Active" : "Invited")</span>
+                    </td>
+                    <td data-label="" class="team-actions">
+                        @if (!m.PasswordSet)
+                        {
+                            <button class="btn-link small" type="button" data-resend>Copy new invite link</button>
+                        }
+                        @if (!m.IsYou)
+                        {
+                            <button class="btn-link small team-remove" type="button" data-remove>Remove access</button>
+                        }
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</section>
+
+<dialog class="team-dialog" data-invite-dialog aria-labelledby="invite-title">
+    <form method="dialog" class="team-dialog-form" novalidate data-invite-form>
+        <header class="team-dialog-head">
+            <h2 id="invite-title">Invite team member</h2>
+            <button type="button" class="team-dialog-close" data-dialog-cancel aria-label="Close"><svg class="icon"><use href="#i-x" /></svg></button>
+        </header>
+        <div data-invite-step="form">
+            <div class="field">
+                <label class="label" for="inv-name">Full name</label>
+                <input class="input" id="inv-name" name="fullName" required maxlength="120" autocomplete="off" />
+            </div>
+            <div class="field">
+                <label class="label" for="inv-email">Work email</label>
+                <input class="input" id="inv-email" name="email" type="email" required maxlength="254" autocomplete="off" />
+            </div>
+            <div class="field">
+                <label class="label" for="inv-speciality">Speciality <span class="muted">(shown to clients when booking)</span></label>
+                <input class="input" id="inv-speciality" name="speciality" maxlength="80" placeholder="e.g. Payroll & Tax" />
+            </div>
+            <p class="field-error" role="alert" data-invite-error></p>
+            <footer class="team-dialog-foot">
+                <button type="button" class="btn btn-outline" data-dialog-cancel>Cancel</button>
+                <button type="submit" class="btn btn-primary" data-invite-save>Send invitation</button>
+            </footer>
+        </div>
+        <div data-invite-step="done" hidden>
+            <p data-invite-message></p>
+            <div class="field">
+                <label class="label" for="inv-link">Invitation link <span class="muted">(valid for 3 days, one use)</span></label>
+                <input class="input" id="inv-link" readonly data-invite-link />
+            </div>
+            <footer class="team-dialog-foot">
+                <button type="button" class="btn btn-outline" data-copy-link>Copy link</button>
+                <button type="button" class="btn btn-primary" data-dialog-cancel>Done</button>
+            </footer>
+        </div>
+    </form>
+</dialog>
+
+@section Scripts {
+    <script src="~/js/pages/admin/team.js" asp-append-version="true"></script>
+}

@@ -1,5 +1,8 @@
+@model LoginInput
 @{
-    ViewData["Title"] = "Sign in";
+    var team = ViewData["Team"] as bool? ?? false;
+    ViewData["Title"] = team ? "Team sign in" : "Sign in";
+    string? Err(string key) => ViewData.ModelState[key]?.Errors.FirstOrDefault()?.ErrorMessage;
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/account/login.css" asp-append-version="true" />
@@ -7,19 +10,29 @@
 
 <div class="login">
     <header class="login-head">
-        <p class="eyebrow">Welcome back</p>
-        <h1>Sign in to your account</h1>
-        <p class="lead">Track invoices, tax status and appointments with your accountant.</p>
+        @if (team)
+        {
+            <p class="eyebrow">Admin portal</p>
+            <h1>Team sign in</h1>
+            <p class="lead">For Khabzela Consulting staff: manage clients, tax statuses, quotes, pricing and invoices.</p>
+        }
+        else
+        {
+            <p class="eyebrow">Welcome back</p>
+            <h1>Sign in to your account</h1>
+            <p class="lead">Track invoices, tax status and appointments with your accountant.</p>
+        }
     </header>
 
-    <form class="login-form" method="post" asp-action="Login" asp-route-returnUrl="@Context.Request.Query["returnUrl"]" novalidate data-login-form>
+    <form class="login-form" method="post" asp-action="Login" asp-route-returnUrl="@ViewData["ReturnUrl"]" asp-route-portal="@(team ? "team" : null)" novalidate data-login-form>
+        <div class="form-alert" role="alert" asp-validation-summary="ModelOnly"></div>
         <div class="field">
             <label class="label" for="email">Email address</label>
             <div class="input-icon">
                 <svg class="icon icon-sm"><use href="#i-mail" /></svg>
-                <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.co.za" required />
+                <input class="input" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.co.za" required value="@Model.Email" />
             </div>
-            <span class="field-error" data-error-for="email"></span>
+            <span class="field-error" data-error-for="email">@Err("Email")</span>
         </div>
 
         <div class="field">
@@ -34,23 +47,31 @@
                     <svg class="icon icon-sm"><use href="#i-eye" /></svg>
                 </button>
             </div>
-            <span class="field-error" data-error-for="password"></span>
+            <span class="field-error" data-error-for="password">@Err("Password")</span>
         </div>
 
         <label class="login-remember">
-            <input type="checkbox" name="rememberMe" value="true" />
+            <input type="checkbox" name="rememberMe" value="true" checked="@Model.RememberMe" />
             <span>Keep me signed in</span>
         </label>
 
         <button class="btn btn-primary btn-block" type="submit">Sign in</button>
     </form>
 
-    <p class="login-alt">
-        New to Khabzela? <a class="btn-link" asp-action="Register">Create an account</a>
-    </p>
+    @if (team)
+    {
+        <div class="login-divider"><span>Not a team member?</span></div>
+        <a class="btn btn-outline btn-block" asp-action="Login">Client sign in</a>
+    }
+    else
+    {
+        <p class="login-alt">
+            New to Khabzela? <a class="btn-link" asp-action="Register">Create an account</a>
+        </p>
 
-    <div class="login-divider"><span>Team member?</span></div>
-    <a class="btn btn-outline btn-block" asp-controller="Admin" asp-action="Index">Go to the admin portal</a>
+        <div class="login-divider"><span>Team member?</span></div>
+        <a class="btn btn-outline btn-block" asp-action="Login" asp-route-portal="team">Go to the admin portal</a>
+    }
 </div>
 
 @section Scripts {

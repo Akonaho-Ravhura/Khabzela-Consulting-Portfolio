@@ -1,17 +1,7 @@
-// Home — portfolio filter, stat counters and the animated quote card in the hero.
+// Home — stat counters and the animated quote card in the hero.
 (function () {
-    const { initChoiceGroup, formatRand } = Khabzela;
+    const { formatRand } = Khabzela;
     const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-
-    // Portfolio filter
-    const cards = Array.from(document.querySelectorAll("[data-portfolio-grid] .case-card"));
-    initChoiceGroup(document.querySelector("[data-portfolio-filter]"), (value) => {
-        cards.forEach((card) => {
-            const show = value === "all" || card.dataset.category === value;
-            card.classList.toggle("is-filtered-out", !show);
-            if (show) card.classList.add("is-visible");
-        });
-    });
 
     // Count up hero stats once visible
     const counters = document.querySelectorAll("[data-count-to]");

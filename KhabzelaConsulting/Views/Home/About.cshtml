@@ -1,26 +1,17 @@
 @{
     ViewData["Title"] = "About us";
-    ViewData["Description"] = "Meet the team behind Khabzela Consulting — accountants who explain the numbers.";
+    ViewData["Description"] = "Khabzela Consulting is a Centurion-based accounting firm, established in 2010, providing accounting, payroll and tax services to SMEs.";
 
-    // Placeholder content — TODO: replace with the firm's real story, team and figures.
     var values = new[]
     {
         new { Icon = "i-message", Title = "Plain language", Text = "We explain what your numbers mean and what to do next — no jargon, no surprises." },
-        new { Icon = "i-shield", Title = "Compliance first", Text = "Deadlines are tracked for you, and you're told the moment SARS changes your status." },
-        new { Icon = "i-quote", Title = "Transparent pricing", Text = "You see a price before you book. Rates change only when the work does." },
-    };
-    var team = new[]
-    {
-        new { Initials = "V", Name = "Vukani", Role = "Founder · Payroll & Tax", Bio = "Leads our payroll and tax practice and handles complex SARS matters personally." },
-        new { Initials = "N", Name = "Nomsa", Role = "Accounting Lead", Bio = "Runs month-end for our accounting clients and prepares annual financial statements." },
-        new { Initials = "L", Name = "Lerato", Role = "Insurance Advisor", Bio = "Reviews business, life and short-term cover to make sure clients pay for what they need." },
+        new { Icon = "i-shield", Title = "Compliance first", Text = "PAYE, VAT, provisional tax and income tax returns submitted correctly and on time." },
+        new { Icon = "i-users", Title = "Tailored service", Text = "Accounting, payroll and tax services tailored to each client's requirements." },
     };
     var milestones = new[]
     {
-        new { Year = "2016", Text = "Khabzela opens in Johannesburg with five payroll clients." },
-        new { Year = "2019", Text = "Accounting and annual financial statements added." },
-        new { Year = "2023", Text = "Insurance advice joins the practice." },
-        new { Year = "2026", Text = "Client app launches with instant quotes and live tax status." },
+        new { Year = "2010", Text = "Khabzela Consulting is established in Centurion." },
+        new { Year = DateTime.Now.Year.ToString(), Text = "Client app launches with online quotes, booking and tax-status notifications." },
     };
 }
 @section Styles {
@@ -30,8 +21,7 @@
 <section class="page-hero">
     <div class="site-container">
         <p class="eyebrow">About us</p>
-        <h1>Accountants who explain the numbers.</h1>
-        <p class="lead">Khabzela Consulting helps South African businesses and individuals stay compliant, understand their finances and make calmer decisions.</p>
+        <h1>We offer accounting, payroll and tax services tailored to our clients' requirements.</h1>
     </div>
 </section>
 
@@ -39,15 +29,15 @@
     <div class="site-container about-story">
         <div class="about-story-copy" data-reveal>
             <p class="eyebrow">Our story</p>
-            <h2>Built for owner-run businesses</h2>
-            <p>Too many small businesses only hear from their accountant at year-end — usually with bad news. We started Khabzela to change that.</p>
-            <p>Today we look after payroll, accounting, tax and insurance for clients across Gauteng and beyond. Each client has a named accountant, a clear monthly price and an app that tells them what's happening with SARS as it happens.</p>
+            <h2>A Centurion accounting firm since 2010</h2>
+            <p>Khabzela Consulting is a Centurion-based accounting firm, established in 2010. At Khabzela Consulting, we provide accounting, payroll and tax services to small and medium-sized enterprises.</p>
+            <p>We have the expertise and experience that clients trust. Meet with us to discover why we're the leading accounting firm in Centurion.</p>
         </div>
         <dl class="about-figures" data-reveal>
-            <div><dt>Active clients</dt><dd>48+</dd></div>
-            <div><dt>Years in practice</dt><dd>10+</dd></div>
-            <div><dt>Returns filed yearly</dt><dd>300+</dd></div>
-            <div><dt>Client retention</dt><dd>95%</dd></div>
+            <div><dt>Established</dt><dd>2010</dd></div>
+            <div><dt>Years in practice</dt><dd>@(DateTime.Now.Year - 2010)+</dd></div>
+            <div><dt>Based in</dt><dd>Centurion</dd></div>
+            <div><dt>Services</dt><dd>3</dd></div>
         </dl>
     </div>
 </section>
@@ -71,33 +61,11 @@
     </div>
 </section>
 
-<section class="section">
-    <div class="site-container">
-        <header class="section-head" data-reveal>
-            <p class="eyebrow">The team</p>
-            <h2>The people you'll actually speak to</h2>
-        </header>
-        <div class="team-grid">
-            @foreach (var m in team)
-            {
-                <article class="team-card" data-reveal>
-                    <div class="team-photo" aria-hidden="true"><span>@m.Initials</span></div>
-                    <div class="team-body">
-                        <h3>@m.Name</h3>
-                        <p class="team-role">@m.Role</p>
-                        <p>@m.Bio</p>
-                    </div>
-                </article>
-            }
-        </div>
-    </div>
-</section>
-
 <section class="section section-dark">
     <div class="site-container">
         <header class="section-head" data-reveal>
             <p class="eyebrow">Our journey</p>
-            <h2>Ten years of steady growth</h2>
+            <h2>Serving Centurion since 2010</h2>
         </header>
         <ol class="timeline" data-timeline>
             @foreach (var m in milestones)

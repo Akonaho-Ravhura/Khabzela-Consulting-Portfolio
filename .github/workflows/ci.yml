@@ -1,0 +1,33 @@
+name: Build and test
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+
+      - name: Restore
+        run: dotnet restore KhabzelaConsulting/KhabzelaConsulting.slnx
+
+      - name: Build
+        run: dotnet build KhabzelaConsulting/KhabzelaConsulting.slnx --configuration Release --no-restore
+
+      - name: Test
+        run: dotnet test KhabzelaConsulting/KhabzelaConsulting.slnx --configuration Release --no-build --logger "trx;LogFileName=test-results.trx"
+
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: "**/TestResults/*.trx"

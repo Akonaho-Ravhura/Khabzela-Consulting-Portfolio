@@ -179,3 +179,23 @@ body.menu-open { overflow: hidden; }
     .footer-cta { grid-template-columns: 1fr auto; align-items: center; padding: 64px 0; }
     .footer-grid { grid-template-columns: 2fr 1fr 1fr 1.4fr; padding: 64px 0; }
 }
+
+/* ---------- Looka brand typography (public website only) ----------
+   Cinzel small-caps headings and Amiri body text, as on the firm's Looka site. */
+.public-body {
+    --font-display: "Cinzel", Georgia, "Times New Roman", serif;
+    --font-body: "Amiri", Georgia, "Times New Roman", serif;
+    font-size: 17px;
+}
+.public-body h1, .public-body h2, .public-body h3 { font-weight: 700; letter-spacing: .01em; }
+.public-body .site-nav > a, .public-body .btn { font-family: "Helvetica Neue", Arial, sans-serif; font-weight: 600; font-size: .9rem; }
+.public-body .eyebrow { font-family: var(--font-body); font-weight: 700; }
+
+.site-logo-text { display: grid; line-height: 1.1; }
+.site-logo-text small { font-size: .55rem; letter-spacing: .3em; opacity: .7; }
+
+/* Cinzel is wider than the previous display font: keep headings inside small screens. */
+.public-body h1, .public-body h2 { overflow-wrap: break-word; }
+.hero-inner > *, .about-teaser-inner > *, .contact-layout > * { min-width: 0; }
+.public-body .hero h1 { font-size: clamp(1.9rem, 1rem + 4vw, 4.1rem); }
+.public-body .page-hero h1 { font-size: clamp(1.7rem, 1.1rem + 2.4vw, 2.9rem); }

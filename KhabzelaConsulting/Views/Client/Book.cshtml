@@ -1,35 +1,17 @@
+@model BookPage
 @{
     ViewData["Title"] = "Book your appointment";
     ViewData["HideTabBar"] = true;
-
-    // Next five working days. TODO (backend): load real availability per consultant.
-    var days = new List<DateTime>();
-    for (var d = DateTime.Today.AddDays(1); days.Count < 5; d = d.AddDays(1))
-    {
-        if (d.DayOfWeek != DayOfWeek.Saturday && d.DayOfWeek != DayOfWeek.Sunday) days.Add(d);
-    }
-    var times = new[] { "09:00", "10:30", "13:00", "14:30", "15:30", "16:30" };
-    var consultants = new[]
-    {
-        new { Initial = "V", Name = "Vukani", Speciality = "Payroll & Tax" },
-        new { Initial = "N", Name = "Nomsa", Speciality = "Accounting" },
-        new { Initial = "L", Name = "Lerato", Speciality = "Insurance advice" },
-    };
+    var days = Model.Days;
+    var times = Model.Times;
+    var consultants = Model.Consultants;
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/client/book.css" asp-append-version="true" />
 }
 
-@* Booked slots per day (yyyy-MM-dd → times). Placeholder until the backend provides availability. *@
-<script type="application/json" id="booked-slots">
-{
-    "@(days[0].ToString("yyyy-MM-dd"))": ["16:30"],
-    "@(days[1].ToString("yyyy-MM-dd"))": ["09:00", "13:00"],
-    "@(days[2].ToString("yyyy-MM-dd"))": ["10:30"],
-    "@(days[3].ToString("yyyy-MM-dd"))": [],
-    "@(days[4].ToString("yyyy-MM-dd"))": ["14:30", "15:30", "16:30"]
-}
-</script>
+@* Booked slots per consultant and day (consultantId → yyyy-MM-dd → times). *@
+<script type="application/json" id="booked-slots">@Html.Raw(System.Text.Json.JsonSerializer.Serialize(Model.Booked))</script>
 
 <div data-book-step="pick">
     <div class="page-head">
@@ -69,12 +51,12 @@
         <div>
             <p class="eyebrow section-label">Meet with</p>
             <div class="book-consultants" role="radiogroup" aria-label="Consultant" data-consultant-group>
-                @for (var i = 0; i < consultants.Length; i++)
+                @for (var i = 0; i < consultants.Count; i++)
                 {
                     var c = consultants[i];
                     <button type="button" role="radio" class="book-consultant @(i == 0 ? "is-active" : "")"
-                            aria-checked="@(i == 0 ? "true" : "false")" data-value="@c.Name">
-                        <span class="avatar">@c.Initial</span>
+                            aria-checked="@(i == 0 ? "true" : "false")" data-value="@c.Id" data-name="@c.Name">
+                        <span class="avatar">@c.Initials</span>
                         <span>@c.Name — @c.Speciality</span>
                         <svg class="icon icon-sm book-consultant-check"><use href="#i-check" /></svg>
                     </button>
@@ -83,11 +65,12 @@
 
             <div class="field book-notes">
                 <label class="label" for="notes">Anything we should know? <span class="muted">(optional)</span></label>
-                <textarea class="textarea" id="notes" rows="3" placeholder="E.g. we're switching from another payroll provider"></textarea>
+                <textarea class="textarea" id="notes" rows="3" maxlength="500" placeholder="E.g. we're switching from another payroll provider"></textarea>
             </div>
         </div>
     </div>
 
+    <p class="field-error book-error" role="alert" data-book-error></p>
     <div class="book-footer">
         <button class="btn btn-light btn-block" type="button" data-confirm disabled>Select a time</button>
     </div>

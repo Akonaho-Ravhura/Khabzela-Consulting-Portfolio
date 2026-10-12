@@ -1,22 +1,30 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
     var action = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
     var section = ViewData["AdminSection"] as string ?? action;
     string Active(string name) => string.Equals(section, name, StringComparison.OrdinalIgnoreCase) ? "is-active" : "";
+    var fullName = User.FindFirst("full_name")?.Value ?? "Team";
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1b2619" />
+    <meta name="theme-color" content="#1e3414" />
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
     <title>@ViewData["Title"] · Khabzela Admin</title>
     <partial name="_Fonts" />
+    <link rel="manifest" href="~/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="~/icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/layouts/admin.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="admin-body">
     <partial name="_IconSprite" />
+    <span hidden data-flash-toast="@TempData["Toast"]"></span>
 
     <aside class="admin-sidebar" id="admin-sidebar" aria-label="Admin navigation">
         <div class="admin-sidebar-head">
@@ -41,16 +49,24 @@
             </a>
             <a class="@Active("QuoteRequests")" asp-controller="Admin" asp-action="QuoteRequests">
                 <svg class="icon"><use href="#i-message" /></svg><span>Quote requests</span>
-                <span class="admin-nav-count">7</span>
+                <vc:new-quote-count />
             </a>
             <a class="@Active("Invoices")" asp-controller="Admin" asp-action="Invoices">
                 <svg class="icon"><use href="#i-file" /></svg><span>Invoices</span>
             </a>
+            <a class="@Active("Team")" asp-controller="Admin" asp-action="Team">
+                <svg class="icon"><use href="#i-user" /></svg><span>Team</span>
+            </a>
         </nav>
 
-        <a class="admin-signout" asp-controller="Account" asp-action="Login">
-            <svg class="icon"><use href="#i-logout" /></svg><span>Sign out</span>
+        <a class="admin-signout" asp-controller="Account" asp-action="TwoFactor">
+            <svg class="icon"><use href="#i-lock" /></svg><span>Security (2FA)</span>
         </a>
+        <form method="post" asp-controller="Account" asp-action="Logout">
+            <button class="admin-signout" type="submit">
+                <svg class="icon"><use href="#i-logout" /></svg><span>Sign out</span>
+            </button>
+        </form>
     </aside>
     <div class="admin-scrim" data-sidebar-close hidden></div>
 
@@ -61,8 +77,8 @@
             </button>
             <h1 class="admin-title">@ViewData["Title"]</h1>
             <div class="admin-user">
-                <span class="avatar">V</span>
-                <span class="admin-user-name">Vukani</span>
+                <span class="avatar">@KhabzelaConsulting.Models.Text.Initials(fullName)</span>
+                <span class="admin-user-name">@fullName</span>
             </div>
         </header>
 
@@ -72,6 +88,7 @@
     </div>
 
     <script src="~/js/site.js" asp-append-version="true"></script>
+    <script src="~/js/pwa.js" asp-append-version="true"></script>
     <script src="~/js/layouts/admin.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>

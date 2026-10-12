@@ -1,3 +1,4 @@
 <Solution>
   <Project Path="KhabzelaConsulting.csproj" />
+  <Project Path="../KhabzelaConsulting.Tests/KhabzelaConsulting.Tests.csproj" />
 </Solution>

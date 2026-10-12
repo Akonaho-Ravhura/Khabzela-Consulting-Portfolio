@@ -1,28 +1,19 @@
 @{
-    ViewData["Title"] = "Accounting, payroll & tax";
+    ViewData["Title"] = "Accounting, payroll & tax in Centurion";
+    var years = DateTime.Now.Year - 2010;
 
-    // Placeholder content — TODO: replace with real services, case studies and figures.
+    // Service descriptions from the firm's own website (Looka).
     var services = new[]
     {
-        new { Icon = "i-chart", Name = "Accounting", Text = "Bookkeeping, reconciliations, management accounts and annual financial statements.", From = "R 900" },
-        new { Icon = "i-users", Name = "Payroll", Text = "Monthly or weekly payroll, payslips, EMP201s and UIF — handled on time, every time.", From = "R 300" },
-        new { Icon = "i-file", Name = "Tax", Text = "Income tax, provisional tax, VAT and SARS correspondence for businesses and individuals.", From = "R 650" },
-        new { Icon = "i-shield", Name = "Insurance advice", Text = "Independent advice on business, life and short-term cover that fits your risk.", From = "" },
+        new { Icon = "i-chart", Name = "Accounting", Text = "We provide our clients with monthly management accounts and annual financial statements to enable them to understand the financial performance of their businesses." },
+        new { Icon = "i-users", Name = "Payroll", Text = "Our payroll team provides weekly and monthly payroll services which includes issuing pay-slips and UIF declarations. Annual tax certificates (IRP5s) are issued at the end of the tax year." },
+        new { Icon = "i-file", Name = "Tax", Text = "We prepare monthly PAYE and VAT returns for our clients. We further do bi-annual provisional tax returns (IRP6s) and annual income tax returns (IT14s)." },
     };
     var steps = new[]
     {
-        new { Title = "Get an instant quote", Text = "Choose a service, answer two or three questions and see a price range straight away." },
-        new { Title = "Book a time", Text = "Pick a slot with the accountant who specialises in what you need — your estimate comes with you." },
-        new { Title = "Stay in the loop", Text = "Follow tax status changes, deadlines and invoices in the app. No paperwork chasing." },
-    };
-    var portfolio = new[]
-    {
-        new { Category = "payroll", Tag = "Payroll", Industry = "Logistics", Title = "Weekly payroll for a 40-person fleet", Text = "Moved drivers from manual spreadsheets to weekly payroll with on-time EMP201 submissions.", Metric = "0", MetricLabel = "late SARS submissions in 18 months" },
-        new { Category = "accounting", Tag = "Accounting", Industry = "Retail", Title = "Monthly management accounts for 3 stores", Text = "Consolidated bookkeeping across branches so the owner sees margin per store each month.", Metric = "6 days", MetricLabel = "faster month-end close" },
-        new { Category = "tax", Tag = "Tax", Industry = "Professional services", Title = "Clearing a SARS backlog", Text = "Filed four years of outstanding returns and negotiated a payment arrangement.", Metric = "4 yrs", MetricLabel = "of returns brought up to date" },
-        new { Category = "accounting", Tag = "Accounting + Tax", Industry = "Construction", Title = "Funding-ready financial statements", Text = "Prepared audited-ready AFS and tax compliance to support a bank funding application.", Metric = "R 2.5m", MetricLabel = "facility approved" },
-        new { Category = "insurance", Tag = "Insurance", Industry = "Hospitality", Title = "Right-sizing business cover", Text = "Reviewed overlapping policies for a guesthouse group and restructured cover.", Metric = "18%", MetricLabel = "lower annual premiums" },
-        new { Category = "payroll", Tag = "Payroll", Industry = "Agriculture", Title = "Seasonal workforce payroll", Text = "Set up weekly and monthly runs for permanent and seasonal staff, with UIF handled.", Metric = "120+", MetricLabel = "employees paid every cycle" },
+        new { Title = "Get a quote in the app", Text = "Sign in, choose a service, answer two or three questions and see an estimated monthly range straight away." },
+        new { Title = "Book a time", Text = "Pick a slot with your accountant in the same flow — your estimate comes with you to the meeting." },
+        new { Title = "Stay in the loop", Text = "Get notified when your tax status changes, follow deadlines and see your invoices in the app." },
     };
 }
 @section Styles {
@@ -33,16 +24,16 @@
 <section class="hero">
     <div class="site-container hero-inner">
         <div class="hero-copy">
-            <p class="eyebrow">Accounting · Payroll · Tax · Insurance</p>
-            <h1>Clear numbers.<br /><em>Calm decisions.</em></h1>
-            <p class="hero-lead">Khabzela Consulting keeps South African businesses compliant and confident — with instant online quotes, a dedicated accountant and real-time updates on your tax status.</p>
+            <p class="eyebrow">Accounting · Payroll · Tax</p>
+            <h1>We're the accounting <em>and tax experts.</em></h1>
+            <p class="hero-lead">We're happy to be a Centurion-based accounting firm. Let us help you meet your accounting, payroll and tax requirements.</p>
             <div class="hero-actions">
-                <a class="btn btn-light" asp-controller="Client" asp-action="Quote">Get an instant quote <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
-                <a class="btn hero-btn-ghost" asp-action="Contact">Book a consultation</a>
+                <a class="btn btn-light" asp-action="Contact">Contact us <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
+                <a class="btn hero-btn-ghost" asp-controller="Account" asp-action="Login">Client login</a>
             </div>
             <ul class="hero-points">
-                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Price in under a minute</li>
-                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>SARS-ready filing</li>
+                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Established 2010</li>
+                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Small &amp; medium businesses</li>
                 <li><svg class="icon icon-sm"><use href="#i-check" /></svg>POPIA compliant</li>
             </ul>
         </div>
@@ -74,10 +65,10 @@
 
     <div class="site-container">
         <dl class="hero-stats">
-            <div><dt>Active clients</dt><dd><span data-count-to="48">48</span>+</dd></div>
-            <div><dt>Years in practice</dt><dd><span data-count-to="10">10</span>+</dd></div>
-            <div><dt>Returns filed yearly</dt><dd><span data-count-to="300">300</span>+</dd></div>
-            <div><dt>Quote turnaround</dt><dd>&lt; 1 min</dd></div>
+            <div><dt>Established</dt><dd>2010</dd></div>
+            <div><dt>Years in practice</dt><dd><span data-count-to="@years">@years</span>+</dd></div>
+            <div><dt>Based in</dt><dd>Centurion</dd></div>
+            <div><dt>Core services</dt><dd>3</dd></div>
         </dl>
     </div>
 </section>
@@ -86,9 +77,9 @@
 <section class="section" id="services">
     <div class="site-container">
         <header class="section-head" data-reveal>
-            <p class="eyebrow">What we do</p>
-            <h2>Four services. One team that knows your numbers.</h2>
-            <p>Pick one or bundle them — every client gets a named accountant and transparent monthly pricing.</p>
+            <p class="eyebrow">Our offering</p>
+            <h2>Our services</h2>
+            <p>Accounting, payroll and tax services tailored to our clients' requirements.</p>
         </header>
 
         <div class="services-grid">
@@ -98,20 +89,61 @@
                     <span class="service-icon"><svg class="icon"><use href="#@s.Icon" /></svg></span>
                     <h3>@s.Name</h3>
                     <p>@s.Text</p>
-                    <p class="service-price">
-                        @if (string.IsNullOrEmpty(s.From))
-                        {
-                            <span>Priced on consultation</span>
-                        }
-                        else
-                        {
-                            <span>From <strong>@s.From</strong> / month</span>
-                        }
-                    </p>
-                    <a class="service-link" asp-controller="Client" asp-action="Quote">Get a quote <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
+                    <a class="service-link" asp-action="Contact">Enquire <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
                 </article>
             }
         </div>
+    </div>
+</section>
+
+<!-- Tax compliance alerts (client app feature) -->
+<section class="section section-alt alerts" id="alerts">
+    <div class="site-container alerts-inner">
+        <div class="alerts-copy" data-reveal>
+            <p class="eyebrow">Tax compliance alerts</p>
+            <h2>Know your tax status before it becomes a problem</h2>
+            <p>Too often, businesses only hear about a SARS issue once it's already affecting them. As a Khabzela client, our app keeps you informed:</p>
+            <ul class="alerts-list">
+                <li><svg class="icon icon-sm"><use href="#i-check" /></svg><span><strong>Tax status updates.</strong> When your status changes (submitted, SARS query, assessed or refund due), you're notified straight away, with a note from your accountant.</span></li>
+                <li><svg class="icon icon-sm"><use href="#i-check" /></svg><span><strong>Deadline reminders a week ahead.</strong> EMP201, VAT201, provisional tax (IRP6), EMP501 and ITR14, worked out for your business.</span></li>
+                <li><svg class="icon icon-sm"><use href="#i-check" /></svg><span><strong>In the app, or by email.</strong> Check it on your phone or computer, and switch on email copies if you prefer.</span></li>
+                <li><svg class="icon icon-sm"><use href="#i-check" /></svg><span><strong>Your SARS login stays private.</strong> No eFiling password is needed and no tax documents are stored in the app.</span></li>
+            </ul>
+            <div class="alerts-actions">
+                <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Create a client account</a>
+                <a class="btn btn-outline" asp-controller="Account" asp-action="Login">Client login</a>
+            </div>
+        </div>
+
+        <figure class="alerts-visual" data-reveal>
+            <ul class="alerts-feed" aria-label="Example notifications">
+                <li class="alerts-note">
+                    <span class="alerts-icon"><svg class="icon"><use href="#i-clock" /></svg></span>
+                    <span>
+                        <strong>Your tax status changed to “Assessed”</strong>
+                        <span>No action needed — we'll follow up if anything is required.</span>
+                        <time>Today, 09:14</time>
+                    </span>
+                </li>
+                <li class="alerts-note">
+                    <span class="alerts-icon"><svg class="icon"><use href="#i-calendar" /></svg></span>
+                    <span>
+                        <strong>VAT201 return due in 7 days</strong>
+                        <span>VAT period ending September. Due Friday 30 October.</span>
+                        <time>Friday, 08:00</time>
+                    </span>
+                </li>
+                <li class="alerts-note">
+                    <span class="alerts-icon"><svg class="icon"><use href="#i-calendar" /></svg></span>
+                    <span>
+                        <strong>EMP201 payroll return due in 7 days</strong>
+                        <span>PAYE, UIF and SDL for October.</span>
+                        <time>Last week</time>
+                    </span>
+                </li>
+            </ul>
+            <figcaption class="muted small">Example notifications from the Khabzela client app.</figcaption>
+        </figure>
     </div>
 </section>
 
@@ -135,44 +167,6 @@
     </div>
 </section>
 
-<!-- Portfolio -->
-<section class="section" id="portfolio">
-    <div class="site-container">
-        <div class="portfolio-head">
-            <header class="section-head" data-reveal>
-                <p class="eyebrow">Portfolio</p>
-                <h2>Work we're proud of</h2>
-                <p>A few recent engagements — names withheld, results not.</p>
-            </header>
-            <div class="choice-group portfolio-filters" role="group" aria-label="Filter case studies" data-portfolio-filter>
-                <button type="button" class="choice is-active" data-value="all" aria-pressed="true">All</button>
-                <button type="button" class="choice" data-value="accounting" aria-pressed="false">Accounting</button>
-                <button type="button" class="choice" data-value="payroll" aria-pressed="false">Payroll</button>
-                <button type="button" class="choice" data-value="tax" aria-pressed="false">Tax</button>
-                <button type="button" class="choice" data-value="insurance" aria-pressed="false">Insurance</button>
-            </div>
-        </div>
-
-        <div class="portfolio-grid" data-portfolio-grid>
-            @foreach (var p in portfolio)
-            {
-                <article class="case-card" data-category="@p.Category" data-reveal>
-                    <div class="case-top">
-                        <span class="case-tag">@p.Tag</span>
-                        <span class="case-industry"><svg class="icon icon-sm"><use href="#i-briefcase" /></svg>@p.Industry</span>
-                    </div>
-                    <h3>@p.Title</h3>
-                    <p>@p.Text</p>
-                    <div class="case-metric">
-                        <strong>@p.Metric</strong>
-                        <span>@p.MetricLabel</span>
-                    </div>
-                </article>
-            }
-        </div>
-    </div>
-</section>
-
 <!-- About teaser -->
 <section class="section section-alt about-teaser">
     <div class="site-container about-teaser-inner">
@@ -181,15 +175,15 @@
                 <svg class="icon"><use href="#i-brand" /></svg>
             </div>
             <div class="about-badge">
-                <strong>Est. 2016</strong>
-                <span>Johannesburg</span>
+                <strong>Est. 2010</strong>
+                <span>Centurion</span>
             </div>
         </div>
         <div class="about-teaser-copy" data-reveal>
             <p class="eyebrow">About us</p>
-            <h2>A small firm with big-firm discipline</h2>
-            <p>We started Khabzela to give owner-run businesses the kind of financial clarity usually reserved for corporates — without the corporate fees or the jargon.</p>
-            <p>Every client works with a named accountant who knows their business, answers the phone and explains what the numbers mean.</p>
+            <h2>Services tailored to our clients' requirements</h2>
+            <p>Khabzela Consulting is a Centurion-based accounting firm, established in 2010. We provide accounting, payroll and tax services to small and medium-sized enterprises.</p>
+            <p>We have the expertise and experience that clients trust. Meet with us to discover why we're the leading accounting firm in Centurion.</p>
             <a class="btn btn-primary" asp-action="About">More about us <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
         </div>
     </div>
@@ -199,10 +193,10 @@
 <section class="section testimonial">
     <div class="site-container">
         <figure class="testimonial-card" data-reveal>
-            <blockquote>“We used to find out about SARS problems months too late. Now I get a notification the same day — and Vukani has already dealt with it.”</blockquote>
+            <blockquote>“Khabzela Consulting offered insights on the financial and tax side of my business I never would have thought of. I'm more than happy.”</blockquote>
             <figcaption>
-                <span class="avatar">SN</span>
-                <span><strong>Sipho N.</strong><span class="muted small">Owner, construction company</span></span>
+                <span class="avatar">EK</span>
+                <span><strong>Eugene Khoza</strong><span class="muted small">Client</span></span>
             </figcaption>
         </figure>
     </div>
@@ -213,12 +207,12 @@
     <div class="site-container contact-band-inner" data-reveal>
         <div>
             <p class="eyebrow">Contact us</p>
-            <h2>Have a question before you get a quote?</h2>
-            <p class="muted">Send us a message or call — we reply within one working day.</p>
+            <h2>Contact us to schedule an appointment</h2>
+            <p class="muted">Let's find the best solutions for your business.</p>
         </div>
         <div class="contact-band-cards">
-            <a class="contact-mini" href="tel:+27110000000"><svg class="icon"><use href="#i-phone" /></svg><span><span class="muted small">Call</span>+27 (0)11 000 0000</span></a>
-            <a class="contact-mini" href="mailto:hello@example.co.za"><svg class="icon"><use href="#i-mail" /></svg><span><span class="muted small">Email</span>hello@example.co.za</span></a>
+            <a class="contact-mini" href="tel:+27728792715"><svg class="icon"><use href="#i-phone" /></svg><span><span class="muted small">Call</span>072 879 2715</span></a>
+            <a class="contact-mini" href="mailto:vukani@khabzelaconsulting.co.za"><svg class="icon"><use href="#i-mail" /></svg><span><span class="muted small">Email</span>vukani@khabzelaconsulting.co.za</span></a>
             <a class="btn btn-primary" asp-action="Contact">Send a message</a>
         </div>
     </div>

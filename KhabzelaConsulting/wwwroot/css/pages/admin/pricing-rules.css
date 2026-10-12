@@ -45,3 +45,5 @@
     .pr-dialog-foot .btn-outline, .pr-dialog-foot .btn-primary { flex: 1; }
     .pr-dialog-spacer { flex-basis: 100%; height: 0; }
 }
+
+.pr-dialog-row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }

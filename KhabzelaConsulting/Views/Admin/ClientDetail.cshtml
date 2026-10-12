@@ -1,16 +1,12 @@
+@model ClientDetailPage
 @{
     ViewData["Title"] = "Client";
     ViewData["AdminSection"] = "Clients";
-
-    // Placeholder data — TODO (backend): load client by ViewData["ClientId"].
-    var statuses = new[] { "Not filed", "Submitted", "SARS query", "Assessed", "Refund due" };
-    var current = "SARS query";
-    var history = new[]
-    {
-        new { Title = "Status → SARS query", Meta = "Sent to client today, 09:14 · Delivered" },
-        new { Title = "Status → Submitted", Meta = "Sent to client 14 Aug · Delivered" },
-        new { Title = "Provisional tax reminder", Meta = "Sent to client 1 Aug · Delivered" },
-    };
+    var statuses = TaxStatuses.All;
+    var current = Model.TaxStatus;
+    var history = Model.History;
+    var p = Model.Profile;
+    var months = System.Globalization.CultureInfo.InvariantCulture.DateTimeFormat.MonthNames.Take(12).ToArray();
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/admin/client-detail.css" asp-append-version="true" />
@@ -21,10 +17,10 @@
 </a>
 
 <header class="cd-head">
-    <span class="avatar avatar-lg">SN</span>
+    <span class="avatar avatar-lg">@Model.Initials</span>
     <div>
-        <h2 class="cd-name">Sipho Nkosi</h2>
-        <p class="muted small">Accounting + Tax client since 2022 · sipho@example.co.za</p>
+        <h2 class="cd-name">@Model.Name</h2>
+        <p class="muted small">@Model.Summary · <a class="btn-link" href="mailto:@Model.Email">@Model.Email</a>@(Model.Phone != null ? $" · {Model.Phone}" : "")@(Model.Company != null ? $" · {Model.Company}" : "")</p>
     </div>
 </header>
 
@@ -33,7 +29,7 @@
         <h3>Update tax status</h3>
         <p class="muted small cd-hint">The client is notified automatically in the app — no documents are attached or stored.</p>
 
-        <form data-status-form>
+        <form data-status-form data-url="@Url.Action("UpdateTaxStatus", new { id = Model.Id })">
             <div class="choice-group cd-statuses" role="radiogroup" aria-label="Tax status" data-status-group>
                 @foreach (var s in statuses)
                 {
@@ -48,18 +44,66 @@
                 <span class="muted small cd-count"><span data-note-count>0</span>/280</span>
             </div>
 
+            <p class="field-error" role="alert" data-status-error></p>
             <button class="btn btn-primary btn-block" type="submit" data-save>Save &amp; notify client</button>
         </form>
     </section>
 
     <section class="card card-pad cd-history">
         <h3>Notification history</h3>
+        <p class="muted small" data-history-empty @(history.Count == 0 ? "" : "hidden")>No notifications sent yet.</p>
         <ul class="cd-history-list" data-history>
             @foreach (var h in history)
             {
                 <li>
                     <p>@h.Title</p>
                     <p class="muted small">@h.Meta</p>
+                </li>
+            }
+        </ul>
+    </section>
+</div>
+
+<div class="cd-grid cd-tax">
+    <section class="card card-pad">
+        <h3>Tax profile</h3>
+        <p class="muted small cd-hint">Decides which SARS deadlines this client is reminded about — 7 days before each one, in the app (and by email if they opted in).</p>
+        <form class="cd-profile" data-profile-form data-url="@Url.Action("UpdateTaxProfile", new { id = Model.Id })">
+            <label class="cd-check"><input type="checkbox" name="isEmployer" checked="@p.IsEmployer" /> <span>Employer — EMP201 monthly, EMP501 reconciliations</span></label>
+            <label class="cd-check"><input type="checkbox" name="isVatRegistered" checked="@p.IsVatRegistered" data-vat-toggle /> <span>VAT registered — VAT201</span></label>
+            <div class="field" data-vat-category @(p.IsVatRegistered ? "" : "hidden")>
+                <label class="label" for="vatCategory">VAT category</label>
+                <select class="select" id="vatCategory" name="vatCategory">
+                    <option value="A" selected="@(p.VatCategory == "A")">A — every two months (Jan, Mar, May…)</option>
+                    <option value="B" selected="@(p.VatCategory == "B")">B — every two months (Feb, Apr, Jun…)</option>
+                    <option value="C" selected="@(p.VatCategory == "C")">C — monthly</option>
+                </select>
+            </div>
+            <label class="cd-check"><input type="checkbox" name="isProvisionalTaxpayer" checked="@p.IsProvisionalTaxpayer" /> <span>Provisional taxpayer — IRP6</span></label>
+            <label class="cd-check"><input type="checkbox" name="isCompany" checked="@p.IsCompany" /> <span>Company — ITR14</span></label>
+            <div class="field">
+                <label class="label" for="yearEndMonth">Financial year-end</label>
+                <select class="select" id="yearEndMonth" name="yearEndMonth">
+                    @for (var m = 1; m <= 12; m++)
+                    {
+                        <option value="@m" selected="@(p.YearEndMonth == m)">@months[m - 1]</option>
+                    }
+                </select>
+            </div>
+            <p class="field-error" role="alert" data-profile-error></p>
+            <button class="btn btn-primary btn-block" type="submit" data-profile-save>Save tax profile</button>
+        </form>
+    </section>
+
+    <section class="card card-pad">
+        <h3>Upcoming deadlines</h3>
+        <p class="muted small" data-deadlines-empty @(Model.Deadlines.Count == 0 ? "" : "hidden")>No deadlines in the next six months. Tick the returns that apply in the tax profile.</p>
+        <ul class="cd-history-list" data-deadlines>
+            @foreach (var d in Model.Deadlines)
+            {
+                <li>
+                    <p>@d.Title — @d.Due.ToString("ddd d MMM yyyy")</p>
+                    <p class="muted small">@d.Detail</p>
                 </li>
             }
         </ul>

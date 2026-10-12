@@ -23,3 +23,5 @@
 @media (min-width: 640px) and (max-width: 900px) {
     .dash-stat-value { font-size: 1.6rem; }
 }
+
+.dash-deadlines { margin-top: 20px; }

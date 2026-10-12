@@ -1,16 +1,7 @@
+@model List<ClientRow>
 @{
     ViewData["Title"] = "Clients";
-
-    // Placeholder data — TODO (backend): load clients.
-    var clients = new[]
-    {
-        new { Id = 1, Name = "Sipho Nkosi", Initials = "SN", Services = "Accounting + Tax", TaxStatus = "SARS query", Since = "2022", Email = "sipho@example.co.za" },
-        new { Id = 2, Name = "Thabo Mokoena", Initials = "TM", Services = "Payroll", TaxStatus = "Assessed", Since = "2024", Email = "thabo@example.co.za" },
-        new { Id = 3, Name = "Palesa Mokoena", Initials = "PM", Services = "Tax", TaxStatus = "Submitted", Since = "2026", Email = "palesa@example.co.za" },
-        new { Id = 4, Name = "Naledi Dube", Initials = "ND", Services = "Payroll", TaxStatus = "Not filed", Since = "2026", Email = "naledi@example.co.za" },
-        new { Id = 5, Name = "Ayanda Zulu", Initials = "AZ", Services = "Accounting", TaxStatus = "Refund due", Since = "2023", Email = "ayanda@example.co.za" },
-        new { Id = 6, Name = "Karabo Molefe", Initials = "KM", Services = "Accounting + Payroll", TaxStatus = "Assessed", Since = "2021", Email = "karabo@example.co.za" },
-    };
+    var clients = Model;
     string Tone(string s) => s switch
     {
         "Assessed" => "won",
@@ -32,11 +23,10 @@
     </label>
     <select class="select clients-filter" aria-label="Filter by tax status" data-status-filter>
         <option value="">All tax statuses</option>
-        <option>Not filed</option>
-        <option>Submitted</option>
-        <option>SARS query</option>
-        <option>Assessed</option>
-        <option>Refund due</option>
+        @foreach (var status in TaxStatuses.All)
+        {
+            <option>@status</option>
+        }
     </select>
 </div>
 
@@ -68,7 +58,7 @@
             }
         </tbody>
     </table>
-    <p class="clients-empty muted" data-clients-empty hidden>No clients match your search.</p>
+    <p class="clients-empty muted" data-clients-empty @(clients.Count == 0 ? "" : "hidden")>@(clients.Count == 0 ? "No clients yet — they appear here when they register in the app." : "No clients match your search.")</p>
 </section>
 
 @section Scripts {

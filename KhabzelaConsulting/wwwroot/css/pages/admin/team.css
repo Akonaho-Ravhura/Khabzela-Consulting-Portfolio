@@ -1,0 +1,23 @@
+/* Admin — Team */
+
+.team-title { font-size: 1.1rem; }
+.team-name { display: flex; align-items: center; gap: 12px; }
+.team-name > span:last-child { display: grid; }
+.team-actions { display: flex; flex-wrap: wrap; gap: 4px 16px; justify-content: flex-end; }
+.team-remove { color: var(--danger); }
+
+.team-dialog {
+    width: min(480px, calc(100vw - 32px));
+    padding: 0;
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    background: var(--paper);
+    color: var(--text);
+    box-shadow: var(--shadow-md);
+}
+.team-dialog::backdrop { background: rgba(30, 52, 20, .45); }
+.team-dialog-form { display: grid; padding: 24px; }
+.team-dialog-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; }
+.team-dialog-close { display: grid; place-items: center; width: 36px; height: 36px; margin-right: -8px; color: var(--muted); }
+.team-dialog-form .field { margin-top: 14px; }
+.team-dialog-foot { display: flex; justify-content: flex-end; gap: 8px; margin-top: 20px; }

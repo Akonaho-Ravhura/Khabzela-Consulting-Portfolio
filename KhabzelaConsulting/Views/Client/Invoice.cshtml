@@ -1,0 +1,65 @@
+@model InvoiceRow
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Invoice @Model.Number · Khabzela Consulting</title>
+    <partial name="_Fonts" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <style>
+        body { background: var(--paper); }
+        .invoice { max-width: 760px; margin: 0 auto; padding: 40px 16px; display: grid; gap: 32px; }
+        .invoice-head { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 24px; }
+        .invoice-head h1 { font-family: var(--font-display); font-size: 2rem; }
+        .invoice-firm { font-size: .9rem; color: var(--muted); line-height: 1.6; }
+        .invoice-firm strong { color: var(--text); font-size: 1rem; }
+        .invoice-meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; }
+        .invoice-meta dt { font-size: .75rem; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); }
+        .invoice table { border-top: 2px solid var(--ink); }
+        .invoice th, .invoice td { padding: 12px 0; text-align: left; border-bottom: 1px solid var(--line); }
+        .invoice td:last-child, .invoice th:last-child { text-align: right; }
+        .invoice-total { font-family: var(--font-display); font-size: 1.4rem; }
+        .invoice-actions { display: flex; gap: 12px; }
+        @@media print { .invoice-actions { display: none; } .invoice { padding: 0; } }
+    </style>
+</head>
+<body>
+    <main class="invoice">
+        <header class="invoice-head">
+            <div>
+                <h1>Invoice @Model.Number</h1>
+                <span class="badge badge-@Model.Status.ToLowerInvariant()">@Model.Status</span>
+            </div>
+            <p class="invoice-firm">
+                <strong>Khabzela Consulting</strong><br />
+                9 Charles De Gaulle Crescent, Highveld, Centurion<br />
+                072 879 2715 / 071 684 1535<br />
+                vukani@@khabzelaconsulting.co.za
+            </p>
+        </header>
+
+        <dl class="invoice-meta">
+            <div><dt>Billed to</dt><dd>@Model.Client@(ViewData["Company"] is string company ? $" · {company}" : "")</dd></div>
+            <div><dt>Issued</dt><dd>@Model.Issued.ToString("d MMMM yyyy")</dd></div>
+            <div><dt>Due</dt><dd>@Model.Due.ToString("d MMMM yyyy")</dd></div>
+        </dl>
+
+        <table>
+            <thead><tr><th>Description</th><th>Amount</th></tr></thead>
+            <tbody>
+                <tr><td>@Model.Description</td><td>R @Model.Amount.ToString("N2")</td></tr>
+                <tr><td><strong>Total</strong></td><td class="invoice-total">R @Model.Amount.ToString("N2")</td></tr>
+            </tbody>
+        </table>
+
+        <div class="invoice-actions">
+            <button class="btn btn-primary" type="button" onclick="window.print()">Print / save as PDF</button>
+            <a class="btn btn-outline" asp-action="Invoices">Back to invoices</a>
+        </div>
+    </main>
+</body>
+</html>

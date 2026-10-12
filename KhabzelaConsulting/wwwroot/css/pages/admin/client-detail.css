@@ -32,3 +32,9 @@
     .cd-update, .cd-history { padding: 24px; }
     .cd-statuses .choice { flex: 0 0 auto; }
 }
+
+/* Tax profile + deadlines */
+.cd-tax { margin-top: 20px; }
+.cd-profile { display: grid; gap: 12px; }
+.cd-check { display: flex; gap: 10px; align-items: flex-start; font-size: .92rem; cursor: pointer; }
+.cd-check input { margin-top: 4px; accent-color: var(--ink); }

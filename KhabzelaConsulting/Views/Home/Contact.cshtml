@@ -2,13 +2,13 @@
     ViewData["Title"] = "Contact us";
     ViewData["Description"] = "Get in touch with Khabzela Consulting — call, email or send us a message.";
 
-    // Placeholder contact details — TODO: replace with the firm's real details.
     var faqs = new[]
     {
         new { Q = "How quickly will you reply?", A = "We reply to every message within one working day — usually the same day." },
+        new { Q = "How will I know if my tax status changes?", A = "Clients get a notification in the Khabzela app as soon as their accountant updates their tax status, and a reminder a week before each SARS deadline (EMP201, VAT201, provisional tax, EMP501 and ITR14). You can also switch on email copies. You don't need to share your eFiling login." },
         new { Q = "Do I need to be a client to ask a question?", A = "Not at all. Ask us anything; if we can help, we'll suggest a next step and a price." },
         new { Q = "Can I switch from my current accountant mid-year?", A = "Yes. We'll request your records from your previous accountant and make sure nothing falls through the cracks." },
-        new { Q = "Do you work with clients outside Gauteng?", A = "Yes — most of our work is done remotely, and consultations can be online or by phone." },
+        new { Q = "Do you work with clients outside Gauteng?", A = "Yes — most of our work can be done remotely, and consultations can be online or by phone." },
     };
 }
 @section Styles {
@@ -18,26 +18,26 @@
 <section class="page-hero">
     <div class="site-container">
         <p class="eyebrow">Contact us</p>
-        <h1>Let's talk about your numbers.</h1>
-        <p class="lead">Send a message, call, or pop in. Want a price straight away? <a class="btn-link" asp-controller="Client" asp-action="Quote">Get an instant quote →</a></p>
+        <h1>Contact us</h1>
+        <p class="lead">Contact us to schedule an appointment. Let's find the best solutions for your business. Existing clients can also <a class="btn-link" asp-controller="Account" asp-action="Login">get a quote and book in the app →</a></p>
     </div>
 </section>
 
 <section class="section contact-section">
     <div class="site-container contact-layout">
         <aside class="contact-info">
-            <a class="contact-card" href="tel:+27110000000">
-                <span class="contact-icon"><svg class="icon"><use href="#i-phone" /></svg></span>
-                <span><span class="contact-label">Call us</span><strong>+27 (0)11 000 0000</strong></span>
-            </a>
-            <a class="contact-card" href="mailto:hello@example.co.za">
-                <span class="contact-icon"><svg class="icon"><use href="#i-mail" /></svg></span>
-                <span><span class="contact-label">Email</span><strong>hello@example.co.za</strong></span>
-            </a>
             <div class="contact-card">
-                <span class="contact-icon"><svg class="icon"><use href="#i-pin" /></svg></span>
-                <span><span class="contact-label">Office</span><strong>Johannesburg, Gauteng</strong></span>
+                <span class="contact-icon"><svg class="icon"><use href="#i-phone" /></svg></span>
+                <span><span class="contact-label">Call us</span><strong><a href="tel:+27728792715">072 879 2715</a> / <a href="tel:+27716841535">071 684 1535</a></strong></span>
             </div>
+            <a class="contact-card" href="mailto:vukani@khabzelaconsulting.co.za">
+                <span class="contact-icon"><svg class="icon"><use href="#i-mail" /></svg></span>
+                <span><span class="contact-label">Email</span><strong>vukani@khabzelaconsulting.co.za</strong></span>
+            </a>
+            <a class="contact-card" href="https://www.google.com/maps/search/?api=1&query=9+Charles+De+Gaulle+Crescent+Highveld+Centurion" target="_blank" rel="noopener">
+                <span class="contact-icon"><svg class="icon"><use href="#i-pin" /></svg></span>
+                <span><span class="contact-label">Office</span><strong>9 Charles De Gaulle Crescent, Highveld, Centurion</strong></span>
+            </a>
             <div class="contact-card">
                 <span class="contact-icon"><svg class="icon"><use href="#i-clock" /></svg></span>
                 <span>
@@ -46,10 +46,13 @@
                     <span class="contact-status" data-open-status></span>
                 </span>
             </div>
+            <iframe class="contact-map" title="Map showing 9 Charles De Gaulle Crescent, Highveld, Centurion" loading="lazy" referrerpolicy="no-referrer-when-downgrade"
+                    src="https://maps.google.com/maps?q=9%20Charles%20De%20Gaulle%20Crescent%2C%20Highveld%2C%20Centurion&z=15&output=embed"></iframe>
         </aside>
 
         <div class="card contact-form-card">
-            <form class="contact-form" novalidate data-contact-form>
+            <form class="contact-form" method="post" asp-action="Contact" novalidate data-contact-form>
+                <div class="contact-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off" /></div>
                 <h2>Send us a message</h2>
                 <div class="contact-row">
                     <div class="field">
@@ -76,7 +79,6 @@
                             <option>Accounting</option>
                             <option>Payroll</option>
                             <option>Tax</option>
-                            <option>Insurance advice</option>
                         </select>
                     </div>
                 </div>
@@ -89,10 +91,11 @@
                     </div>
                 </div>
                 <label class="contact-consent">
-                    <input type="checkbox" name="consent" required data-consent />
+                    <input type="checkbox" name="consent" value="true" required data-consent />
                     <span>I agree that Khabzela Consulting may use these details to respond to my enquiry, in line with the <a class="btn-link" asp-action="Privacy">privacy policy</a>.</span>
                 </label>
                 <span class="field-error" data-error-for="consent"></span>
+                <p class="field-error" role="alert" data-form-error></p>
                 <button class="btn btn-primary contact-submit" type="submit" data-submit>Send message</button>
             </form>
 

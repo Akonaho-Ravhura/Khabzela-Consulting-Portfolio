@@ -1,7 +1,7 @@
 // Admin — Quote requests: status tabs with counts and inline status changes.
-// TODO (backend): persist status changes.
+// Status changes are saved to the server; the dropdown reverts if saving fails.
 (function () {
-    const { initChoiceGroup, toast } = Khabzela;
+    const { initChoiceGroup, toast, post } = Khabzela;
     const rows = Array.from(document.querySelectorAll("[data-request-rows] tr"));
     const empty = document.querySelector("[data-empty]");
     let filter = "all";
@@ -26,8 +26,19 @@
     initChoiceGroup(document.querySelector("[data-filter-group]"), (value) => { filter = value; apply(); });
 
     document.querySelectorAll("[data-status-select]").forEach((select) => {
-        select.addEventListener("change", () => {
+        select.addEventListener("change", async () => {
             const row = select.closest("tr");
+            const previous = row.dataset.status;
+            select.disabled = true;
+            try {
+                await post(`/Admin/UpdateQuoteStatus/${row.dataset.id}`, { status: select.value });
+            } catch (err) {
+                select.value = previous;
+                toast(err.message);
+                return;
+            } finally {
+                select.disabled = false;
+            }
             row.dataset.status = select.value;
             select.className = `qr-status badge badge-${select.value.toLowerCase()}`;
             updateCounts();

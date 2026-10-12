@@ -91,3 +91,5 @@
     .admin-title { font-size: 1.9rem; }
     .admin-main { padding: 8px 40px 64px; max-width: 1280px; }
 }
+
+button.admin-signout { width: 100%; text-align: left; color: inherit; }
