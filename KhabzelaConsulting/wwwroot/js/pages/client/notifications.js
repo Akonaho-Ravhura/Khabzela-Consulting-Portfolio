@@ -1,6 +1,6 @@
 // Client — Notifications: filter by type and mark all as read.
 (function () {
-    const { initChoiceGroup, store, toast } = Khabzela;
+    const { initChoiceGroup, toast, post } = Khabzela;
     const items = Array.from(document.querySelectorAll("[data-notif-list] .notif"));
     const empty = document.querySelector("[data-notif-empty]");
     const markAll = document.querySelector("[data-mark-all]");
@@ -12,8 +12,6 @@
         if (dot) dot.hidden = true;
     }
 
-    if (store.get("kc.notificationsRead")) markRead();
-
     initChoiceGroup(document.querySelector("[data-filter-group]"), (type) => {
         let visible = 0;
         items.forEach((n) => {
@@ -24,10 +22,16 @@
         empty.hidden = visible > 0;
     });
 
-    markAll.addEventListener("click", () => {
-        // TODO (backend): persist read state on the server.
-        store.set("kc.notificationsRead", true);
-        markRead();
-        toast("All notifications marked as read");
+    markAll.addEventListener("click", async () => {
+        markAll.disabled = true;
+        try {
+            await post("/Client/MarkAllRead");
+            markRead();
+            toast("All notifications marked as read");
+        } catch (err) {
+            toast(err.message);
+        } finally {
+            markAll.disabled = false;
+        }
     });
 })();

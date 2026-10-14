@@ -56,3 +56,11 @@
     .profile-grid { grid-template-columns: 3fr 2fr; gap: 24px; align-items: start; }
     .profile-form { padding: 28px; }
 }
+
+/* Sign out is a POST form so it can't be triggered by a link from another site. */
+.profile-links form { border-top: 1px solid var(--line); }
+.profile-links button.profile-signout {
+    display: flex; align-items: center; gap: 14px;
+    width: 100%; padding: 16px 20px; text-align: left;
+}
+.profile-links button.profile-signout:hover { background: #fdfaf5; }

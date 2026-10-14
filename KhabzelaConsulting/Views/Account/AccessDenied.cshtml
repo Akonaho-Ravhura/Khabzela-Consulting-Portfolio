@@ -1,0 +1,19 @@
+@{
+    ViewData["Title"] = "No access";
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/account/forgot-password.css" asp-append-version="true" />
+}
+
+<div class="forgot">
+    <header class="forgot-head">
+        <h1>You don't have access to this page</h1>
+        <p class="lead">You're signed in with an account that can't open this area. Client accounts use the client app; team members use the admin portal.</p>
+    </header>
+    <div class="twofa-actions">
+        <a class="btn btn-primary" asp-controller="Account" asp-action="Login">Go to my dashboard</a>
+        <form method="post" asp-controller="Account" asp-action="Logout">
+            <button class="btn btn-outline" type="submit">Sign in with another account</button>
+        </form>
+    </div>
+</div>

@@ -1,5 +1,7 @@
+@model RegisterInput
 @{
     ViewData["Title"] = "Create account";
+    string? Err(string key) => ViewData.ModelState[key]?.Errors.FirstOrDefault()?.ErrorMessage;
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/account/register.css" asp-append-version="true" />
@@ -16,43 +18,45 @@
     </header>
 
     <form class="register-form" method="post" asp-action="Register" novalidate data-register-form>
+        <div class="form-alert" role="alert" asp-validation-summary="ModelOnly"></div>
         <div class="field">
             <label class="label" for="fullName">Full name</label>
-            <input class="input" id="fullName" name="fullName" autocomplete="name" required />
-            <span class="field-error" data-error-for="fullName"></span>
+            <input class="input" id="fullName" name="fullName" autocomplete="name" required value="@Model.FullName" />
+            <span class="field-error" data-error-for="fullName">@Err("FullName")</span>
         </div>
 
         <div class="register-row">
             <div class="field">
                 <label class="label" for="email">Email address</label>
-                <input class="input" id="email" name="email" type="email" autocomplete="email" required />
-                <span class="field-error" data-error-for="email"></span>
+                <input class="input" id="email" name="email" type="email" autocomplete="email" required value="@Model.Email" />
+                <span class="field-error" data-error-for="email">@Err("Email")</span>
             </div>
             <div class="field">
                 <label class="label" for="phone">Mobile number</label>
-                <input class="input" id="phone" name="phone" type="tel" autocomplete="tel" placeholder="082 000 0000" required pattern="^(\+27|0)[\d\s]{9,12}$" />
-                <span class="field-error" data-error-for="phone"></span>
+                <input class="input" id="phone" name="phone" type="tel" autocomplete="tel" placeholder="082 000 0000" value="@Model.Phone" required pattern="^(\+27|0)[\d\s]{9,12}$" />
+                <span class="field-error" data-error-for="phone">@Err("Phone")</span>
             </div>
         </div>
 
         <div class="field">
             <label class="label" for="password">Password</label>
             <input class="input" id="password" name="password" type="password" autocomplete="new-password" required minlength="8" />
+            <span class="muted small">At least 8 characters, with upper- and lowercase letters and a number.</span>
             <div class="strength" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-            <span class="field-error" data-error-for="password"></span>
+            <span class="field-error" data-error-for="password">@Err("Password")</span>
         </div>
 
         <div class="field">
             <label class="label" for="confirmPassword">Confirm password</label>
             <input class="input" id="confirmPassword" name="confirmPassword" type="password" autocomplete="new-password" required />
-            <span class="field-error" data-error-for="confirmPassword"></span>
+            <span class="field-error" data-error-for="confirmPassword">@Err("ConfirmPassword")</span>
         </div>
 
         <label class="register-terms">
-            <input type="checkbox" name="acceptTerms" required data-terms />
-            <span>I agree to the terms of service and privacy policy (POPIA).</span>
+            <input type="checkbox" name="acceptTerms" value="true" required data-terms />
+            <span>I agree to the terms of service and <a class="btn-link" asp-controller="Home" asp-action="Privacy" target="_blank">privacy policy (POPIA)</a>.</span>
         </label>
-        <span class="field-error" data-error-for="acceptTerms"></span>
+        <span class="field-error" data-error-for="acceptTerms">@Err("AcceptTerms")</span>
 
         <button class="btn btn-primary btn-block" type="submit">Create account</button>
     </form>

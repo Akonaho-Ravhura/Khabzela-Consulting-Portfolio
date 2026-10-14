@@ -1,23 +1,31 @@
+@inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
     var action = ViewContext.RouteData.Values["action"]?.ToString();
     string Active(string name) => string.Equals(action, name, StringComparison.OrdinalIgnoreCase) ? "is-active" : "";
     string Current(string name) => string.Equals(action, name, StringComparison.OrdinalIgnoreCase) ? "page" : "false";
     var hideTabBar = ViewData["HideTabBar"] as bool? ?? false;
+    var initial = KhabzelaConsulting.Models.Text.Initials(User.FindFirst("full_name")?.Value)[..1];
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-    <meta name="theme-color" content="#f8f1e7" />
+    <meta name="theme-color" content="#faf7f4" />
+    <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
     <title>@ViewData["Title"] · Khabzela</title>
     <partial name="_Fonts" />
+    <link rel="manifest" href="~/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="~/icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="mobile-web-app-capable" content="yes" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/layouts/client.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
 <body class="client-body @(hideTabBar ? "no-tabbar" : "")">
     <partial name="_IconSprite" />
+    <span hidden data-flash-toast="@TempData["Toast"]"></span>
 
     <!-- Desktop / tablet top navigation -->
     <header class="client-topbar">
@@ -33,7 +41,7 @@
                 <a class="@Active("Notifications")" aria-current="@Current("Notifications")" asp-controller="Client" asp-action="Notifications">Notifications</a>
             </nav>
             <a class="client-topbar-profile" asp-controller="Client" asp-action="Profile" aria-label="Profile">
-                <span class="avatar">T</span>
+                <span class="avatar">@initial</span>
             </a>
         </div>
     </header>
@@ -54,7 +62,7 @@
             </a>
             <a class="@Active("Notifications")" aria-current="@Current("Notifications")" asp-controller="Client" asp-action="Notifications">
                 <svg class="icon"><use href="#i-bell" /></svg><span>Notifications</span>
-                <span class="tab-dot" data-unread-dot hidden></span>
+                <vc:unread-dot />
             </a>
             <a class="@Active("Profile")" aria-current="@Current("Profile")" asp-controller="Client" asp-action="Profile">
                 <svg class="icon"><use href="#i-user" /></svg><span>Profile</span>
@@ -63,7 +71,7 @@
     }
 
     <script src="~/js/site.js" asp-append-version="true"></script>
-    <script src="~/js/layouts/client.js" asp-append-version="true"></script>
+    <script src="~/js/pwa.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
 </body>
 </html>

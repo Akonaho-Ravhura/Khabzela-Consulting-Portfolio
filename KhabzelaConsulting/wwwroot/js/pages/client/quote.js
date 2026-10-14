@@ -1,4 +1,5 @@
 // Client — Get a quote: live price estimate from the pricing rules, then hand off to booking.
+// This is a preview only; the server recalculates from the same rules when the booking is confirmed.
 (function () {
     const rules = JSON.parse(document.getElementById("pricing-rules").textContent);
     const { formatRand, initChoiceGroup, store } = Khabzela;
@@ -7,14 +8,12 @@
         service: "payroll",
         employees: 12,
         frequency: "monthly",
-        bracket: { accounting: "lt1m", tax: "lt1m" },
-        cover: "business"
+        bracket: { accounting: "lt1m", tax: "lt1m" }
     };
 
     const labels = {
-        services: { accounting: "Accounting", payroll: "Payroll", tax: "Tax", insurance: "Insurance advice" },
-        brackets: { lt1m: "turnover under R1m", "1to5m": "turnover R1m – R5m", "5to20m": "turnover R5m – R20m" },
-        cover: { business: "business cover", life: "life cover", "short-term": "short-term cover" }
+        services: { accounting: "Accounting", payroll: "Payroll", tax: "Tax" },
+        brackets: { lt1m: "turnover under R1m", "1to5m": "turnover R1m – R5m", "5to20m": "turnover R5m – R20m" }
     };
 
     const range = document.querySelector("[data-employees-range]");
@@ -22,25 +21,23 @@
     const estimateEl = document.querySelector("[data-estimate]");
     const detailEl = document.querySelector("[data-estimate-detail]");
 
+    // Rules are [min, max] pairs; null means the rule is in Draft, so there's no automatic estimate.
     function calculate() {
-        switch (state.service) {
-            case "payroll": {
-                const r = rules.payroll;
-                const surcharge = state.frequency === "monthly" ? 0 : r.weeklySurcharge;
-                return {
-                    min: r.base + r.perEmployeeMin * state.employees + surcharge,
-                    max: r.base + r.perEmployeeMax * state.employees + surcharge,
-                    detail: `${state.employees} employee${state.employees === 1 ? "" : "s"} · ${state.frequency === "both" ? "weekly & monthly" : state.frequency}`
-                };
-            }
-            case "accounting":
-            case "tax": {
-                const [min, max] = rules[state.service].brackets[state.bracket[state.service]];
-                return { min, max, detail: labels.brackets[state.bracket[state.service]] };
-            }
-            default:
-                return { min: null, max: null, detail: labels.cover[state.cover] };
+        if (state.service === "payroll") {
+            const r = rules.payroll;
+            const detail = `${state.employees} employee${state.employees === 1 ? "" : "s"} · ${state.frequency === "both" ? "weekly & monthly" : state.frequency}`;
+            if (!r.perEmployee) return { min: null, max: null, detail };
+            const base = r.base || [0, 0];
+            const surcharge = state.frequency === "monthly" || !r.weeklySurcharge ? [0, 0] : r.weeklySurcharge;
+            return {
+                min: base[0] + r.perEmployee[0] * state.employees + surcharge[0],
+                max: base[1] + r.perEmployee[1] * state.employees + surcharge[1],
+                detail
+            };
         }
+        const range = rules[state.service].brackets[state.bracket[state.service]];
+        const detail = labels.brackets[state.bracket[state.service]];
+        return range ? { min: range[0], max: range[1], detail } : { min: null, max: null, detail };
     }
 
     function render() {
@@ -67,7 +64,6 @@
         render();
     });
     initChoiceGroup(document.querySelector("[data-frequency-group]"), (value) => { state.frequency = value; render(); });
-    initChoiceGroup(document.querySelector("[data-cover-group]"), (value) => { state.cover = value; render(); });
     document.querySelectorAll("[data-bracket-group]").forEach((group) => {
         initChoiceGroup(group, (value) => { state.bracket[group.dataset.bracketGroup] = value; render(); });
     });

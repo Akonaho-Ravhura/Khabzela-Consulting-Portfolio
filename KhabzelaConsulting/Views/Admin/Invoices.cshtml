@@ -1,17 +1,8 @@
+@model List<InvoiceRow>
 @{
     ViewData["Title"] = "Invoices";
-
-    // Placeholder data — TODO (backend): load invoices.
-    var invoices = new[]
-    {
-        new { Number = "#1047", Client = "Sipho Nkosi", Description = "Accounting + Tax — October", Amount = 2650m, Due = "15 Oct", Status = "Due" },
-        new { Number = "#1046", Client = "Karabo Molefe", Description = "Accounting + Payroll — October", Amount = 3900m, Due = "15 Oct", Status = "Due" },
-        new { Number = "#1045", Client = "Thabo Mokoena", Description = "Payroll — October", Amount = 1150m, Due = "15 Oct", Status = "Due" },
-        new { Number = "#1043", Client = "Ayanda Zulu", Description = "Accounting — September", Amount = 1800m, Due = "15 Sep", Status = "Overdue" },
-        new { Number = "#1042", Client = "Thabo Mokoena", Description = "Accounting + Tax — September", Amount = 2650m, Due = "15 Sep", Status = "Paid" },
-        new { Number = "#1040", Client = "Palesa Mokoena", Description = "Tax — September", Amount = 800m, Due = "15 Sep", Status = "Paid" },
-    };
-    var clients = invoices.Select(i => i.Client).Distinct().OrderBy(c => c);
+    var invoices = Model;
+    var clients = (List<KeyValuePair<int, string>>)ViewData["Clients"]!;
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/admin/invoices.css" asp-append-version="true" />
@@ -37,13 +28,13 @@
         <tbody data-invoice-rows>
             @foreach (var inv in invoices)
             {
-                <tr data-status="@inv.Status" data-amount="@inv.Amount">
+                <tr data-status="@inv.Status" data-amount="@inv.Amount.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-id="@inv.Id">
                     <td data-label="">
                         <span class="ai-inv"><strong>Invoice @inv.Number</strong><span class="muted small">@inv.Description</span></span>
                     </td>
                     <td data-label="Client">@inv.Client</td>
                     <td data-label="Amount">R @inv.Amount.ToString("N0")</td>
-                    <td data-label="Due" class="text-muted">@inv.Due</td>
+                    <td data-label="Due" class="text-muted">@inv.Due.ToString("d MMM")</td>
                     <td data-label="Status"><span class="badge badge-@inv.Status.ToLowerInvariant()" data-status-badge>@inv.Status</span></td>
                     <td data-label="" class="ai-actions">
                         @if (inv.Status != "Paid")
@@ -55,6 +46,10 @@
             }
         </tbody>
     </table>
+    @if (invoices.Count == 0)
+    {
+        <p class="muted card-pad" data-invoices-empty>No invoices yet — create the first one with “New invoice”.</p>
+    }
 </section>
 
 <dialog class="ai-dialog" data-invoice-dialog aria-labelledby="invoice-dialog-title">
@@ -69,7 +64,7 @@
                 <option value="">Choose a client…</option>
                 @foreach (var c in clients)
                 {
-                    <option>@c</option>
+                    <option value="@c.Key">@c.Value</option>
                 }
             </select>
         </div>
@@ -87,10 +82,11 @@
                 <input class="input" id="inv-due" type="date" required />
             </div>
         </div>
+        <p class="field-error" role="alert" data-invoice-error></p>
         <p class="muted small ai-dialog-hint">The client is notified in the app when the invoice is created.</p>
         <footer class="ai-dialog-foot">
             <button type="button" class="btn btn-outline" data-dialog-cancel>Cancel</button>
-            <button type="submit" class="btn btn-primary">Create invoice</button>
+            <button type="submit" class="btn btn-primary" data-invoice-save>Create invoice</button>
         </footer>
     </form>
 </dialog>

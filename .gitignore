@@ -55,3 +55,11 @@ CodeCoverage/
 *.VisualState.xml
 TestResult.xml
 nunit-*.xml
+
+# Local development database
+*.db
+*.db-shm
+*.db-wal
+
+# Local editor/tooling settings
+.claude/

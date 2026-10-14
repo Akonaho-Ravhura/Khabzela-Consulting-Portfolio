@@ -1,18 +1,19 @@
-// Admin — Pricing rules: add / edit / delete rules through a dialog.
-// TODO (backend): persist changes so the quote calculator picks them up.
+// Admin — Pricing rules: edit a rule's label, min/max amount and status. Saved rules feed the
+// client quote calculator straight away.
 (function () {
-    const { toast } = Khabzela;
+    const { toast, post } = Khabzela;
     const dialog = document.querySelector("[data-rule-dialog]");
     const form = document.querySelector("[data-rule-form]");
-    const titleEl = document.querySelector("[data-dialog-title]");
     const groupEl = document.querySelector("[data-dialog-group]");
-    const variable = form.querySelector("#rule-variable");
-    const formula = form.querySelector("#rule-formula");
+    const unitEl = document.querySelector("[data-dialog-unit]");
+    const errorEl = document.querySelector("[data-rule-error]");
+    const saveBtn = document.querySelector("[data-rule-save]");
+    const label = form.querySelector("#rule-variable");
+    const min = form.querySelector("#rule-min");
+    const max = form.querySelector("#rule-max");
     const statusGroup = form.querySelector("[data-rule-status]");
-    const deleteBtn = form.querySelector("[data-rule-delete]");
 
     let editingRow = null;
-    let targetBody = null;
 
     function setStatus(value) {
         statusGroup.querySelectorAll(".choice").forEach((b) => {
@@ -26,28 +27,18 @@
         if (btn) setStatus(btn.dataset.value);
     });
 
-    function open(row, group) {
+    function open(row) {
         editingRow = row;
-        targetBody = group.querySelector("tbody");
-        titleEl.textContent = row ? "Edit rule" : "Add rule";
-        groupEl.textContent = group.dataset.group;
-        variable.value = row ? row.querySelector('[data-field="variable"]').textContent.trim() : "";
-        formula.value = row ? row.querySelector('[data-field="formula"]').textContent.trim() : "";
-        setStatus(row ? row.querySelector('[data-field="status"]').textContent.trim() : "Active");
-        deleteBtn.hidden = !row;
-        [variable, formula].forEach((i) => i.classList.remove("is-invalid"));
+        groupEl.textContent = row.closest("[data-group]").dataset.group;
+        label.value = row.querySelector('[data-field="variable"]').textContent.trim();
+        min.value = row.dataset.min;
+        max.value = row.dataset.max;
+        unitEl.textContent = `Amounts are ${row.dataset.unit}. Use the same value for both to charge a fixed amount.`;
+        setStatus(row.querySelector('[data-field="status"]').textContent.trim());
+        [label, min, max].forEach((i) => i.classList.remove("is-invalid"));
+        errorEl.textContent = "";
         dialog.showModal();
-        variable.focus();
-    }
-
-    function buildRow() {
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-            <td data-label="Variable" data-field="variable"></td>
-            <td data-label="Price impact" data-field="formula"></td>
-            <td data-label="Status"><span class="pr-status" data-field="status"></span></td>
-            <td data-label="" class="pr-actions"><button class="btn-link small" type="button" data-edit-rule>Edit</button></td>`;
-        return tr;
+        label.focus();
     }
 
     function flash(row) {
@@ -58,35 +49,48 @@
 
     document.addEventListener("click", (e) => {
         const edit = e.target.closest("[data-edit-rule]");
-        const add = e.target.closest("[data-add-rule]");
-        if (edit) open(edit.closest("tr"), edit.closest("[data-group]"));
-        if (add) open(null, add.closest("[data-group]"));
+        if (edit) open(edit.closest("tr"));
     });
 
     form.querySelectorAll("[data-dialog-cancel]").forEach((b) => b.addEventListener("click", () => dialog.close()));
     dialog.addEventListener("click", (e) => { if (e.target === dialog) dialog.close(); });
 
-    form.addEventListener("submit", (e) => {
-        const invalid = [variable, formula].filter((i) => !i.value.trim());
-        [variable, formula].forEach((i) => i.classList.toggle("is-invalid", invalid.includes(i)));
-        if (invalid.length) { e.preventDefault(); invalid[0].focus(); return; }
+    form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+        const invalid = [label, min, max].filter((i) => !i.value.trim() || !i.checkValidity());
+        [label, min, max].forEach((i) => i.classList.toggle("is-invalid", invalid.includes(i)));
+        if (invalid.length) {
+            errorEl.textContent = "Fill in a name and amounts between R0 and R1,000,000.";
+            invalid[0].focus();
+            return;
+        }
+        if (parseFloat(max.value) < parseFloat(min.value)) {
+            max.classList.add("is-invalid");
+            errorEl.textContent = "The maximum can't be less than the minimum.";
+            max.focus();
+            return;
+        }
 
-        const status = statusGroup.querySelector(".is-active").dataset.value;
-        const row = editingRow || targetBody.appendChild(buildRow());
-        row.querySelector('[data-field="variable"]').textContent = variable.value.trim();
-        row.querySelector('[data-field="formula"]').textContent = formula.value.trim();
-        const statusEl = row.querySelector('[data-field="status"]');
-        statusEl.textContent = status;
-        statusEl.className = `pr-status pr-status-${status.toLowerCase()}`;
-        flash(row);
-        toast(editingRow ? "Rule updated" : "Rule added");
-    });
-
-    deleteBtn.addEventListener("click", () => {
-        if (!editingRow) return;
-        if (!confirm(`Delete "${editingRow.querySelector('[data-field="variable"]').textContent.trim()}"?`)) return;
-        editingRow.remove();
-        dialog.close();
-        toast("Rule deleted");
+        saveBtn.disabled = true;
+        try {
+            const status = statusGroup.querySelector(".is-active").dataset.value;
+            const result = await post(`/Admin/UpdatePricingRule/${editingRow.dataset.id}`, {
+                label: label.value.trim(), minValue: min.value, maxValue: max.value, status
+            });
+            editingRow.dataset.min = min.value;
+            editingRow.dataset.max = max.value;
+            editingRow.querySelector('[data-field="variable"]').textContent = result.label;
+            editingRow.querySelector('[data-field="formula"]').textContent = result.formula;
+            const statusEl = editingRow.querySelector('[data-field="status"]');
+            statusEl.textContent = result.status;
+            statusEl.className = `pr-status pr-status-${result.status.toLowerCase()}`;
+            dialog.close();
+            flash(editingRow);
+            toast("Rule updated — the quote calculator uses it now");
+        } catch (err) {
+            errorEl.textContent = err.message;
+        } finally {
+            saveBtn.disabled = false;
+        }
     });
 })();

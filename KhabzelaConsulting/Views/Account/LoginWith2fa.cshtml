@@ -1,0 +1,33 @@
+@model TwoFactorLoginInput
+@{
+    ViewData["Title"] = "Two-factor sign in";
+    var codeError = ViewData.ModelState["Code"]?.Errors.FirstOrDefault()?.ErrorMessage;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/account/forgot-password.css" asp-append-version="true" />
+}
+
+<div class="forgot">
+    <a class="forgot-back btn-link small" asp-action="Login">
+        <svg class="icon icon-sm"><use href="#i-chevron-left" /></svg> Back to sign in
+    </a>
+    <header class="forgot-head">
+        <h1>Enter your security code</h1>
+        <p class="lead">Open your authenticator app and enter the 6-digit code for Khabzela Consulting.</p>
+    </header>
+
+    <form class="forgot-form" method="post" asp-action="LoginWith2fa" asp-route-returnUrl="@ViewData["ReturnUrl"]" novalidate>
+        <div class="form-alert" role="alert" asp-validation-summary="ModelOnly"></div>
+        <input type="hidden" name="rememberMe" value="@Model.RememberMe.ToString().ToLowerInvariant()" />
+        <div class="field">
+            <label class="label" for="code">Security code</label>
+            <input class="input @(codeError != null ? "is-invalid" : "")" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" required autofocus />
+            <span class="field-error">@codeError</span>
+        </div>
+        <label class="login-remember">
+            <input type="checkbox" name="rememberDevice" value="true" />
+            <span>Don't ask again on this device</span>
+        </label>
+        <button class="btn btn-primary btn-block" type="submit">Verify and sign in</button>
+    </form>
+</div>

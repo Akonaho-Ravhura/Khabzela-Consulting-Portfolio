@@ -1,14 +1,7 @@
+@model List<InvoiceRow>
 @{
     ViewData["Title"] = "Invoices";
-
-    // Placeholder data — TODO (backend): load the client's invoices.
-    var invoices = new[]
-    {
-        new { Number = "#1045", Description = "Payroll — October", Issued = "01 Oct 2026", Due = "15 Oct 2026", Amount = 1150m, Status = "Due" },
-        new { Number = "#1042", Description = "Accounting + Tax — September", Issued = "01 Sep 2026", Due = "15 Sep 2026", Amount = 2650m, Status = "Paid" },
-        new { Number = "#1038", Description = "Payroll — September", Issued = "01 Sep 2026", Due = "15 Sep 2026", Amount = 1150m, Status = "Paid" },
-        new { Number = "#1031", Description = "Annual financial statements", Issued = "12 Aug 2026", Due = "26 Aug 2026", Amount = 4800m, Status = "Paid" },
-    };
+    var invoices = Model;
     var outstanding = invoices.Where(i => i.Status != "Paid").Sum(i => i.Amount);
 }
 @section Styles {
@@ -27,7 +20,7 @@
     </div>
     <div class="card card-pad">
         <p class="eyebrow">Paid this year</p>
-        <p class="inv-figure">R @invoices.Where(i => i.Status == "Paid").Sum(i => i.Amount).ToString("N0")</p>
+        <p class="inv-figure">R @(((decimal?)ViewData["PaidThisYear"] ?? 0).ToString("N0"))</p>
     </div>
 </div>
 
@@ -37,10 +30,14 @@
     <button type="button" class="choice" data-value="paid" aria-pressed="false">Paid</button>
 </div>
 
+@if (invoices.Count == 0)
+{
+    <p class="muted">No invoices yet. They'll appear here as soon as your accountant issues one.</p>
+}
 <ul class="inv-list">
     @foreach (var inv in invoices)
     {
-        <li class="inv" data-status="@inv.Status.ToLowerInvariant()">
+        <li class="inv" data-status="@(inv.Status == "Paid" ? "paid" : "due")">
             <button type="button" class="inv-row" aria-expanded="false">
                 <span class="inv-main">
                     <span class="inv-number">Invoice @inv.Number</span>
@@ -53,12 +50,12 @@
             </button>
             <div class="inv-detail" hidden>
                 <dl>
-                    <div><dt>Issued</dt><dd>@inv.Issued</dd></div>
-                    <div><dt>Due</dt><dd>@inv.Due</dd></div>
+                    <div><dt>Issued</dt><dd>@inv.Issued.ToString("dd MMM yyyy")</dd></div>
+                    <div><dt>Due</dt><dd>@inv.Due.ToString("dd MMM yyyy")</dd></div>
                 </dl>
-                <button type="button" class="btn btn-outline inv-download">
-                    <svg class="icon icon-sm"><use href="#i-download" /></svg> Download PDF
-                </button>
+                <a class="btn btn-outline inv-download" asp-action="Invoice" asp-route-id="@inv.Id" target="_blank" rel="noopener">
+                    <svg class="icon icon-sm"><use href="#i-download" /></svg> View / save as PDF
+                </a>
             </div>
         </li>
     }

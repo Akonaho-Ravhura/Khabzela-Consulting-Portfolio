@@ -1,5 +1,5 @@
 // Home — Contact us: form validation + success state, open/closed indicator, single-open FAQ.
-// TODO (backend): POST the message to a contact endpoint (and send an email notification).
+// Sends the message to the server, which saves it and emails it to vukani@khabzelaconsulting.co.za.
 (function () {
     const form = document.querySelector("[data-contact-form]");
     const success = document.querySelector("[data-contact-success]");
@@ -7,6 +7,7 @@
     const message = form.querySelector("#message");
     const counter = form.querySelector("[data-char-count]");
     const consent = form.querySelector("[data-consent]");
+    const formError = form.querySelector("[data-form-error]");
     const fields = [form.querySelector("#name"), form.querySelector("#email"), form.querySelector("#phone"), message, consent];
 
     function validate(input) {
@@ -44,12 +45,30 @@
 
         submit.disabled = true;
         submit.textContent = "Sending…";
-        setTimeout(() => {
-            document.querySelector("[data-success-name]").textContent = form.querySelector("#name").value.trim().split(" ")[0];
-            form.hidden = true;
-            success.hidden = false;
-            success.focus();
-        }, 600);
+        formError.textContent = "";
+        const data = Object.fromEntries(new FormData(form).entries());
+        data.consent = consent.checked;
+
+        Khabzela.post(form.action, data)
+            .then(() => {
+                document.querySelector("[data-success-name]").textContent = form.querySelector("#name").value.trim().split(" ")[0];
+                form.hidden = true;
+                success.hidden = false;
+                success.focus();
+            })
+            .catch((err) => {
+                // Field errors from the server's validation, if any; otherwise a general message.
+                const errors = (err.data && err.data.errors) || {};
+                Object.entries(errors).forEach(([name, msg]) => {
+                    const input = form.querySelector(`[name="${name}"]`);
+                    if (input) setError(input, msg);
+                });
+                formError.textContent = Object.keys(errors).length ? "Please check the highlighted fields." : err.message;
+            })
+            .finally(() => {
+                submit.disabled = false;
+                submit.textContent = "Send message";
+            });
     });
 
     document.querySelector("[data-send-another]").addEventListener("click", () => {

@@ -5,13 +5,13 @@
    ========================================================================== */
 
 :root {
-    /* Brand palette */
-    --cream: #f8f1e7;
-    --cream-2: #f3eadc;
+    /* Brand palette — forest green and warm off-white from the firm's Looka brand */
+    --cream: #faf7f4;
+    --cream-2: #f2ede6;
     --paper: #ffffff;
-    --ink: #1b2619;
-    --ink-2: #26331f;
-    --ink-3: #2f3d27;
+    --ink: #1e3414;
+    --ink-2: #284420;
+    --ink-3: #32512a;
     --text: #1f241c;
     --muted: #7a7062;
     --muted-2: #a69c8c;
@@ -252,3 +252,12 @@ h3 { font-size: 1.05rem; }
 @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after { transition: none !important; animation: none !important; }
 }
+
+/* ---------- Server-side form messages ---------- */
+.form-alert:empty, .form-alert.validation-summary-valid { display: none; }
+.form-alert {
+    margin-bottom: 16px; padding: 12px 14px;
+    background: var(--danger-bg); color: var(--danger);
+    border-left: 3px solid var(--danger); font-size: .9rem;
+}
+.form-alert ul { display: grid; gap: 4px; }

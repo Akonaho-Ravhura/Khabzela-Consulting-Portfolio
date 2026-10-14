@@ -1,0 +1,53 @@
+@{
+    ViewData["Title"] = "Two-factor authentication";
+    var enabled = ViewData["Enabled"] as bool? ?? false;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/account/forgot-password.css" asp-append-version="true" />
+}
+
+<div class="forgot">
+    <a class="forgot-back btn-link small" href="@ViewData["BackUrl"]">
+        <svg class="icon icon-sm"><use href="#i-chevron-left" /></svg> Back
+    </a>
+    <header class="forgot-head">
+        <h1>Two-factor authentication</h1>
+        <p class="lead">Add a second step to sign-in: a 6-digit code from an authenticator app (Google or Microsoft Authenticator).</p>
+    </header>
+
+    @if (TempData["Error"] is string error)
+    {
+        <div class="form-alert" role="alert">@error</div>
+    }
+
+    @if (enabled)
+    {
+        <div class="card card-pad forgot-sent">
+            <span class="forgot-sent-icon"><svg class="icon"><use href="#i-check" /></svg></span>
+            <h2>Two-factor authentication is on</h2>
+            <p class="muted">You'll be asked for a code from your authenticator app when you sign in on a new device.</p>
+            <form method="post" asp-action="DisableTwoFactor" onsubmit="return confirm('Turn off two-factor authentication?');">
+                <button class="btn btn-outline" type="submit">Turn off</button>
+            </form>
+        </div>
+    }
+    else
+    {
+        <ol class="twofa-steps">
+            <li>
+                <p>Scan this QR code with your authenticator app:</p>
+                <div class="twofa-qr" aria-label="QR code for your authenticator app">@Html.Raw(ViewData["QrSvg"])</div>
+                <p class="muted small">Can't scan it? Enter this key instead: <code>@ViewData["Key"]</code></p>
+            </li>
+            <li>
+                <form class="forgot-form" method="post" asp-action="EnableTwoFactor" novalidate>
+                    <div class="field">
+                        <label class="label" for="code">Enter the 6-digit code it shows</label>
+                        <input class="input" id="code" name="code" inputmode="numeric" autocomplete="one-time-code" maxlength="7" required />
+                    </div>
+                    <button class="btn btn-primary btn-block" type="submit">Turn on two-factor authentication</button>
+                </form>
+            </li>
+        </ol>
+    }
+</div>

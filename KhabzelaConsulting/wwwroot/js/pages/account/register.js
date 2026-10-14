@@ -23,6 +23,8 @@
         if (input.validity.typeMismatch) return "Enter a valid email address.";
         if (input.validity.patternMismatch) return "Enter a valid South African mobile number.";
         if (input.validity.tooShort) return `Use at least ${input.minLength} characters.`;
+        if (input === password && !(/[A-Z]/.test(password.value) && /[a-z]/.test(password.value) && /\d/.test(password.value)))
+            return "Include upper- and lowercase letters and a number.";
         if (input === confirm && confirm.value !== password.value) return "Passwords don't match.";
         return "";
     }

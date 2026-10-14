@@ -1,44 +1,19 @@
+@model List<RuleGroup>
 @{
     ViewData["Title"] = "Pricing rules";
-
-    // Placeholder data — TODO (backend): load rules; these feed the client quote calculator.
-    var groups = new[]
-    {
-        new { Name = "Payroll", Rules = new[]
-        {
-            new { Variable = "Base fee", Formula = "R 250 / month", Status = "Active" },
-            new { Variable = "Per employee", Formula = "R 50 – R 100 / employee / month", Status = "Active" },
-            new { Variable = "Weekly payroll surcharge", Formula = "+ R 200 / month", Status = "Active" },
-        }},
-        new { Name = "Accounting", Rules = new[]
-        {
-            new { Variable = "Annual turnover bracket", Formula = "R 900 – R 3,500 / month by bracket", Status = "Active" },
-        }},
-        new { Name = "Tax", Rules = new[]
-        {
-            new { Variable = "Annual turnover bracket", Formula = "R 650 – R 2,400 / month by bracket", Status = "Active" },
-        }},
-        new { Name = "Bundle discount", Rules = new[]
-        {
-            new { Variable = "2+ services selected", Formula = "− 10% off combined estimate", Status = "Draft" },
-        }},
-    };
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/admin/pricing-rules.css" asp-append-version="true" />
 }
 
-<p class="admin-page-intro">Update these anytime — changes apply immediately to the quote calculator on the website and app.</p>
+<p class="admin-page-intro">Update these anytime — changes apply immediately to the quote calculator in the client app. Set a rule to <strong>Draft</strong> to stop automatic estimates for it (clients then see "Priced on consultation").</p>
 
 <div class="admin-stack">
-    @foreach (var g in groups)
+    @foreach (var g in Model)
     {
         <section class="card pr-group" data-group="@g.Name">
             <header class="card-header">
                 <h2 class="pr-group-title">@g.Name</h2>
-                <button class="btn-link small pr-add" type="button" data-add-rule>
-                    <svg class="icon icon-sm"><use href="#i-plus" /></svg> Add rule
-                </button>
             </header>
             <table class="table table-stack pr-table">
                 <thead>
@@ -47,8 +22,8 @@
                 <tbody>
                     @foreach (var r in g.Rules)
                     {
-                        <tr>
-                            <td data-label="Variable" data-field="variable">@r.Variable</td>
+                        <tr data-id="@r.Id" data-min="@r.Min.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-max="@r.Max.ToString(System.Globalization.CultureInfo.InvariantCulture)" data-unit="@r.Unit">
+                            <td data-label="Variable" data-field="variable">@r.Label</td>
                             <td data-label="Price impact" data-field="formula">@r.Formula</td>
                             <td data-label="Status"><span class="pr-status pr-status-@r.Status.ToLowerInvariant()" data-field="status">@r.Status</span></td>
                             <td data-label="" class="pr-actions"><button class="btn-link small" type="button" data-edit-rule>Edit</button></td>
@@ -72,12 +47,19 @@
 
         <div class="field">
             <label class="label" for="rule-variable">Variable</label>
-            <input class="input" id="rule-variable" name="variable" required placeholder="e.g. Per employee" />
+            <input class="input" id="rule-variable" name="label" required maxlength="80" />
         </div>
-        <div class="field">
-            <label class="label" for="rule-formula">Price impact / formula</label>
-            <input class="input" id="rule-formula" name="formula" required placeholder="e.g. R 65 / employee / month" />
+        <div class="pr-dialog-row">
+            <div class="field">
+                <label class="label" for="rule-min">Minimum (R)</label>
+                <input class="input" id="rule-min" name="minValue" type="number" min="0" max="1000000" step="1" required inputmode="numeric" />
+            </div>
+            <div class="field">
+                <label class="label" for="rule-max">Maximum (R)</label>
+                <input class="input" id="rule-max" name="maxValue" type="number" min="0" max="1000000" step="1" required inputmode="numeric" />
+            </div>
         </div>
+        <p class="muted small" data-dialog-unit></p>
         <div class="field">
             <span class="label">Status</span>
             <div class="choice-group" role="group" aria-label="Status" data-rule-status>
@@ -85,12 +67,12 @@
                 <button type="button" class="choice" data-value="Draft" aria-pressed="false">Draft</button>
             </div>
         </div>
+        <p class="field-error" role="alert" data-rule-error></p>
 
         <footer class="pr-dialog-foot">
-            <button type="button" class="btn btn-link pr-delete" data-rule-delete>Delete rule</button>
             <span class="pr-dialog-spacer"></span>
             <button type="button" class="btn btn-outline" data-dialog-cancel>Cancel</button>
-            <button type="submit" class="btn btn-primary">Save rule</button>
+            <button type="submit" class="btn btn-primary" data-rule-save>Save rule</button>
         </footer>
     </form>
 </dialog>

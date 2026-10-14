@@ -1,14 +1,7 @@
+@model List<NotificationRow>
 @{
     ViewData["Title"] = "Notifications";
-
-    // Placeholder data — TODO (backend): load the client's notifications.
-    var notifications = new[]
-    {
-        new { Icon = "i-clock", Title = "Your tax status changed", Body = "SARS has moved your 2025 return to \"Assessed\". No action needed — your accountant will follow up if anything is required.", When = "Today, 09:14", Type = "tax", Unread = true },
-        new { Icon = "i-calendar", Title = "Provisional tax due in 12 days", Body = "Your second IRP6 for the 2026 tax year is due soon.", When = "Yesterday, 08:00", Type = "deadline", Unread = true },
-        new { Icon = "i-file", Title = "Invoice #1042 marked paid", Body = "", When = "3 days ago", Type = "invoice", Unread = false },
-        new { Icon = "i-calendar", Title = "Appointment confirmed", Body = "Payroll consultation with Vukani.", When = "Last week", Type = "deadline", Unread = false },
-    };
+    var notifications = Model;
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/client/notifications.css" asp-append-version="true" />
@@ -19,7 +12,7 @@
         <h1>Notifications</h1>
         <p class="lead">Tax status changes, deadlines and updates from your accountant — no documents are stored here.</p>
     </div>
-    <button class="btn-link small notif-mark" type="button" data-mark-all>Mark all as read</button>
+    <button class="btn-link small notif-mark" type="button" data-mark-all @(notifications.Any(n => n.Unread) ? "" : "hidden")>Mark all as read</button>
 </header>
 
 <div class="choice-group notif-filters" role="group" aria-label="Filter notifications" data-filter-group>
@@ -45,7 +38,7 @@
         </li>
     }
 </ul>
-<p class="notif-empty muted" data-notif-empty hidden>Nothing here yet.</p>
+<p class="notif-empty muted" data-notif-empty @(notifications.Count == 0 ? "" : "hidden")>Nothing here yet.</p>
 
 @section Scripts {
     <script src="~/js/pages/client/notifications.js" asp-append-version="true"></script>

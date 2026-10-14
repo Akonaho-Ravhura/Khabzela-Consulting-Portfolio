@@ -1,16 +1,8 @@
+@model List<QuoteRow>
 @{
     ViewData["Title"] = "Quote requests";
-
-    // Placeholder data — TODO (backend): load quote requests (created by the client quote + booking flow).
-    var requests = new[]
-    {
-        new { Id = 1, Client = "Naledi Dube", Email = "naledi@example.co.za", Service = "Payroll", Detail = "12 employees · monthly", Estimate = "R 850 – 1,450", Appointment = "Tue 26 Aug, 10:30", Status = "New", Date = "22 Aug" },
-        new { Id = 2, Client = "Lwazi Khumalo", Email = "lwazi@example.co.za", Service = "Accounting", Detail = "Turnover R1m – R5m", Estimate = "R 1,400 – 2,200", Appointment = "Wed 27 Aug, 09:00", Status = "New", Date = "22 Aug" },
-        new { Id = 3, Client = "Sipho Nkosi", Email = "sipho@example.co.za", Service = "Accounting + Tax", Detail = "Turnover R1m – R5m", Estimate = "R 2,100 – 3,200", Appointment = "Mon 25 Aug, 14:30", Status = "Contacted", Date = "21 Aug" },
-        new { Id = 4, Client = "Palesa Mokoena", Email = "palesa@example.co.za", Service = "Tax", Detail = "Turnover under R1m", Estimate = "R 650 – 950", Appointment = "Done", Status = "Won", Date = "19 Aug" },
-        new { Id = 5, Client = "Johan Pretorius", Email = "johan@example.co.za", Service = "Insurance advice", Detail = "Business cover", Estimate = "—", Appointment = "Done", Status = "Lost", Date = "15 Aug" },
-    };
-    var statuses = new[] { "New", "Contacted", "Won", "Lost" };
+    var requests = Model;
+    var statuses = QuoteStatuses.All;
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/admin/quote-requests.css" asp-append-version="true" />
@@ -34,7 +26,7 @@
         <tbody data-request-rows>
             @foreach (var r in requests)
             {
-                <tr data-status="@r.Status">
+                <tr data-status="@r.Status" data-id="@r.Id">
                     <td data-label="">
                         <span class="qr-client">
                             <strong>@r.Client</strong>
@@ -54,12 +46,12 @@
                             }
                         </select>
                     </td>
-                    <td data-label="Date" class="text-muted">@r.Date</td>
+                    <td data-label="Date" class="text-muted">@r.Date.ToString("d MMM")</td>
                 </tr>
             }
         </tbody>
     </table>
-    <p class="qr-empty muted" data-empty hidden>No requests with this status.</p>
+    <p class="qr-empty muted" data-empty @(requests.Count == 0 ? "" : "hidden")>@(requests.Count == 0 ? "No quote requests yet — they arrive when clients book through the app." : "No requests with this status.")</p>
 </section>
 
 @section Scripts {
