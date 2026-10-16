@@ -1,4 +1,6 @@
+@inject Microsoft.Extensions.Options.IOptions<KhabzelaConsulting.Services.SiteOptions> SiteOptions
 @{
+    ViewData["HideClosing"] = true;
     ViewData["Title"] = "Privacy & POPIA";
 }
 @section Styles {
@@ -35,7 +37,7 @@
             <p>The client app shows status updates only — no tax documents are attached to or stored in app notifications.</p>
 
             <h2 id="rights">Your rights</h2>
-            <p>Under the Protection of Personal Information Act (POPIA) you may ask to see, correct or delete your information. Email <a class="btn-link" href="mailto:vukani@khabzelaconsulting.co.za">vukani@khabzelaconsulting.co.za</a> and we'll respond within 30 days.</p>
+            <p>Under the Protection of Personal Information Act (POPIA) you may ask to see, correct or delete your information. Email <a class="btn-link" href="mailto:@SiteOptions.Value.ContactEmail">@SiteOptions.Value.ContactEmail</a> and we'll respond within 30 days.</p>
         </article>
     </div>
 </section>

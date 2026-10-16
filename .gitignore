@@ -61,5 +61,3 @@ nunit-*.xml
 *.db-shm
 *.db-wal
 
-# Local editor/tooling settings
-.claude/

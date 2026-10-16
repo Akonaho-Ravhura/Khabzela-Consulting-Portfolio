@@ -231,6 +231,14 @@ namespace KhabzelaConsulting.Controllers
             return Json(new { ok = true });
         }
 
+        // Website contact-form messages, newest first (also emailed to the firm when email is configured).
+        public async Task<IActionResult> Enquiries()
+        {
+            var messages = await _db.ContactMessages.OrderByDescending(m => m.CreatedAt).Take(200).ToListAsync();
+            ViewData["Clock"] = _clock;
+            return View(messages);
+        }
+
         // ----- Team: administrators are invited by an existing administrator, never self-registered. -----
 
         public async Task<IActionResult> Team()

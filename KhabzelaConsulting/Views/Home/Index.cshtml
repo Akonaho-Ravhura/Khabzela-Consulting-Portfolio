@@ -1,95 +1,43 @@
 @{
     ViewData["Title"] = "Accounting, payroll & tax in Centurion";
-    var years = DateTime.Now.Year - 2010;
 
-    // Service descriptions from the firm's own website (Looka).
+    // Service descriptions from the firm's own website.
     var services = new[]
     {
-        new { Icon = "i-chart", Name = "Accounting", Text = "We provide our clients with monthly management accounts and annual financial statements to enable them to understand the financial performance of their businesses." },
-        new { Icon = "i-users", Name = "Payroll", Text = "Our payroll team provides weekly and monthly payroll services which includes issuing pay-slips and UIF declarations. Annual tax certificates (IRP5s) are issued at the end of the tax year." },
-        new { Icon = "i-file", Name = "Tax", Text = "We prepare monthly PAYE and VAT returns for our clients. We further do bi-annual provisional tax returns (IRP6s) and annual income tax returns (IT14s)." },
-    };
-    var steps = new[]
-    {
-        new { Title = "Get a quote in the app", Text = "Sign in, choose a service, answer two or three questions and see an estimated monthly range straight away." },
-        new { Title = "Book a time", Text = "Pick a slot with your accountant in the same flow — your estimate comes with you to the meeting." },
-        new { Title = "Stay in the loop", Text = "Get notified when your tax status changes, follow deadlines and see your invoices in the app." },
+        new { Image = "service-accounting", Alt = "Laptop showing financial reports", Name = "Accounting", Text = "We provide our clients with monthly management accounts and annual financial statements to enable them to understand the financial performance of their businesses." },
+        new { Image = "service-payroll", Alt = "Person paying online with a card on a laptop", Name = "Payroll", Text = "Our payroll team provides weekly and monthly payroll services which includes issuing pay-slips and UIF declarations. Annual tax certificates (IRP5s) are issued at the end of the tax year." },
+        new { Image = "service-tax", Alt = "Tax statement and forms on a desk", Name = "Tax", Text = "We prepare monthly PAYE and VAT returns for our clients. We further do bi-annual provisional tax returns (IRP6s) and annual income tax returns (IT14s)." },
     };
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/home/index.css" asp-append-version="true" />
 }
 
-<!-- Hero -->
 <section class="hero">
-    <div class="site-container hero-inner">
-        <div class="hero-copy">
-            <p class="eyebrow">Accounting · Payroll · Tax</p>
-            <h1>We're the accounting <em>and tax experts.</em></h1>
-            <p class="hero-lead">We're happy to be a Centurion-based accounting firm. Let us help you meet your accounting, payroll and tax requirements.</p>
-            <div class="hero-actions">
-                <a class="btn btn-light" asp-action="Contact">Contact us <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
-                <a class="btn hero-btn-ghost" asp-controller="Account" asp-action="Login">Client login</a>
-            </div>
-            <ul class="hero-points">
-                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Established 2010</li>
-                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>Small &amp; medium businesses</li>
-                <li><svg class="icon icon-sm"><use href="#i-check" /></svg>POPIA compliant</li>
-            </ul>
-        </div>
-
-        <div class="hero-visual" aria-hidden="true">
-            <div class="hero-card hero-card-quote">
-                <p class="eyebrow">Payroll estimate</p>
-                <p class="hero-card-figure" data-hero-estimate>R 850 – R 1,450<span>/mo</span></p>
-                <div class="hero-card-bar"><span data-hero-bar></span></div>
-                <p class="hero-card-meta"><span data-hero-employees>12</span> employees · monthly</p>
-            </div>
-            <div class="hero-card hero-card-notif">
-                <svg class="icon"><use href="#i-clock" /></svg>
-                <div>
-                    <p><strong>Tax status changed</strong></p>
-                    <p class="hero-card-meta">Your 2025 return is now “Assessed”.</p>
-                </div>
-            </div>
-            <div class="hero-card hero-card-booking">
-                <span class="avatar">V</span>
-                <div>
-                    <p><strong>Booked with Vukani</strong></p>
-                    <p class="hero-card-meta">Tue 26 · 10:30</p>
-                </div>
-                <svg class="icon hero-card-check"><use href="#i-check" /></svg>
-            </div>
-        </div>
-    </div>
-
     <div class="site-container">
-        <dl class="hero-stats">
-            <div><dt>Established</dt><dd>2010</dd></div>
-            <div><dt>Years in practice</dt><dd><span data-count-to="@years">@years</span>+</dd></div>
-            <div><dt>Based in</dt><dd>Centurion</dd></div>
-            <div><dt>Core services</dt><dd>3</dd></div>
-        </dl>
+        <h1>We're the accounting and tax experts</h1>
+        <p>We're happy to be a Centurion-based accounting firm. Let us help you meet your accounting, payroll and tax requirements.</p>
+        <a class="btn btn-primary" asp-action="Contact">Contact us</a>
+        @* Above the fold: load first, smaller file on phones. *@
+        <img class="hero-image" src="~/images/hero.jpg" srcset="/images/hero-sm.jpg 760w, /images/hero.jpg 1600w" sizes="(max-width: 1232px) 100vw, 1200px"
+             width="1600" height="700" alt="Tax forms, a calculator and documents on a desk" fetchpriority="high" decoding="async" />
     </div>
 </section>
 
-<!-- Services -->
-<section class="section" id="services">
+<section class="section offering" id="services">
     <div class="site-container">
-        <header class="section-head" data-reveal>
+        <header class="offering-head">
             <p class="eyebrow">Our offering</p>
-            <h2>Our services</h2>
-            <p>Accounting, payroll and tax services tailored to our clients' requirements.</p>
+            <h2>Our Services</h2>
         </header>
-
-        <div class="services-grid">
+        <div class="offering-grid">
             @foreach (var s in services)
             {
-                <article class="service-card" data-reveal>
-                    <span class="service-icon"><svg class="icon"><use href="#@s.Icon" /></svg></span>
+                <article class="offering-card">
+                    <img src="~/images/@(s.Image)-sm.jpg" srcset="/images/@(s.Image)-sm.jpg 480w, /images/@(s.Image).jpg 800w" sizes="(max-width: 760px) 100vw, 380px"
+                         width="800" height="520" alt="@s.Alt" loading="lazy" decoding="async" />
                     <h3>@s.Name</h3>
                     <p>@s.Text</p>
-                    <a class="service-link" asp-action="Contact">Enquire <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
                 </article>
             }
         </div>
@@ -97,9 +45,9 @@
 </section>
 
 <!-- Tax compliance alerts (client app feature) -->
-<section class="section section-alt alerts" id="alerts">
+<section class="section alerts" id="alerts">
     <div class="site-container alerts-inner">
-        <div class="alerts-copy" data-reveal>
+        <div class="alerts-copy">
             <p class="eyebrow">Tax compliance alerts</p>
             <h2>Know your tax status before it becomes a problem</h2>
             <p>Too often, businesses only hear about a SARS issue once it's already affecting them. As a Khabzela client, our app keeps you informed:</p>
@@ -109,13 +57,16 @@
                 <li><svg class="icon icon-sm"><use href="#i-check" /></svg><span><strong>In the app, or by email.</strong> Check it on your phone or computer, and switch on email copies if you prefer.</span></li>
                 <li><svg class="icon icon-sm"><use href="#i-check" /></svg><span><strong>Your SARS login stays private.</strong> No eFiling password is needed and no tax documents are stored in the app.</span></li>
             </ul>
-            <div class="alerts-actions">
+
+            @* Entry points to the separate client app. *@
+            <div class="app-links" aria-label="Client app">
                 <a class="btn btn-primary" asp-controller="Account" asp-action="Register">Create a client account</a>
+                <a class="btn btn-outline" asp-controller="Client" asp-action="Quote">Get a quote</a>
                 <a class="btn btn-outline" asp-controller="Account" asp-action="Login">Client login</a>
             </div>
         </div>
 
-        <figure class="alerts-visual" data-reveal>
+        <figure class="alerts-visual">
             <ul class="alerts-feed" aria-label="Example notifications">
                 <li class="alerts-note">
                     <span class="alerts-icon"><svg class="icon"><use href="#i-clock" /></svg></span>
@@ -142,82 +93,7 @@
                     </span>
                 </li>
             </ul>
-            <figcaption class="muted small">Example notifications from the Khabzela client app.</figcaption>
+            <figcaption>Example notifications from the Khabzela client app.</figcaption>
         </figure>
     </div>
 </section>
-
-<!-- How it works -->
-<section class="section section-dark how">
-    <div class="site-container">
-        <header class="section-head is-center" data-reveal>
-            <p class="eyebrow">How it works</p>
-            <h2>From quote to compliant in three steps</h2>
-        </header>
-        <ol class="how-steps">
-            @for (var i = 0; i < steps.Length; i++)
-            {
-                <li class="how-step" data-reveal>
-                    <span class="how-num">@((i + 1).ToString("00"))</span>
-                    <h3>@steps[i].Title</h3>
-                    <p>@steps[i].Text</p>
-                </li>
-            }
-        </ol>
-    </div>
-</section>
-
-<!-- About teaser -->
-<section class="section section-alt about-teaser">
-    <div class="site-container about-teaser-inner">
-        <div class="about-teaser-media" data-reveal aria-hidden="true">
-            <div class="about-monogram">
-                <svg class="icon"><use href="#i-brand" /></svg>
-            </div>
-            <div class="about-badge">
-                <strong>Est. 2010</strong>
-                <span>Centurion</span>
-            </div>
-        </div>
-        <div class="about-teaser-copy" data-reveal>
-            <p class="eyebrow">About us</p>
-            <h2>Services tailored to our clients' requirements</h2>
-            <p>Khabzela Consulting is a Centurion-based accounting firm, established in 2010. We provide accounting, payroll and tax services to small and medium-sized enterprises.</p>
-            <p>We have the expertise and experience that clients trust. Meet with us to discover why we're the leading accounting firm in Centurion.</p>
-            <a class="btn btn-primary" asp-action="About">More about us <svg class="icon icon-sm"><use href="#i-arrow-right" /></svg></a>
-        </div>
-    </div>
-</section>
-
-<!-- Testimonial -->
-<section class="section testimonial">
-    <div class="site-container">
-        <figure class="testimonial-card" data-reveal>
-            <blockquote>“Khabzela Consulting offered insights on the financial and tax side of my business I never would have thought of. I'm more than happy.”</blockquote>
-            <figcaption>
-                <span class="avatar">EK</span>
-                <span><strong>Eugene Khoza</strong><span class="muted small">Client</span></span>
-            </figcaption>
-        </figure>
-    </div>
-</section>
-
-<!-- Contact band -->
-<section class="section section-alt contact-band">
-    <div class="site-container contact-band-inner" data-reveal>
-        <div>
-            <p class="eyebrow">Contact us</p>
-            <h2>Contact us to schedule an appointment</h2>
-            <p class="muted">Let's find the best solutions for your business.</p>
-        </div>
-        <div class="contact-band-cards">
-            <a class="contact-mini" href="tel:+27728792715"><svg class="icon"><use href="#i-phone" /></svg><span><span class="muted small">Call</span>072 879 2715</span></a>
-            <a class="contact-mini" href="mailto:vukani@khabzelaconsulting.co.za"><svg class="icon"><use href="#i-mail" /></svg><span><span class="muted small">Email</span>vukani@khabzelaconsulting.co.za</span></a>
-            <a class="btn btn-primary" asp-action="Contact">Send a message</a>
-        </div>
-    </div>
-</section>
-
-@section Scripts {
-    <script src="~/js/pages/home/index.js" asp-append-version="true"></script>
-}
