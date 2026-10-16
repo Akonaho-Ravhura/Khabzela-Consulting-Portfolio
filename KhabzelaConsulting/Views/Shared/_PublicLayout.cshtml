@@ -1,3 +1,4 @@
+@inject Microsoft.Extensions.Options.IOptions<KhabzelaConsulting.Services.SiteOptions> SiteOptions
 @inject Microsoft.AspNetCore.Antiforgery.IAntiforgery Antiforgery
 @{
     var action = ViewContext.RouteData.Values["action"]?.ToString();
@@ -94,7 +95,7 @@
             <address class="footer-contact">
                 <span><a href="tel:+27728792715">072 879 2715</a> / <a href="tel:+27716841535">071 684 1535</a></span>
                 <span>9 Charles De Gaulle Crescent, Highveld</span>
-                <a href="mailto:vukani@khabzelaconsulting.co.za">vukani@khabzelaconsulting.co.za</a>
+                <a href="mailto:@SiteOptions.Value.ContactEmail">@SiteOptions.Value.ContactEmail</a>
                 <a href="https://www.khabzelaconsulting.co.za">www.khabzelaconsulting.co.za</a>
             </address>
         </div>

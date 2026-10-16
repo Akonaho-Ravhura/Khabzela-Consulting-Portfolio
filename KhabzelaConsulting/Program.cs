@@ -81,7 +81,13 @@ builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp")
 builder.Services.Configure<SeedOptions>(builder.Configuration.GetSection("Seed"));
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<SaClock>();
-builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.Configure<AcsEmailOptions>(builder.Configuration.GetSection("AzureEmail"));
+builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
+// Email: Azure Communication Services when configured (Azure deployment), otherwise SMTP (Afrihost mailbox).
+if (!string.IsNullOrWhiteSpace(builder.Configuration["AzureEmail:ConnectionString"]))
+    builder.Services.AddScoped<IEmailSender, AcsEmailSender>();
+else
+    builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<DeadlineReminderService>();
 if (!builder.Configuration.GetValue<bool>("Reminders:Disabled"))

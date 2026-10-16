@@ -125,6 +125,7 @@ namespace KhabzelaConsulting.Tests
             var login = await LoginAsync(client, "admin@demo.khabzela.co.za", "Demo@2026");
             Assert.Equal("/Admin", login.Headers.Location!.ToString());
             Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/Admin/Clients")).StatusCode);
+            Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/Admin/Enquiries")).StatusCode);
         }
 
         [Fact]
