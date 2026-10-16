@@ -50,6 +50,7 @@ namespace KhabzelaConsulting.Tests
         [Theory]
         [InlineData("/")]
         [InlineData("/Home/About")]
+        [InlineData("/Home/Offering")]
         [InlineData("/Home/Contact")]
         [InlineData("/Home/Privacy")]
         [InlineData("/Account/Login")]
@@ -69,6 +70,11 @@ namespace KhabzelaConsulting.Tests
             Assert.Contains("vukani@khabzelaconsulting.co.za", html);
             Assert.DoesNotContain("Insurance", html);
             Assert.Contains("Know your tax status before it becomes a problem", html);
+            Assert.DoesNotContain("Facebook", html);
+
+            var offering = await NewClient().GetStringAsync("/Home/Offering");
+            Assert.Contains("Tax", offering);
+            Assert.DoesNotContain("Insurance", offering);
         }
 
         [Theory]

@@ -1,0 +1,38 @@
+@{
+    ViewData["Title"] = "Offering";
+    ViewData["Description"] = "Accounting, payroll and tax services from Khabzela Consulting in Centurion.";
+
+    var services = new[]
+    {
+        new { Image = "offering-accounting", Alt = "Hand holding a calculator over financial documents", Name = "Accounting", Text = "We provide our clients with monthly management accounts and annual financial statements to enable them to understand the financial performance of their businesses." },
+        new { Image = "offering-payroll", Alt = "Payroll documents, a calculator and a cup of coffee on a desk", Name = "Payroll", Text = "Our payroll team provides weekly and monthly payroll services which includes issuing pay-slips and UIF declarations. Annual tax certificates (IRP5s) are issued at the end of the tax year." },
+        new { Image = "offering-tax", Alt = "Tax statement and forms on a desk", Name = "Tax", Text = "We prepare monthly PAYE and VAT returns for our clients. We further do bi-annual provisional tax returns (IRP6s) and annual income tax returns (IT14s)." },
+    };
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/home/offering.css" asp-append-version="true" />
+}
+
+<section class="page-head">
+    <div class="site-container">
+        <p class="eyebrow">Our offering</p>
+        <h1>Khabzela Consulting is a Centurion-based accounting firm that features a team of accounting and tax experts with years of experience.</h1>
+    </div>
+</section>
+
+<section class="offering-list">
+    <div class="site-container">
+        @for (var i = 0; i < services.Length; i++)
+        {
+            var s = services[i];
+            <article class="panel offering-item @(i % 2 == 1 ? "is-reversed" : "")" id="@s.Name.ToLowerInvariant()">
+                <img src="~/images/@(s.Image)-sm.jpg" srcset="/images/@(s.Image)-sm.jpg 600w, /images/@(s.Image).jpg 1100w" sizes="(max-width: 900px) 100vw, 640px"
+                     width="1100" height="780" alt="@s.Alt" loading="@(i == 0 ? "eager" : "lazy")" decoding="async" />
+                <div class="offering-text">
+                    <h2>@s.Name</h2>
+                    <p>@s.Text</p>
+                </div>
+            </article>
+        }
+    </div>
+</section>

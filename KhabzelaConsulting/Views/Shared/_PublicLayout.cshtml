@@ -2,49 +2,51 @@
 @{
     var action = ViewContext.RouteData.Values["action"]?.ToString();
     string Active(string name) => string.Equals(action, name, StringComparison.OrdinalIgnoreCase) ? "is-active" : "";
-    var isHome = string.Equals(action, "Index", StringComparison.OrdinalIgnoreCase);
-    var homeUrl = Url.Action("Index", "Home");
+    var showClosing = ViewData["HideClosing"] as bool? != true;
 }
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#1e3414" />
+    <meta name="theme-color" content="#16301a" />
     <meta name="description" content="@(ViewData["Description"] ?? "Khabzela Consulting — a Centurion-based accounting firm offering accounting, payroll and tax services to small and medium-sized businesses.")" />
     <meta name="csrf-token" content="@Antiforgery.GetAndStoreTokens(Context).RequestToken" />
     <title>@ViewData["Title"] · Khabzela Consulting</title>
-    <partial name="_Fonts" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@600;700&display=swap" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cinzel:wght@600;700&family=Montserrat:wght@300;400&family=Mrs+Saint+Delafield&family=Noto+Serif:wght@400&display=swap" />
     <link rel="manifest" href="~/manifest.webmanifest" />
     <link rel="apple-touch-icon" href="~/icons/icon-192.png" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/layouts/public.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
-    <script>document.documentElement.classList.add("js");</script>
 </head>
-<body class="public-body @(isHome ? "is-home" : "")">
+<body class="public-body">
     <partial name="_IconSprite" />
     <span hidden data-flash-toast="@TempData["Toast"]"></span>
     <a class="skip-link" href="#main">Skip to content</a>
 
     <header class="site-header" data-site-header>
         <div class="site-container site-header-inner">
-            <a class="site-logo" asp-controller="Home" asp-action="Index">
-                <svg class="icon"><use href="#i-brand" /></svg>
-                <span class="site-logo-text">Khabzela Consulting<small>ACCOUNTING · PAYROLL · TAX</small></span>
-            </a>
-
             <nav class="site-nav" id="site-nav" aria-label="Main" data-site-nav>
                 <a class="@Active("Index")" asp-controller="Home" asp-action="Index">Home</a>
-                <a href="@homeUrl#services">Offering</a>
-                <a class="@Active("About")" asp-controller="Home" asp-action="About">About us</a>
+                <a class="@Active("Offering")" asp-controller="Home" asp-action="Offering">Offering</a>
+                <a class="@Active("About")" asp-controller="Home" asp-action="About">About</a>
                 <a class="@Active("Contact")" asp-controller="Home" asp-action="Contact">Contact</a>
-                <div class="site-nav-actions">
-                    <a class="btn btn-outline site-login" asp-controller="Account" asp-action="Login">Client login</a>
-                    <a class="btn btn-primary" asp-controller="Client" asp-action="Quote">Get a quote</a>
-                </div>
+                <a class="site-nav-mobile" asp-controller="Account" asp-action="Login">Client login</a>
             </nav>
+
+            <a class="site-logo" asp-controller="Home" asp-action="Index" aria-label="Khabzela Consulting — home">
+                <span class="site-logo-mark" aria-hidden="true">K</span>
+                <span class="site-logo-name">Khabzela Consulting</span>
+                <span class="site-logo-tag">Accounting · Payroll · Tax</span>
+            </a>
+
+            <div class="site-header-actions">
+                <a class="site-login" asp-controller="Account" asp-action="Login">Client login</a>
+                <a class="btn btn-primary" asp-controller="Home" asp-action="Contact">Contact us</a>
+            </div>
 
             <button class="site-menu-btn" type="button" aria-controls="site-nav" aria-expanded="false" aria-label="Open menu" data-menu-toggle>
                 <svg class="icon icon-open"><use href="#i-menu" /></svg>
@@ -55,67 +57,50 @@
 
     <main id="main">
         @RenderBody()
+
+        @if (showClosing)
+        {
+            <section class="testimonial">
+                <figure class="site-container">
+                    <blockquote>Khabzela Consulting offered insights on the financial and tax side of my business I never would have thought of. I'm more than happy.</blockquote>
+                    <figcaption>- Eugene Khoza</figcaption>
+                </figure>
+            </section>
+
+            <section class="closing">
+                <div class="site-container">
+                    <h2>Contact us to schedule an appointment. Let's find the best solutions for your business.</h2>
+                    <a class="btn btn-primary" asp-controller="Home" asp-action="Contact">Contact us</a>
+                </div>
+            </section>
+        }
     </main>
 
     <footer class="site-footer">
-        <div class="site-container">
-            <div class="footer-cta">
-                <div>
-                    <h2>Contact us to schedule an appointment.</h2>
-                    <p>Let's find the best solutions for your business.</p>
-                </div>
-                <div class="footer-cta-actions">
-                    <a class="btn btn-light" asp-controller="Home" asp-action="Contact">Contact us</a>
-                    <a class="btn footer-btn-ghost" asp-controller="Client" asp-action="Quote">Get a quote</a>
-                </div>
-            </div>
+        <div class="site-container footer-grid">
+            <a class="site-logo footer-logo" asp-controller="Home" asp-action="Index" aria-label="Khabzela Consulting — home">
+                <span class="site-logo-mark" aria-hidden="true">K</span>
+                <span class="site-logo-name">Khabzela Consulting</span>
+                <span class="site-logo-tag">Accounting · Payroll · Tax</span>
+            </a>
 
-            <div class="footer-grid">
-                <div class="footer-brand">
-                    <a class="site-logo" asp-controller="Home" asp-action="Index">
-                        <svg class="icon"><use href="#i-brand" /></svg>
-                        <span class="site-logo-text">Khabzela Consulting<small>ACCOUNTING · PAYROLL · TAX</small></span>
-                    </a>
-                    <p>A Centurion-based accounting firm providing accounting, payroll and tax services to small and medium-sized businesses since 2010.</p>
-                </div>
+            <nav class="footer-links" aria-label="Footer">
+                <a asp-controller="Home" asp-action="Index">Home</a>
+                <a asp-controller="Home" asp-action="Offering">Offering</a>
+                <a asp-controller="Home" asp-action="About">About</a>
+                <a asp-controller="Home" asp-action="Contact">Contact</a>
+            </nav>
 
-                <div class="footer-col">
-                    <h3>Services</h3>
-                    <ul>
-                        <li><a href="@homeUrl#services">Accounting</a></li>
-                        <li><a href="@homeUrl#services">Payroll</a></li>
-                        <li><a href="@homeUrl#services">Tax</a></li>
-                        <li><a href="@homeUrl#alerts">Tax compliance alerts</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Company</h3>
-                    <ul>
-                        <li><a asp-controller="Home" asp-action="About">About us</a></li>
-                        <li><a asp-controller="Home" asp-action="Contact">Contact</a></li>
-                        <li><a asp-controller="Account" asp-action="Login">Client login</a></li>
-                    </ul>
-                </div>
-
-                <div class="footer-col">
-                    <h3>Get in touch</h3>
-                    <ul class="footer-contact">
-                        <li><svg class="icon icon-sm"><use href="#i-phone" /></svg><span><a href="tel:+27728792715">072 879 2715</a> / <a href="tel:+27716841535">071 684 1535</a></span></li>
-                        <li><svg class="icon icon-sm"><use href="#i-mail" /></svg><a href="mailto:vukani@khabzelaconsulting.co.za">vukani@khabzelaconsulting.co.za</a></li>
-                        <li><svg class="icon icon-sm"><use href="#i-pin" /></svg><span>9 Charles De Gaulle Crescent, Highveld, Centurion</span></li>
-                        <li><svg class="icon icon-sm"><use href="#i-clock" /></svg><span>Mon – Fri, 08:00 – 17:00</span></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="footer-bottom">
-                <p>&copy; <span data-year>@DateTime.Now.Year</span> Khabzela Consulting. All rights reserved.</p>
-                <nav aria-label="Legal">
-                    <a asp-controller="Home" asp-action="Privacy">Privacy &amp; POPIA</a>
-                    <button type="button" class="footer-top" data-back-to-top>Back to top ↑</button>
-                </nav>
-            </div>
+            <address class="footer-contact">
+                <span><a href="tel:+27728792715">072 879 2715</a> / <a href="tel:+27716841535">071 684 1535</a></span>
+                <span>9 Charles De Gaulle Crescent, Highveld</span>
+                <a href="mailto:vukani@khabzelaconsulting.co.za">vukani@khabzelaconsulting.co.za</a>
+                <a href="https://www.khabzelaconsulting.co.za">www.khabzelaconsulting.co.za</a>
+            </address>
+        </div>
+        <div class="site-container footer-bottom">
+            <span>&copy; @DateTime.Now.Year Khabzela Consulting</span>
+            <a asp-controller="Home" asp-action="Privacy">Privacy &amp; POPIA</a>
         </div>
     </footer>
 

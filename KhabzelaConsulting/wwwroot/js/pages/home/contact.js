@@ -1,4 +1,4 @@
-// Home — Contact us: form validation + success state, open/closed indicator, single-open FAQ.
+// Home — Contact us: form validation + success state and open/closed indicator.
 // Sends the message to the server, which saves it and emails it to vukani@khabzelaconsulting.co.za.
 (function () {
     const form = document.querySelector("[data-contact-form]");
@@ -91,10 +91,4 @@
         status.textContent = open ? "● Open now" : "● Closed — leave a message";
         status.classList.add(open ? "is-open" : "is-closed");
     }
-
-    // Only one FAQ open at a time
-    const items = document.querySelectorAll("[data-faq] details");
-    items.forEach((d) => d.addEventListener("toggle", () => {
-        if (d.open) items.forEach((other) => { if (other !== d) other.open = false; });
-    }));
 })();

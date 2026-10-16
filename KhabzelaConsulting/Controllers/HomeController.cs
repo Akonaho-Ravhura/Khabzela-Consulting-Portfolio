@@ -32,6 +32,11 @@ namespace KhabzelaConsulting.Controllers
             return View();
         }
 
+        public IActionResult Offering()
+        {
+            return View();
+        }
+
         public IActionResult About()
         {
             return View();
