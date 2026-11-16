@@ -15,19 +15,26 @@ namespace KhabzelaConsulting.Controllers
         private readonly AppDbContext _db;
         private readonly IEmailSender _email;
         private readonly SmtpOptions _smtp;
+        private readonly SiteOptions _site;
         private readonly IWebHostEnvironment _env;
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(AppDbContext db, IEmailSender email, IOptions<SmtpOptions> smtp, IWebHostEnvironment env, ILogger<HomeController> logger)
+        public HomeController(AppDbContext db, IEmailSender email, IOptions<SmtpOptions> smtp, IOptions<SiteOptions> site, IWebHostEnvironment env, ILogger<HomeController> logger)
         {
             _db = db;
             _email = email;
             _smtp = smtp.Value;
+            _site = site.Value;
             _env = env;
             _logger = logger;
         }
 
         public IActionResult Index()
+        {
+            return View();
+        }
+
+        public IActionResult Offering()
         {
             return View();
         }
@@ -85,8 +92,10 @@ namespace KhabzelaConsulting.Controllers
                 _logger.LogError(ex, "Contact message {MessageId} saved but the email to the owner failed.", message.Id);
             }
 
-            if (!message.EmailSent && !_env.IsDevelopment())
-                return StatusCode(503, new { error = "Sorry — we couldn't send your message right now. Please call us on 072 879 2715 or email vukani@khabzelaconsulting.co.za." });
+            // The message is already saved (staff read it under Admin → Enquiries); only report a failure
+            // when email delivery is set up but didn't work.
+            if (_email.IsConfigured && !message.EmailSent && !_env.IsDevelopment())
+                return StatusCode(503, new { error = $"Sorry — we couldn't send your message right now. Please call us on 072 879 2715 or email {_site.ContactEmail}." });
 
             return Json(new { ok = true });
         }

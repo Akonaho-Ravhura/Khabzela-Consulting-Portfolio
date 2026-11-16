@@ -50,6 +50,7 @@ namespace KhabzelaConsulting.Tests
         [Theory]
         [InlineData("/")]
         [InlineData("/Home/About")]
+        [InlineData("/Home/Offering")]
         [InlineData("/Home/Contact")]
         [InlineData("/Home/Privacy")]
         [InlineData("/Account/Login")]
@@ -66,9 +67,14 @@ namespace KhabzelaConsulting.Tests
         {
             var html = await NewClient().GetStringAsync("/");
             Assert.Contains("072 879 2715", html);
-            Assert.Contains("vukani@khabzelaconsulting.co.za", html);
+            Assert.Contains("info@khabzelaconsulting.co.za", html);
             Assert.DoesNotContain("Insurance", html);
             Assert.Contains("Know your tax status before it becomes a problem", html);
+            Assert.DoesNotContain("Facebook", html);
+
+            var offering = await NewClient().GetStringAsync("/Home/Offering");
+            Assert.Contains("Tax", offering);
+            Assert.DoesNotContain("Insurance", offering);
         }
 
         [Theory]
@@ -119,6 +125,7 @@ namespace KhabzelaConsulting.Tests
             var login = await LoginAsync(client, "admin@demo.khabzela.co.za", "Demo@2026");
             Assert.Equal("/Admin", login.Headers.Location!.ToString());
             Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/Admin/Clients")).StatusCode);
+            Assert.Equal(HttpStatusCode.OK, (await client.GetAsync("/Admin/Enquiries")).StatusCode);
         }
 
         [Fact]

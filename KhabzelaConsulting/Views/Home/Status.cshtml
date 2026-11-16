@@ -1,4 +1,5 @@
 @{
+    ViewData["HideClosing"] = true;
     var code = ViewData["Code"] as int? ?? 500;
     ViewData["Title"] = code == 404 ? "Page not found" : "Something went wrong";
     var (heading, text) = code switch

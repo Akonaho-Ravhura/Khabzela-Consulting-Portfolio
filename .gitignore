@@ -61,5 +61,6 @@ nunit-*.xml
 *.db-shm
 *.db-wal
 
-# Local editor/tooling settings
-.claude/
+
+# Node / Android app build output
+node_modules/

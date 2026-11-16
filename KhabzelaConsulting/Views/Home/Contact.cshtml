@@ -1,38 +1,30 @@
+@inject Microsoft.Extensions.Options.IOptions<KhabzelaConsulting.Services.SiteOptions> SiteOptions
 @{
     ViewData["Title"] = "Contact us";
-    ViewData["Description"] = "Get in touch with Khabzela Consulting — call, email or send us a message.";
-
-    var faqs = new[]
-    {
-        new { Q = "How quickly will you reply?", A = "We reply to every message within one working day — usually the same day." },
-        new { Q = "How will I know if my tax status changes?", A = "Clients get a notification in the Khabzela app as soon as their accountant updates their tax status, and a reminder a week before each SARS deadline (EMP201, VAT201, provisional tax, EMP501 and ITR14). You can also switch on email copies. You don't need to share your eFiling login." },
-        new { Q = "Do I need to be a client to ask a question?", A = "Not at all. Ask us anything; if we can help, we'll suggest a next step and a price." },
-        new { Q = "Can I switch from my current accountant mid-year?", A = "Yes. We'll request your records from your previous accountant and make sure nothing falls through the cracks." },
-        new { Q = "Do you work with clients outside Gauteng?", A = "Yes — most of our work can be done remotely, and consultations can be online or by phone." },
-    };
+    ViewData["Description"] = "Contact Khabzela Consulting in Centurion to schedule an appointment.";
+    ViewData["HideClosing"] = true;
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/home/contact.css" asp-append-version="true" />
 }
 
-<section class="page-hero">
+<section class="page-head">
     <div class="site-container">
         <p class="eyebrow">Contact us</p>
-        <h1>Contact us</h1>
-        <p class="lead">Contact us to schedule an appointment. Let's find the best solutions for your business. Existing clients can also <a class="btn-link" asp-controller="Account" asp-action="Login">get a quote and book in the app →</a></p>
+        <h1>Contact us to schedule an appointment. Let's find the best solutions for your business.</h1>
     </div>
 </section>
 
-<section class="section contact-section">
+<section class="contact-section">
     <div class="site-container contact-layout">
         <aside class="contact-info">
             <div class="contact-card">
                 <span class="contact-icon"><svg class="icon"><use href="#i-phone" /></svg></span>
                 <span><span class="contact-label">Call us</span><strong><a href="tel:+27728792715">072 879 2715</a> / <a href="tel:+27716841535">071 684 1535</a></strong></span>
             </div>
-            <a class="contact-card" href="mailto:vukani@khabzelaconsulting.co.za">
+            <a class="contact-card" href="mailto:@SiteOptions.Value.ContactEmail">
                 <span class="contact-icon"><svg class="icon"><use href="#i-mail" /></svg></span>
-                <span><span class="contact-label">Email</span><strong>vukani@khabzelaconsulting.co.za</strong></span>
+                <span><span class="contact-label">Email</span><strong>@SiteOptions.Value.ContactEmail</strong></span>
             </a>
             <a class="contact-card" href="https://www.google.com/maps/search/?api=1&query=9+Charles+De+Gaulle+Crescent+Highveld+Centurion" target="_blank" rel="noopener">
                 <span class="contact-icon"><svg class="icon"><use href="#i-pin" /></svg></span>
@@ -50,7 +42,7 @@
                     src="https://maps.google.com/maps?q=9%20Charles%20De%20Gaulle%20Crescent%2C%20Highveld%2C%20Centurion&z=15&output=embed"></iframe>
         </aside>
 
-        <div class="card contact-form-card">
+        <div class="panel contact-form-card">
             <form class="contact-form" method="post" asp-action="Contact" novalidate data-contact-form>
                 <div class="contact-hp" aria-hidden="true"><label for="website">Website</label><input id="website" name="website" tabindex="-1" autocomplete="off" /></div>
                 <h2>Send us a message</h2>
@@ -109,23 +101,6 @@
     </div>
 </section>
 
-<section class="section section-alt">
-    <div class="site-container faq">
-        <header class="section-head" data-reveal>
-            <p class="eyebrow">FAQ</p>
-            <h2>Common questions</h2>
-        </header>
-        <div class="faq-list" data-faq>
-            @foreach (var f in faqs)
-            {
-                <details class="faq-item">
-                    <summary>@f.Q<svg class="icon icon-sm"><use href="#i-plus" /></svg></summary>
-                    <p>@f.A</p>
-                </details>
-            }
-        </div>
-    </div>
-</section>
 
 @section Scripts {
     <script src="~/js/pages/home/contact.js" asp-append-version="true"></script>

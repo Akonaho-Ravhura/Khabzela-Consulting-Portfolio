@@ -57,9 +57,12 @@ namespace KhabzelaConsulting.Services
             message.Subject = subject;
             message.Body = new BodyBuilder { HtmlBody = htmlBody }.ToMessageBody();
 
+            // Port 465 is always implicit TLS; STARTTLS there would hang until the timeout.
+            var security = _options.Port == 465 ? SecureSocketOptions.SslOnConnect
+                : _options.UseStartTls ? SecureSocketOptions.StartTls : SecureSocketOptions.SslOnConnect;
+
             using var client = new SmtpClient { Timeout = 15000 };
-            await client.ConnectAsync(_options.Host!, _options.Port,
-                _options.UseStartTls ? SecureSocketOptions.StartTls : SecureSocketOptions.SslOnConnect, ct);
+            await client.ConnectAsync(_options.Host!, _options.Port, security, ct);
             if (!string.IsNullOrEmpty(_options.Username))
                 await client.AuthenticateAsync(_options.Username, _options.Password ?? "", ct);
             await client.SendAsync(message, ct);

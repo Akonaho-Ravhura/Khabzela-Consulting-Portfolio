@@ -81,7 +81,13 @@ builder.Services.Configure<SmtpOptions>(builder.Configuration.GetSection("Smtp")
 builder.Services.Configure<SeedOptions>(builder.Configuration.GetSection("Seed"));
 builder.Services.AddSingleton(TimeProvider.System);
 builder.Services.AddSingleton<SaClock>();
-builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
+builder.Services.Configure<AcsEmailOptions>(builder.Configuration.GetSection("AzureEmail"));
+builder.Services.Configure<SiteOptions>(builder.Configuration.GetSection("Site"));
+// Email: Azure Communication Services when configured (Azure deployment), otherwise SMTP (Afrihost mailbox).
+if (!string.IsNullOrWhiteSpace(builder.Configuration["AzureEmail:ConnectionString"]))
+    builder.Services.AddScoped<IEmailSender, AcsEmailSender>();
+else
+    builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<DeadlineReminderService>();
 if (!builder.Configuration.GetValue<bool>("Reminders:Disabled"))
@@ -95,6 +101,10 @@ using (var scope = app.Services.CreateScope())
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     var seed = scope.ServiceProvider.GetRequiredService<IOptions<SeedOptions>>().Value;
     await DbSeeder.SeedAsync(scope.ServiceProvider, seed, useMigrations: !useSqlite, logger);
+
+    // Without an email provider the contact form, password resets and notifications are saved but never emailed.
+    if (!app.Environment.IsDevelopment() && !scope.ServiceProvider.GetRequiredService<IEmailSender>().IsConfigured)
+        logger.LogError("No email provider is configured (set Smtp:Host or AzureEmail:ConnectionString) — emails will not be sent.");
 }
 
 if (!app.Environment.IsDevelopment())

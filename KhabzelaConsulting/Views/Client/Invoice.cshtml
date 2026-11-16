@@ -1,4 +1,5 @@
 @model InvoiceRow
+@inject Microsoft.Extensions.Options.IOptions<KhabzelaConsulting.Services.SiteOptions> SiteOptions
 @{
     Layout = null;
 }
@@ -38,7 +39,7 @@
                 <strong>Khabzela Consulting</strong><br />
                 9 Charles De Gaulle Crescent, Highveld, Centurion<br />
                 072 879 2715 / 071 684 1535<br />
-                vukani@@khabzelaconsulting.co.za
+                @SiteOptions.Value.ContactEmail
             </p>
         </header>
 

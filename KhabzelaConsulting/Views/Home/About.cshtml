@@ -2,83 +2,35 @@
     ViewData["Title"] = "About us";
     ViewData["Description"] = "Khabzela Consulting is a Centurion-based accounting firm, established in 2010, providing accounting, payroll and tax services to SMEs.";
 
-    var values = new[]
+    var images = new[]
     {
-        new { Icon = "i-message", Title = "Plain language", Text = "We explain what your numbers mean and what to do next — no jargon, no surprises." },
-        new { Icon = "i-shield", Title = "Compliance first", Text = "PAYE, VAT, provisional tax and income tax returns submitted correctly and on time." },
-        new { Icon = "i-users", Title = "Tailored service", Text = "Accounting, payroll and tax services tailored to each client's requirements." },
-    };
-    var milestones = new[]
-    {
-        new { Year = "2010", Text = "Khabzela Consulting is established in Centurion." },
-        new { Year = DateTime.Now.Year.ToString(), Text = "Client app launches with online quotes, booking and tax-status notifications." },
+        new { Image = "about-1", Alt = "Coins with a small plant growing from them" },
+        new { Image = "about-2", Alt = "Growth chart on paper with a pen and ruler" },
+        new { Image = "about-3", Alt = "Two people working on laptops and notes" },
     };
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/home/about.css" asp-append-version="true" />
 }
 
-<section class="page-hero">
+<section class="page-head">
     <div class="site-container">
         <p class="eyebrow">About us</p>
         <h1>We offer accounting, payroll and tax services tailored to our clients' requirements.</h1>
     </div>
 </section>
 
-<section class="section">
-    <div class="site-container about-story">
-        <div class="about-story-copy" data-reveal>
-            <p class="eyebrow">Our story</p>
-            <h2>A Centurion accounting firm since 2010</h2>
-            <p>Khabzela Consulting is a Centurion-based accounting firm, established in 2010. At Khabzela Consulting, we provide accounting, payroll and tax services to small and medium-sized enterprises.</p>
-            <p>We have the expertise and experience that clients trust. Meet with us to discover why we're the leading accounting firm in Centurion.</p>
-        </div>
-        <dl class="about-figures" data-reveal>
-            <div><dt>Established</dt><dd>2010</dd></div>
-            <div><dt>Years in practice</dt><dd>@(DateTime.Now.Year - 2010)+</dd></div>
-            <div><dt>Based in</dt><dd>Centurion</dd></div>
-            <div><dt>Services</dt><dd>3</dd></div>
-        </dl>
-    </div>
-</section>
-
-<section class="section section-alt">
+<section class="about-body">
     <div class="site-container">
-        <header class="section-head" data-reveal>
-            <p class="eyebrow">What we believe</p>
-            <h2>Our values</h2>
-        </header>
-        <div class="values-grid">
-            @foreach (var v in values)
-            {
-                <article class="value-card" data-reveal>
-                    <span class="value-icon"><svg class="icon"><use href="#@v.Icon" /></svg></span>
-                    <h3>@v.Title</h3>
-                    <p>@v.Text</p>
-                </article>
-            }
+        <div class="panel">
+            <div class="about-images">
+                @foreach (var img in images)
+                {
+                    <img src="~/images/@(img.Image)-sm.jpg" srcset="/images/@(img.Image)-sm.jpg 420w, /images/@(img.Image).jpg 700w" sizes="(max-width: 700px) 100vw, 350px"
+                         width="700" height="460" alt="@img.Alt" decoding="async" />
+                }
+            </div>
+            <p>Khabzela Consulting is a Centurion based accounting firm, established in 2010. At Khabzela Consulting, we provide Accounting, Payroll and Tax Services to small and medium sized enterprises. We have the expertise and experience that clients trust. Meet with us to discover why we're the leading accounting firm in Centurion.</p>
         </div>
     </div>
 </section>
-
-<section class="section section-dark">
-    <div class="site-container">
-        <header class="section-head" data-reveal>
-            <p class="eyebrow">Our journey</p>
-            <h2>Serving Centurion since 2010</h2>
-        </header>
-        <ol class="timeline" data-timeline>
-            @foreach (var m in milestones)
-            {
-                <li class="timeline-item" data-reveal>
-                    <span class="timeline-year">@m.Year</span>
-                    <p>@m.Text</p>
-                </li>
-            }
-        </ol>
-    </div>
-</section>
-
-@section Scripts {
-    <script src="~/js/pages/home/about.js" asp-append-version="true"></script>
-}

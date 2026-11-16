@@ -1,0 +1,14 @@
+/* Offering */
+
+.offering-list { padding-bottom: 80px; }
+.offering-list .site-container { display: grid; gap: 60px; }
+.offering-item { display: grid; gap: 28px; align-items: center; }
+.offering-item img { width: 100%; height: auto; aspect-ratio: 635 / 450; object-fit: cover; background: #e9e3da; }
+.offering-text h2 { margin-bottom: 14px; font-size: 1.6rem; }
+.offering-text p { font-size: 1.05rem; line-height: 1.6; }
+
+@media (min-width: 900px) {
+    .offering-item { grid-template-columns: 1.4fr 1fr; gap: 54px; }
+    .offering-item.is-reversed { grid-template-columns: 1fr 1.4fr; }
+    .offering-item.is-reversed img { order: 2; }
+}
