@@ -236,6 +236,7 @@ namespace KhabzelaConsulting.Controllers
         {
             var messages = await _db.ContactMessages.OrderByDescending(m => m.CreatedAt).Take(200).ToListAsync();
             ViewData["Clock"] = _clock;
+            ViewData["EmailConfigured"] = _email.IsConfigured;
             return View(messages);
         }
 

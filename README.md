@@ -41,6 +41,19 @@ Development uses a local SQLite file (`khabzela-dev.db`) and seeds demo data:
 
 Run the tests with `dotnet test KhabzelaConsulting/KhabzelaConsulting.slnx`.
 
+## Android app
+
+`KhabzelaMobile/` is a Capacitor Android app that opens the live client app (`/Client`) full-screen, with the firm's icon and splash screen and an offline page. The APK can be installed directly on any Android phone (no Play Store needed).
+
+```bash
+cd KhabzelaMobile
+npm install
+npm run build:apk    # needs Android Studio (its JDK) and the Android SDK
+# APK: KhabzelaMobile/android/app/build/outputs/apk/debug/app-debug.apk
+```
+
+On macOS, if Gradle complains about the Java version, run it with Android Studio's JDK: `JAVA_HOME="/Applications/Android Studio.app/Contents/jbr/Contents/Home" npm run build:apk`. Or open `KhabzelaMobile/android` in Android Studio and choose **Build → Build APK(s)**.
+
 ## Production configuration
 
 Never commit secrets. Set these as environment variables on the server (or with `dotnet user-secrets` locally):
@@ -50,7 +63,10 @@ Never commit secrets. Set these as environment variables on the server (or with 
 | `ConnectionStrings__DefaultConnection` | Azure SQL connection string. Migrations run automatically on start-up. |
 | `Seed__AdminPassword` | Creates the owner's admin login (`vukani@khabzelaconsulting.co.za`) on first start. |
 | `Seed__DemoData` / `Seed__DemoPassword` | Optional demo accounts for markers (`true` / a password). |
-| `Smtp__Host`, `Smtp__Port`, `Smtp__Username`, `Smtp__Password` | Mailbox used to send contact-form messages, password resets and notification emails. |
+| `Smtp__Host`, `Smtp__Port`, `Smtp__Username`, `Smtp__Password`, `Smtp__FromAddress` | Mailbox used to send contact-form messages, password resets and notification emails. `FromAddress` should be the mailbox you sign in as. Port 465 uses implicit TLS; 587 uses STARTTLS. |
+| `AzureEmail__ConnectionString`, `AzureEmail__SenderAddress` | Alternative to SMTP: Azure Communication Services Email. Used instead of SMTP when the connection string is set. |
+
+If neither email option is set, enquiries are still saved (Admin → Enquiries shows a warning) but nothing is emailed.
 
 ## Security
 

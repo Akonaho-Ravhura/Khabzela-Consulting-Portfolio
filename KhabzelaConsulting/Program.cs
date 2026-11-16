@@ -101,6 +101,10 @@ using (var scope = app.Services.CreateScope())
     var logger = scope.ServiceProvider.GetRequiredService<ILogger<Program>>();
     var seed = scope.ServiceProvider.GetRequiredService<IOptions<SeedOptions>>().Value;
     await DbSeeder.SeedAsync(scope.ServiceProvider, seed, useMigrations: !useSqlite, logger);
+
+    // Without an email provider the contact form, password resets and notifications are saved but never emailed.
+    if (!app.Environment.IsDevelopment() && !scope.ServiceProvider.GetRequiredService<IEmailSender>().IsConfigured)
+        logger.LogError("No email provider is configured (set Smtp:Host or AzureEmail:ConnectionString) — emails will not be sent.");
 }
 
 if (!app.Environment.IsDevelopment())

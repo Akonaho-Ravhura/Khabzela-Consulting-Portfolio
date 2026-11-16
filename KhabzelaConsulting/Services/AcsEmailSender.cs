@@ -52,6 +52,6 @@ namespace KhabzelaConsulting.Services
     // Public contact details shown on the website; overridable per deployment.
     public class SiteOptions
     {
-        public string ContactEmail { get; set; } = "vukani@khabzelaconsulting.co.za";
+        public string ContactEmail { get; set; } = "info@khabzelaconsulting.co.za";
     }
 }

@@ -61,3 +61,6 @@ nunit-*.xml
 *.db-shm
 *.db-wal
 
+
+# Node / Android app build output
+node_modules/

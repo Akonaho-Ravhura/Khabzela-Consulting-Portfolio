@@ -67,7 +67,7 @@ namespace KhabzelaConsulting.Tests
         {
             var html = await NewClient().GetStringAsync("/");
             Assert.Contains("072 879 2715", html);
-            Assert.Contains("vukani@khabzelaconsulting.co.za", html);
+            Assert.Contains("info@khabzelaconsulting.co.za", html);
             Assert.DoesNotContain("Insurance", html);
             Assert.Contains("Know your tax status before it becomes a problem", html);
             Assert.DoesNotContain("Facebook", html);
