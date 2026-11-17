@@ -32,12 +32,19 @@
 .inv-detail dl { display: flex; gap: 24px; margin: 0; font-size: .88rem; }
 .inv-detail dt { color: var(--muted); font-size: .75rem; text-transform: uppercase; letter-spacing: .08em; }
 .inv-detail dd { margin: 0; }
+.inv-actions { display: flex; flex-wrap: wrap; gap: 8px; }
+.inv-notice { margin-bottom: 16px; padding: 12px 14px; background: var(--success-bg); color: var(--success); border-left: 3px solid var(--success); font-size: .9rem; }
 .inv-download { min-height: 38px; padding: .4rem .9rem; font-size: .85rem; }
 
 @media (min-width: 768px) {
     .inv-summary { max-width: 560px; }
+    .inv-notice { max-width: 760px; }
     .inv-summary .card { padding: 20px; }
     .inv-list { max-width: 760px; }
     .inv-row { padding: 18px 20px; }
     .inv-detail { padding: 14px 20px 18px; }
 }
+
+/* Pay invoice */
+.pay-card { display: grid; gap: 12px; max-width: 560px; }
+.pay-card .inv-notice { margin: 0; }

@@ -1,0 +1,37 @@
+@model InvoiceRow
+@{
+    ViewData["Title"] = "Pay invoice";
+    var fields = (List<KeyValuePair<string, string>>)ViewData["Fields"]!;
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/pages/client/invoices.css" asp-append-version="true" />
+}
+
+<div class="page-head">
+    <a class="back-btn" asp-action="Invoices" aria-label="Back to invoices"><svg class="icon"><use href="#i-chevron-left" /></svg></a>
+    <h1>Pay invoice</h1>
+</div>
+
+<section class="card card-pad pay-card">
+    <p class="eyebrow">Invoice @Model.Number</p>
+    <p class="inv-figure">R @Model.Amount.ToString("N2")</p>
+    <p>@Model.Description · due @Model.Due.ToString("d MMMM yyyy")</p>
+
+    @if (ViewData["Sandbox"] is true)
+    {
+        <p class="inv-notice">Test mode: no real money is taken. On PayFast, use the test wallet or test card to complete the payment.</p>
+    }
+
+    <p class="muted">You'll pay on PayFast's secure page by card, instant EFT or another method. We never see or store your card details. The invoice is marked paid automatically once PayFast confirms the payment.</p>
+
+    <form method="post" action="@ViewData["ProcessUrl"]">
+        @foreach (var field in fields)
+        {
+            <input type="hidden" name="@field.Key" value="@field.Value" />
+        }
+        <div class="inv-actions">
+            <button class="btn btn-primary" type="submit">Continue to PayFast</button>
+            <a class="btn btn-outline" asp-action="Invoices">Cancel</a>
+        </div>
+    </form>
+</section>

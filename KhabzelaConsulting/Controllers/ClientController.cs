@@ -20,10 +20,12 @@ namespace KhabzelaConsulting.Controllers
         private readonly NotificationService _notifications;
         private readonly DeadlineReminderService _reminders;
         private readonly SaClock _clock;
+        private readonly PayFastService _payFast;
         private readonly ILogger<ClientController> _logger;
 
-        public ClientController(AppDbContext db, UserManager<ApplicationUser> users, SignInManager<ApplicationUser> signIn, NotificationService notifications, DeadlineReminderService reminders, SaClock clock, ILogger<ClientController> logger)
+        public ClientController(AppDbContext db, UserManager<ApplicationUser> users, SignInManager<ApplicationUser> signIn, NotificationService notifications, DeadlineReminderService reminders, SaClock clock, PayFastService payFast, ILogger<ClientController> logger)
         {
+            _payFast = payFast;
             _db = db;
             _users = users;
             _signIn = signIn;
@@ -174,7 +176,28 @@ namespace KhabzelaConsulting.Controllers
             var today = _clock.Today;
             var invoices = await _db.Invoices.Where(i => i.ClientId == client.Id).OrderByDescending(i => i.IssuedAt).ToListAsync();
             ViewData["PaidThisYear"] = invoices.Where(i => i.Status == InvoiceStatuses.Paid && i.PaidAt?.Year == today.Year).Sum(i => i.Amount);
+            ViewData["CanPayOnline"] = _payFast.IsConfigured;
+            // Back from PayFast: the payment is confirmed separately by PayFast's notification, which can take a few seconds.
+            if (int.TryParse(Request.Query["paid"], out var paidId) && invoices.FirstOrDefault(i => i.Id == paidId) is { } returned)
+                ViewData["PaymentMessage"] = returned.Status == InvoiceStatuses.Paid
+                    ? $"Thank you, invoice #{returned.Number} is paid."
+                    : $"Thank you. We're confirming your payment for invoice #{returned.Number}; it will show as paid shortly.";
             return View(invoices.Select(i => ToRow(i, client, today)).ToList());
+        }
+
+        // Confirms the amount, then hands over to PayFast's secure payment page (card, EFT, etc.).
+        public async Task<IActionResult> Pay(int id)
+        {
+            if (!_payFast.IsConfigured) return RedirectToAction(nameof(Invoices));
+            var client = await CurrentClientAsync();
+            var invoice = await _db.Invoices.FirstOrDefaultAsync(i => i.Id == id && i.ClientId == client.Id);
+            if (invoice == null) return NotFound();
+            if (invoice.Status == InvoiceStatuses.Paid) return RedirectToAction(nameof(Invoices));
+
+            ViewData["ProcessUrl"] = _payFast.ProcessUrl;
+            ViewData["Sandbox"] = _payFast.IsSandbox;
+            ViewData["Fields"] = _payFast.BuildPaymentFields(invoice, client.User, $"{Request.Scheme}://{Request.Host}");
+            return View(ToRow(invoice, client, _clock.Today));
         }
 
         // Printable invoice — the browser's "Save as PDF" produces the PDF.

@@ -3,6 +3,7 @@
     ViewData["Title"] = "Invoices";
     var invoices = Model;
     var outstanding = invoices.Where(i => i.Status != "Paid").Sum(i => i.Amount);
+    var canPayOnline = ViewData["CanPayOnline"] is true;
 }
 @section Styles {
     <link rel="stylesheet" href="~/css/pages/client/invoices.css" asp-append-version="true" />
@@ -12,6 +13,11 @@
     <a class="back-btn" asp-action="Index" aria-label="Back to home"><svg class="icon"><use href="#i-chevron-left" /></svg></a>
     <h1>Invoices</h1>
 </div>
+
+@if (ViewData["PaymentMessage"] is string paymentMessage)
+{
+    <p class="inv-notice" role="status">@paymentMessage</p>
+}
 
 <div class="inv-summary">
     <div class="card card-pad">
@@ -53,9 +59,15 @@
                     <div><dt>Issued</dt><dd>@inv.Issued.ToString("dd MMM yyyy")</dd></div>
                     <div><dt>Due</dt><dd>@inv.Due.ToString("dd MMM yyyy")</dd></div>
                 </dl>
-                <a class="btn btn-outline inv-download" asp-action="Invoice" asp-route-id="@inv.Id" target="_blank" rel="noopener">
-                    <svg class="icon icon-sm"><use href="#i-download" /></svg> View / save as PDF
-                </a>
+                <div class="inv-actions">
+                    @if (canPayOnline && inv.Status != "Paid")
+                    {
+                        <a class="btn btn-primary inv-download" asp-action="Pay" asp-route-id="@inv.Id">Pay now</a>
+                    }
+                    <a class="btn btn-outline inv-download" asp-action="Invoice" asp-route-id="@inv.Id" target="_blank" rel="noopener">
+                        <svg class="icon icon-sm"><use href="#i-download" /></svg> View / save as PDF
+                    </a>
+                </div>
             </div>
         </li>
     }

@@ -5,6 +5,8 @@ Website and client app for Khabzela Consulting, a Centurion-based accounting fir
 - **Public website**: home, offering, about, contact (the contact form emails the owner).
 - **Client app** (mobile-first, installable as a PWA on phones and desktops): combined *get a quote + book an appointment* flow, tax-status and deadline notifications, invoices, profile and notification preferences.
 - **Admin portal** (staff/owner, "Go to the admin portal" on the sign-in page): dashboard, clients with tax-status updates (each update notifies the client), pricing rules that drive the quote calculator, quote requests and invoicing.
+- **Online invoice payments**: clients pay invoices in the app through PayFast (card, instant EFT and more). PayFast confirms each payment to the app, which marks the invoice paid, notifies the client and emails the firm automatically. No card details are handled by the app.
+- **Automatic invoice reminders**: clients are reminded 3 days before an invoice is due and again once it is overdue (each reminder is sent only once).
 - **Automatic SARS deadline reminders**: each client has a tax profile (employer, VAT category, provisional taxpayer, company, year-end). The app works out their EMP201, EMP501, VAT201, IRP6 and ITR14 due dates (moved to the previous business day for weekends and public holidays) and reminds the client 7 days before each one. Staff see all deadlines for the next 14 days on the dashboard. No SARS login or client tax data is needed.
 
 ## Tech stack
@@ -15,10 +17,10 @@ ASP.NET Core MVC (.NET 10), Entity Framework Core, ASP.NET Core Identity, Azure 
 
 ```
 KhabzelaConsulting/            Web app (MVC, layered)
-  Controllers/                 Home (public), Account (auth), Client (client app), Admin (staff portal)
+  Controllers/                 Home (public), Account (auth), Client (client app), Admin (staff portal), Payments (PayFast callbacks)
   Models/                      Entities (domain model / ER diagram), form inputs, page models
   Data/                        AppDbContext, EF Core migrations, seeding
-  Services/                    PricingCalculator, NotificationService, email, SA time & tax deadlines
+  Services/                    PricingCalculator, NotificationService, PayFast, email, SA time, tax deadline & invoice reminders
   ViewComponents/              Layout badges (unread notifications, new quote requests)
   Views/, wwwroot/             Razor views, per-page CSS/JS, PWA manifest + service worker
 KhabzelaConsulting.Tests/      Unit + integration tests (xUnit, WebApplicationFactory)
@@ -66,12 +68,19 @@ Never commit secrets. Set these as environment variables on the server (or with 
 | `Smtp__Host`, `Smtp__Port`, `Smtp__Username`, `Smtp__Password`, `Smtp__FromAddress` | Mailbox used to send contact-form messages, password resets and notification emails. `FromAddress` should be the mailbox you sign in as. Port 465 uses implicit TLS; 587 uses STARTTLS. |
 | `AzureEmail__ConnectionString`, `AzureEmail__SenderAddress` | Alternative to SMTP: Azure Communication Services Email. Used instead of SMTP when the connection string is set. |
 
+| `PayFast__MerchantId`, `PayFast__MerchantKey`, `PayFast__Passphrase` | Turns on online invoice payments. Without them the *Pay now* button is hidden and everything else works as before. The passphrase must match the one set on the PayFast account. |
+| `PayFast__UseSandbox` | `true` (default) uses PayFast's test environment, where no real money is taken. Set `false` with the firm's live merchant details to accept real payments. |
+| `PayFast__SiteUrl` | Public address PayFast sends payment confirmations to, e.g. `https://khabzela-consulting.azurewebsites.net`. Defaults to the address the client used. |
+
 If neither email option is set, enquiries are still saved (Admin → Enquiries shows a warning) but nothing is emailed.
+
+To demo payments without a PayFast account, use PayFast's shared sandbox merchant: `PayFast__MerchantId=10000100`, `PayFast__MerchantKey=46f0cd694581a` and no passphrase. On the sandbox checkout, pay with the test wallet.
 
 ## Security
 
 - Passwords are hashed by ASP.NET Core Identity. Accounts lock for 15 minutes after 5 failed sign-ins, and authenticator-app two-factor authentication is optional.
 - Access is role-based (`Admin` / `Client`), and every client query is scoped to the signed-in client.
+- Payments happen on PayFast's hosted page, so the app never sees card details. A payment confirmation only marks an invoice paid after its signature (when a passphrase is set), PayFast's own server and the amount all check out.
 - Anti-forgery tokens are required on every POST. EF Core uses parameterised queries, which prevents SQL injection.
 - Login, registration, password-reset and contact forms are rate-limited. The contact form also has a spam honeypot.
 - Security headers are set, and HTTPS/HSTS is enforced in production.

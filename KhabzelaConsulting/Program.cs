@@ -90,6 +90,10 @@ else
     builder.Services.AddScoped<IEmailSender, SmtpEmailSender>();
 builder.Services.AddScoped<NotificationService>();
 builder.Services.AddScoped<DeadlineReminderService>();
+// Online invoice payments (PayFast); switched off until PayFast:MerchantId and PayFast:MerchantKey are set.
+builder.Services.Configure<PayFastOptions>(builder.Configuration.GetSection("PayFast"));
+builder.Services.AddHttpClient("payfast", c => c.Timeout = TimeSpan.FromSeconds(15));
+builder.Services.AddScoped<PayFastService>();
 if (!builder.Configuration.GetValue<bool>("Reminders:Disabled"))
     builder.Services.AddHostedService<DeadlineReminderJob>();
 
