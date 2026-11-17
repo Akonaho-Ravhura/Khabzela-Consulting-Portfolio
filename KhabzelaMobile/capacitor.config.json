@@ -2,12 +2,18 @@
   "appId": "za.co.khabzelaconsulting.app",
   "appName": "Khabzela Consulting",
   "webDir": "www",
-  "appendUserAgent": "KhabzelaApp/1.0",
+  "appendUserAgent": "KhabzelaApp/1.1",
   "backgroundColor": "#faf7f4",
   "server": {
     "url": "https://khabzela-consulting.azurewebsites.net/Client",
     "errorPath": "offline.html",
-    "cleartext": false
+    "cleartext": false,
+    "allowNavigation": [
+      "payfast.co.za",
+      "*.payfast.co.za",
+      "payfast.io",
+      "*.payfast.io"
+    ]
   },
   "android": {
     "allowMixedContent": false
