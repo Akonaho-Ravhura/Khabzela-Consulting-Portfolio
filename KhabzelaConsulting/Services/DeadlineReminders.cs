@@ -4,7 +4,8 @@ using Microsoft.EntityFrameworkCore;
 
 namespace KhabzelaConsulting.Services
 {
-    // Sends each client one reminder per upcoming SARS deadline, a week before it's due.
+    // Sends each client one reminder per upcoming SARS deadline, a week before it's due, plus
+    // automatic invoice reminders (a few days before the due date, and once when it becomes overdue).
     public class DeadlineReminderService
     {
         public const int ReminderDaysBefore = 7;
@@ -22,6 +23,36 @@ namespace KhabzelaConsulting.Services
             _logger = logger;
         }
 
+        public const int InvoiceReminderDaysBefore = 3;
+
+        // Queues (without saving) any invoice reminders this client hasn't had yet.
+        private async Task<int> QueueInvoiceRemindersAsync(Client client, DateTime today, CancellationToken ct)
+        {
+            var horizon = today.AddDays(InvoiceReminderDaysBefore);
+            var unpaid = await _db.Invoices.Where(i => i.ClientId == client.Id && i.Status != InvoiceStatuses.Paid && i.DueDate <= horizon)
+                .ToListAsync(ct);
+            if (unpaid.Count == 0) return 0;
+
+            string KeyOf(Invoice i) => (i.DueDate.Date < today ? "invoice-overdue:" : "invoice-due:") + i.Id;
+            var keys = unpaid.Select(KeyOf).ToList();
+            var already = await _db.Notifications.Where(n => n.ClientId == client.Id && keys.Contains(n.DedupKey!))
+                .Select(n => n.DedupKey).ToListAsync(ct);
+
+            var sent = 0;
+            foreach (var invoice in unpaid.Where(i => !already.Contains(KeyOf(i))))
+            {
+                var amount = PricingCalculator.FormatRand(invoice.Amount);
+                var days = (invoice.DueDate.Date - today).Days;
+                var (title, message) = days < 0
+                    ? ($"Invoice #{invoice.Number} is overdue", $"{invoice.Description}: {amount} was due on {invoice.DueDate:d MMMM yyyy}. You can pay it online from the Invoices page in the app.")
+                    : ($"Invoice #{invoice.Number} due {(days == 0 ? "today" : days == 1 ? "tomorrow" : $"in {days} days")}", $"{invoice.Description}: {amount}, due {invoice.DueDate:dddd d MMMM yyyy}. You can pay it online from the Invoices page in the app.");
+                var n = await _notifications.NotifyAsync(client, NotificationTypes.Invoice, title, message);
+                n.DedupKey = KeyOf(invoice);
+                sent++;
+            }
+            return sent;
+        }
+
         public static TaxProfile ProfileOf(Client c) =>
             new(c.IsEmployer, c.IsVatRegistered, c.VatCategory, c.IsProvisionalTaxpayer, c.IsCompany, c.YearEndMonth);
 
@@ -35,6 +66,8 @@ namespace KhabzelaConsulting.Services
             var sent = 0;
             foreach (var client in clients)
             {
+                sent += await QueueInvoiceRemindersAsync(client, today, ct);
+
                 var due = TaxCalendar.Upcoming(ProfileOf(client), today, ReminderDaysBefore);
                 if (due.Count == 0) continue;
 
